@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-22 17:30:02
- * @LastEditTime: 2021-09-26 15:22:51
+ * @LastEditTime: 2021-09-26 18:42:52
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Home.vue
@@ -11,6 +11,7 @@
     <img alt="Vue logo" src="../assets/logo.png">
     <HelloWorld msg="Welcome to Your Vue.js App"/>
     <a-button @click="logout">Log out</a-button>
+    <a-button @click="report">Create Report</a-button>
   </div>
 </template>
 
@@ -34,6 +35,9 @@ export default {
             .finally(() => {
               this.$router.push("login")
             });
+    },
+    report() {
+      this.$router.push("/report")
     }
   }
 }
