@@ -1,7 +1,9 @@
+/* eslint-disable vue/no-unused-vars */
+/* eslint-disable vue/no-unused-vars */
 <!--
  * @Author: your name
  * @Date: 2021-09-26 15:34:38
- * @LastEditTime: 2021-09-27 17:26:11
+ * @LastEditTime: 2021-09-27 18:58:28
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Report.vue
@@ -10,59 +12,49 @@
   <div id="report" v-title data-title="工作日志-周煌-2021.09-27">
     <div class="report-frame">
       <h1>{{ "工作日志-周煌-2021.09-27" }}</h1>
-      <a-form
-        id="components-form-create-report"
-        :form="form"
-        class="report-form"
-        @submit="submit"
-      >
-        <a-form-item>
+      <a-row>
+        <a-col :span="6">
           <a-date-picker
-            style="float: left"
-            v-decorator="[
-              'on_day',
-              { initialValue: moment() },
-              {
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please select the date of report!',
-                  },
-                ],
-              },
-            ]"
-            @change="onDayChange"
-          />
-          <a-space style="float: right">
-            <a-button html-type="submit">
-              {{ $t("report.button.save") }}
-            </a-button>
-            <a-button type="primary" html-type="submit">
-              {{ $t("report.button.submit") }}
-            </a-button>
-          </a-space>
-        </a-form-item>
-        <a-form-item
-          v-for="k in form.getFieldValue('task_keys')"
-          :key="k"
-        >
-          <a-space>
-            <task-sketch v-model="tasks[k]" />
-            <a-icon
-              v-if="form.getFieldValue('task_keys').length > 1"
-              class="dynamic-delete-button"
-              type="minus-circle-o"
-              :disabled="form.getFieldValue('task_keys').length === 1"
-              @click="() => remove(k)"
-            />
-          </a-space>
-        </a-form-item>
-        <a-form-item>
-          <a-button type="dashed" style="width: 40%" @click="add">
-            <a-icon type="plus" /> Add Task
+            :allowClear="false"
+            v-model="onDay"
+        /></a-col>
+        <a-col :span="2" :offset="14">
+          <a-button @click="save">
+            {{ $t("report.button.save") }}
           </a-button>
-        </a-form-item>
-      </a-form>
+        </a-col>
+        <a-col :span="2">
+          <a-button type="primary" @click="submit">
+            {{ $t("report.button.submit") }}
+          </a-button>
+        </a-col>
+      </a-row>
+
+      <a-table :columns="columns" :data-source="tasks">
+        <p slot="expandedRowRender" slot-scope="task" style="margin: 0">
+          {{ task.details }}
+        </p>
+        <template slot="name" slot-scope="text, record">
+          <editable-cell
+            :text="text"
+            @change="onCellChange(record.key, 'name', $event)"
+          />
+        </template>
+        <template slot="operation" slot-scope="text, record">
+          <a-popconfirm
+            v-if="tasks.length"
+            title="Sure to delete?"
+            @confirm="() => onDelete(record.key)"
+          >
+            <a href="javascript:;">Delete</a>
+          </a-popconfirm>
+        </template>
+      </a-table>
+
+      <a-button type="dashed" style="width: 40%; margin-top:8px" @click="add">
+        <a-icon type="plus" /> Add Task
+      </a-button>
+
       <task-modal-form
         ref="collectionForm"
         :visible="visible"
@@ -76,44 +68,42 @@
 <script>
 // @ is an alias to /src
 import TaskModalForm from "./components/TaskModalForm.vue";
-import TaskSketch from "./components/TaskSketch.vue";
+
 import moment from "moment";
 
-let id = 0;
+const columns = [
+  { title: "Name", dataIndex: "name", key: "name" },
+  { title: "Cost", dataIndex: "cost", key: "cost" },
+  { title: "Project", dataIndex: "project", key: "project" },
+  { title: "Product", dataIndex: "product", key: "product" },
+  {
+    title: "operation",
+    dataIndex: "operation",
+    scopedSlots: { customRender: "operation" },
+  },
+];
 
 export default {
   name: "Home",
   components: {
     TaskModalForm,
-    TaskSketch,
   },
-  beforeCreate() {
-    this.form = this.$form.createForm(this);
-    this.form.getFieldDecorator("task_keys", {
-      initialValue: [],
-      preserve: true,
-    });
-  },
+  beforeCreate() {},
   data() {
     return {
       moment,
       visible: false,
+      count: 0,
       tasks: [],
+      columns,
+      onDay: moment(),
     };
   },
   methods: {
-    submit(e) {
-      e.preventDefault();
-      this.form.validateFields((err, values) => {
-        if (err) {
-          return;
-        }
-        console.log("submit report", this.tasks, values.on_day.format());
-      });
+    submit() {
+      console.log("submit report", this.tasks, this.onDay.format());
     },
-    save(e) {
-      e.preventDefault();
-    },
+    save() {},
     prepare() {},
     showTaskForm() {
       this.visible = true;
@@ -130,41 +120,27 @@ export default {
         console.log("Received values of form: ", values);
         modalForm.resetFields();
         this.visible = false;
-        const { form } = this;
-
-        this.tasks[id] = values;
-        // can use data-binding to get
-        const keys = form.getFieldValue("task_keys");
-        console.log("keys", keys);
-        const nextKeys = keys.concat(id++);
-
-        // can use data-binding to set
-        // important! notify form to detect changes
-        form.setFieldsValue({
-          task_keys: nextKeys,
-        });
+        const { count, tasks } = this;
+        let newTask = { ...values, key: count };
+        this.tasks = [...tasks, newTask];
+        this.count = count + 1;
+        console.log("tasks: ", this.tasks);
       });
     },
-    remove(k) {
-      const { form } = this;
-      // can use data-binding to get
-      const keys = form.getFieldValue("task_keys");
-      // We need at least one passenger
-      if (keys.length === 1) {
-        return;
-      }
-
-      // can use data-binding to set
-      form.setFieldsValue({
-        task_keys: keys.filter((key) => key !== k),
-      });
-    },
-
     add() {
       this.showTaskForm();
     },
-    onDayChange(date) {
-      console.log("select", date);
+    onCellChange(key, dataIndex, value) {
+      const tasks = [...this.tasks];
+      const target = tasks.find((item) => item.key === key);
+      if (target) {
+        target[dataIndex] = value;
+        this.tasks = tasks;
+      }
+    },
+    onDelete(key) {
+      const tasks = [...this.tasks];
+      this.tasks = tasks.filter((item) => item.key !== key);
     },
   },
 };
