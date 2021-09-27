@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-05 15:23:50
- * @LastEditTime: 2021-09-26 15:24:52
+ * @LastEditTime: 2021-09-27 17:04:43
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/assets/lang/en.js
@@ -61,6 +61,12 @@ module.exports = {
       list: "Tokens",
       opers: "Operations",
     },
+  },
+  report: {
+    button: {
+      submit: "Submit",
+      save: "Save",
+    }
   },
   operation: {
     message: {

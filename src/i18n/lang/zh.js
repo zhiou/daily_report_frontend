@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-05 15:23:46
- * @LastEditTime: 2021-09-26 15:26:05
+ * @LastEditTime: 2021-09-27 17:04:32
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/assets/lang/zh.js
@@ -62,6 +62,12 @@ module.exports = {
       list: "令牌列表",
       opers: "令牌操作",
     },
+  },
+  report: {
+    button: {
+      submit: "提交",
+      save: "保存",
+    }
   },
   operation: {
     message: {

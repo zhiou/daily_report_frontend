@@ -1,53 +1,75 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 15:34:38
- * @LastEditTime: 2021-09-26 18:53:36
+ * @LastEditTime: 2021-09-27 17:26:11
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Report.vue
 -->
 <template>
-  <div class="report">
-    <a-form
-      id="components-form-create-report"
-      :form="form"
-      class="report-form"
-      @submit="submit"
-    >
-      <a-form-item>
-        <a-date-picker @change="onDayChange" />
-      </a-form-item>
-      <a-form-item>
-        <task-sketch
-          v-for="(k, index) in form.getFieldValue('task_keys')"
+  <div id="report" v-title data-title="工作日志-周煌-2021.09-27">
+    <div class="report-frame">
+      <h1>{{ "工作日志-周煌-2021.09-27" }}</h1>
+      <a-form
+        id="components-form-create-report"
+        :form="form"
+        class="report-form"
+        @submit="submit"
+      >
+        <a-form-item>
+          <a-date-picker
+            style="float: left"
+            v-decorator="[
+              'on_day',
+              { initialValue: moment() },
+              {
+                rules: [
+                  {
+                    required: true,
+                    message: 'Please select the date of report!',
+                  },
+                ],
+              },
+            ]"
+            @change="onDayChange"
+          />
+          <a-space style="float: right">
+            <a-button html-type="submit">
+              {{ $t("report.button.save") }}
+            </a-button>
+            <a-button type="primary" html-type="submit">
+              {{ $t("report.button.submit") }}
+            </a-button>
+          </a-space>
+        </a-form-item>
+        <a-form-item
+          v-for="k in form.getFieldValue('task_keys')"
           :key="k"
-          v-bind="index === 0 ? formItemLayout : formItemLayoutWithOutLabel"
-        />
-        <a-icon
-          v-if="form.getFieldValue('task_keys').length > 1"
-          class="dynamic-delete-button"
-          type="minus-circle-o"
-          :disabled="form.getFieldValue('task_keys').length === 1"
-          @click="() => remove(k)"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayoutWithOutLabel">
-        <a-button type="dashed" style="width: 60%" @click="add">
-          <a-icon type="plus" /> Add Task
-        </a-button>
-      </a-form-item>
-      <a-form-item>
-        <a-button type="primary" html-type="submit" class="login-form-button">
-          {{ $t("report.button.submit") }}
-        </a-button>
-      </a-form-item>
-    </a-form>
-    <task-modal-form
-      ref="collectionForm"
-      :visible="visible"
-      @cancel="hideTaskForm"
-      @create="handleCreateTask"
-    />
+        >
+          <a-space>
+            <task-sketch v-model="tasks[k]" />
+            <a-icon
+              v-if="form.getFieldValue('task_keys').length > 1"
+              class="dynamic-delete-button"
+              type="minus-circle-o"
+              :disabled="form.getFieldValue('task_keys').length === 1"
+              @click="() => remove(k)"
+            />
+          </a-space>
+        </a-form-item>
+        <a-form-item>
+          <a-button type="dashed" style="width: 40%" @click="add">
+            <a-icon type="plus" /> Add Task
+          </a-button>
+        </a-form-item>
+      </a-form>
+      <task-modal-form
+        ref="collectionForm"
+        :visible="visible"
+        @cancel="hideTaskForm"
+        @create="handleCreateTask"
+      />
+    </div>
   </div>
 </template>
 
@@ -55,6 +77,7 @@
 // @ is an alias to /src
 import TaskModalForm from "./components/TaskModalForm.vue";
 import TaskSketch from "./components/TaskSketch.vue";
+import moment from "moment";
 
 let id = 0;
 
@@ -73,28 +96,20 @@ export default {
   },
   data() {
     return {
+      moment,
       visible: false,
-      formItemLayout: {
-        labelCol: {
-          xs: { span: 24 },
-          sm: { span: 4 },
-        },
-        wrapperCol: {
-          xs: { span: 24 },
-          sm: { span: 20 },
-        },
-      },
-      formItemLayoutWithOutLabel: {
-        wrapperCol: {
-          xs: { span: 24, offset: 0 },
-          sm: { span: 20, offset: 4 },
-        },
-      },
+      tasks: [],
     };
   },
   methods: {
     submit(e) {
       e.preventDefault();
+      this.form.validateFields((err, values) => {
+        if (err) {
+          return;
+        }
+        console.log("submit report", this.tasks, values.on_day.format());
+      });
     },
     save(e) {
       e.preventDefault();
@@ -116,10 +131,13 @@ export default {
         modalForm.resetFields();
         this.visible = false;
         const { form } = this;
+
+        this.tasks[id] = values;
         // can use data-binding to get
         const keys = form.getFieldValue("task_keys");
-        console.log("keys", keys)
+        console.log("keys", keys);
         const nextKeys = keys.concat(id++);
+
         // can use data-binding to set
         // important! notify form to detect changes
         form.setFieldsValue({
@@ -146,8 +164,36 @@ export default {
       this.showTaskForm();
     },
     onDayChange(date) {
-        console.log("select", date)
-    }
+      console.log("select", date);
+    },
   },
 };
 </script>
+
+<style scoped>
+.report-frame {
+  position: absolute;
+  width: 70%;
+  height: 100%;
+  background-color: white;
+  padding: 30px;
+  margin: 30px;
+  min-width: 700px;
+}
+
+.dynamic-delete-button {
+  cursor: pointer;
+  position: relative;
+  top: 4px;
+  font-size: 24px;
+  color: #999;
+  transition: all 0.3s;
+}
+.dynamic-delete-button:hover {
+  color: #777;
+}
+.dynamic-delete-button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+</style>

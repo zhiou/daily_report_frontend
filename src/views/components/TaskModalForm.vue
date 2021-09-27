@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 17:06:32
- * @LastEditTime: 2021-09-26 18:49:27
+ * @LastEditTime: 2021-09-27 10:04:49
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/components/TaskForm.vue
@@ -65,28 +65,25 @@
           />
         </a-form-item>
         <a-form-item label="Project">
-          <a-dropdown v-decorator="['project']">
-            <a class="ant-dropdown-link" @click="(e) => e.preventDefault()">
-              Select Project <a-icon type="down" />
-            </a>
-            <a-menu slot="overlay">
-              <a-menu-item v-for="project in projects" :key="project.number">{{
-                project.name
-              }}</a-menu-item>
-            </a-menu>
-          </a-dropdown>
+          <a-select
+            v-decorator="['project']"
+            style="width: 120px"
+            @change="onProjectSelected"
+          >
+            <a-select-option v-for="(project, index) in projects" :key="index">
+              {{ project.name }}
+            </a-select-option>
+          </a-select>
         </a-form-item>
         <a-form-item label="Product">
-          <a-dropdown v-decorator="['product']">
-            <a class="ant-dropdown-link" @click="(e) => e.preventDefault()">
-              Select Product <a-icon type="down" />
-            </a>
-            <a-menu slot="overlay">
-              <a-menu-item v-for="product in products" :key="product.number">{{
-                product.name
-              }}</a-menu-item>
-            </a-menu>
-          </a-dropdown>
+          <a-select
+            style="width: 120px"
+            v-decorator="['product']"
+          >
+            <a-select-option v-for="(product, index) in products" :key="index">
+              {{ product.name }}
+            </a-select-option>
+          </a-select>
         </a-form-item>
       </a-form>
     </a-modal>
@@ -96,28 +93,53 @@
 <script>
 let projects = [
   { number: "0", name: "未立项" },
-  { number: "项目1编号", name: "项目1" },
-  { number: "项目2编号", name: "项目2" },
+  {
+    number: "项目1编号",
+    name: "项目1",
+  },
+  {
+    number: "项目2编号",
+    name: "项目2",
+  },
 ];
 
-let products = [
-  { number: "0", name: "自定义" },
-  { number: "产品1编号", name: "产品1" },
-  { number: "产品2编号", name: "产品2" },
-];
+let productTable = {
+  0: [{ number: "0", name: "自定义" }],
+  项目1编号: [
+    { number: "0", name: "自定义" },
+    { number: "产品1编号", name: "产品1" },
+  ],
+  项目2编号: [
+    { number: "0", name: "自定义" },
+    { number: "产品2编号", name: "产品2" },
+  ],
+};
 
 export default {
   name: "TaskModalForm",
-  props: ['visible'],
+  props: ["visible"],
   beforeCreate() {
     this.form = this.$form.createForm(this);
+    this.form.getFieldDecorator("project", {
+      initialValue: [0],
+      preserve: true,
+    });
+    this.form.getFieldDecorator("product", {
+      initialValue: [0],
+      preserve: true,
+    });
   },
   components: {},
   data() {
     return {
       projects,
-      products,
+      products:productTable[projects[0].number],
     };
+  },
+  methods: {
+    onProjectSelected(index) {
+      this.products = productTable[projects[index].number];
+    },
   },
 };
 </script>
