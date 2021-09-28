@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 17:06:32
- * @LastEditTime: 2021-09-27 10:04:49
+ * @LastEditTime: 2021-09-28 14:54:40
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/components/TaskForm.vue
@@ -53,7 +53,9 @@
           />
         </a-form-item>
         <a-form-item label="Cost">
-          <a-input
+          <a-input-number
+            :min="0.5"
+            :max="12"
             v-decorator="[
               'cost',
               {
@@ -76,10 +78,7 @@
           </a-select>
         </a-form-item>
         <a-form-item label="Product">
-          <a-select
-            style="width: 120px"
-            v-decorator="['product']"
-          >
+          <a-select style="width: 120px" v-decorator="['product']">
             <a-select-option v-for="(product, index) in products" :key="index">
               {{ product.name }}
             </a-select-option>
@@ -133,7 +132,7 @@ export default {
   data() {
     return {
       projects,
-      products:productTable[projects[0].number],
+      products: productTable[projects[0].number],
     };
   },
   methods: {
