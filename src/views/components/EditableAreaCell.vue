@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-28 14:37:52
- * @LastEditTime: 2021-09-28 18:05:48
+ * @LastEditTime: 2021-09-28 18:05:29
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/components/EditableCell.vue
@@ -9,13 +9,12 @@
 <template>
   <div class="editable-cell">
     <div v-if="editable" class="editable-cell-input-wrapper">
-      <a-input-number
-        :min="0.5"
-        :max="12"
-        :value="value"
+      <a-input
+        type="textarea"
+        v-model="value"
+        :autoSize="true"
         :allowClear="false"
         @change="handleChange"
-        @pressEnter="check"
         @blur="check"
       /><a-icon type="check" class="editable-cell-icon-check" @click="check" />
     </div>
@@ -28,16 +27,17 @@
 
 <script>
 export default {
-  name: "EditableNumberCell",
-  props: { number: Number },
+  name: "EditableAreaCell",
+  props: { text: String },
   data() {
     return {
-      value: this.number,
+      value: this.text,
       editable: false,
     };
   },
   methods: {
-    handleChange(value) {
+    handleChange(e) {
+      const value = e.target.value;
       this.value = value;
     },
     check() {

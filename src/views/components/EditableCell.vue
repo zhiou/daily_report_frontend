@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-28 14:37:52
- * @LastEditTime: 2021-09-28 14:57:27
+ * @LastEditTime: 2021-09-28 18:05:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/components/EditableCell.vue
@@ -11,8 +11,10 @@
     <div v-if="editable" class="editable-cell-input-wrapper">
       <a-input
         :value="value"
+        :allowClear="false"
         @change="handleChange"
         @pressEnter="check"
+        @blur="check"
       /><a-icon type="check" class="editable-cell-icon-check" @click="check" />
     </div>
     <div v-else class="editable-cell-text-wrapper">
@@ -25,7 +27,7 @@
 <script>
 export default {
   name: "EditableCell",
-  props: {'text': String},
+  props: { text: String },
   data() {
     return {
       value: this.text,

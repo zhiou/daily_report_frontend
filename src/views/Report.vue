@@ -3,7 +3,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 15:34:38
- * @LastEditTime: 2021-09-28 17:14:34
+ * @LastEditTime: 2021-09-28 18:08:18
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Report.vue
@@ -80,12 +80,9 @@
           />
         </template>
         <template slot="details" slot-scope="text, record">
-          <a-input
-            type="textarea"
-            :value="text"
-            :autoSize="true"
-            :allowClear="true"
-            @blur="onCellChange(record.key, 'details', $event.target.value)"
+          <editable-area-cell
+            :text="text"
+            @change="onCellChange(record.key, 'details', $event)"
           />
         </template>
         <template slot="operation" slot-scope="text, record">
@@ -107,8 +104,9 @@
 
 <script>
 // @ is an alias to /src
-import EditableCell from "./components/EditableCell.vue";
+import EditableCell from "./components/EditableAreaCell.vue";
 import EditableNumberCell from "./components/EditableNumberCell.vue";
+import EditableAreaCell from "./components/EditableAreaCell.vue";
 import moment from "moment";
 
 const columns = [
@@ -172,6 +170,7 @@ export default {
   components: {
     EditableCell,
     EditableNumberCell,
+    EditableAreaCell,
   },
   beforeCreate() {},
   data() {
@@ -200,7 +199,7 @@ export default {
         }
       let values = {
         name: "新任务",
-        details: "",
+        details: "任务详情",
         cost: 8,
         project: defaultProject,
         product: 0,
@@ -217,10 +216,10 @@ export default {
       console.log("tasks: ", this.tasks);
     },
     onCellChange(key, dataIndex, value) {
-      console.log("on cell change", key, dataIndex, value);
       const tasks = [...this.tasks];
       const target = tasks.find((item) => item.key === key);
-      if (target) {
+      if (target && target[dataIndex] !== value) {
+        console.log("on cell change", key, dataIndex, value);
         target[dataIndex] = value;
         this.tasks = tasks;
       }
@@ -257,12 +256,15 @@ export default {
 <style scoped>
 .report-frame {
   position: absolute;
-  width: 70%;
+  width: 80%;
   height: 100%;
+  left: 10%;
+  right: 10%;
   background-color: white;
   padding: 30px;
-  margin: 30px;
+  margin: auto;
   min-width: 700px;
+  max-width: 1200px;
 }
 
 .dynamic-delete-button {
