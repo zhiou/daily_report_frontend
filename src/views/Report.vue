@@ -3,7 +3,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 15:34:38
- * @LastEditTime: 2021-09-28 18:08:18
+ * @LastEditTime: 2021-10-11 16:20:01
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Report.vue
@@ -11,23 +11,25 @@
 <template>
   <div id="report" v-title data-title="工作日志-创建">
     <div class="report-frame">
-      <h1>{{ "工作日志-" + department + "-" + author + "-" + onDay.format("yyyy-MM-DD") }}</h1>
+      <h1>
+        {{ "工作日志-" + department + "-" + author + "-" + dayString }}
+      </h1>
       <a-row :gutter="16">
         <a-col :span="4">
           <a-date-picker :allowClear="false" v-model="onDay"
         /></a-col>
         <a-col :span="4">
-          <a-input :value='author' addonBefore="Name" disabled/>
+          <a-input :default-value="author" addonBefore="Name" disabled />
         </a-col>
         <a-col :span="6">
-          <a-input :value='department' addonBefore="Department" disabled/>
+          <a-input :default-value="department" addonBefore="Department" disabled />
         </a-col>
         <a-col :span="4" :offset="6">
           <a-button-group>
-            <a-button @click="save">
+            <a-button @click="(e) => update(0)">
               {{ $t("report.button.save") }}
             </a-button>
-            <a-button type="primary" @click="submit">
+            <a-button type="primary" @click="(e) => update(1)">
               {{ $t("report.button.submit") }}
             </a-button>
           </a-button-group>
@@ -95,7 +97,11 @@
           />
         </template>
       </a-table>
-      <a-button type="dashed" style="width: 40%; margin-top: 8px" @click="handleCreateTask">
+      <a-button
+        type="dashed"
+        style="width: 40%; margin-top: 8px"
+        @click="handleCreateTask"
+      >
         <a-icon type="plus" /> Add Task
       </a-button>
     </div>
@@ -149,19 +155,19 @@ const columns = [
 
 let projects = [
   { number: "0", name: "未立项" },
-  { number: "项目1编号", name: "项目1" },
-  { number: "项目2编号", name: "项目2" },
+  { number: "11223344", name: "项目1" },
+  { number: "22334455", name: "项目2" },
 ];
 
 let productTable = {
   0: [{ number: "0", name: "自定义" }],
-  项目1编号: [
+  11223344: [
     { number: "0", name: "自定义" },
-    { number: "产品1编号", name: "产品1" },
+    { number: "12345", name: "产品1" },
   ],
-  项目2编号: [
+  22334455: [
     { number: "0", name: "自定义" },
-    { number: "产品2编号", name: "产品2" },
+    { number: "67890", name: "产品2" },
   ],
 };
 
@@ -172,43 +178,107 @@ export default {
     EditableNumberCell,
     EditableAreaCell,
   },
-  beforeCreate() {},
+  beforeCreate() {
+    this.$store
+      .dispatch("report/query", {
+        on_day: moment(),
+        author: this.author,
+      })
+      .then((report) => {
+        console.log("report queried", report);
+        let tasks = report.tasks;
+        this.tasks = tasks.map((task) => {
+          console.log(
+            "project index",
+            this.projects.findIndex(
+              (project) => task.project_id === project.number
+            )
+          );
+          let selectedProject = this.projects.findIndex(
+              (project) => task.project_id === project.number
+            )
+          const project = {
+            selected: selectedProject < 0 ? 0 : selectedProject,
+            options: this.projects,
+          };
+          console.log(
+            "products for project",
+            project,
+            this.productTable[task.project_id]
+          );
+          console.log(
+            "product index",
+            this.productTable[task.project_id].findIndex(
+              (product) => task.product_id === product.number
+            )
+          );
+          let selectedProduct = this.productTable[task.project_id].findIndex(
+              (product) => task.product_id === product.number
+            )
+          const product = {
+            selected: selectedProduct < 0 ? 0 : selectedProduct,
+            options: this.productTable[task.project_id],
+          };
+          let key = this.count
+          this.count = key + 1
+          return { ...task, project, product, key: key };
+        });
+        this.onDay = moment(report.on_day);
+        console.log("this.tasks", this.tasks);
+      });
+  },
   data() {
     return {
-      moment,
       count: 0,
       tasks: [],
       columns,
       onDay: moment(),
       projects,
       productTable,
-      author: '周煌',
-      department: '研发X部'
     };
   },
-  methods: {
-    submit() {
-      console.log("submit report", this.tasks, this.onDay.format());
+  computed: {
+    department() {
+      return this.$store.state.user.department ? this.$store.state.user.department : "研发X部"
     },
-    save() {},
-
+    author() {
+      return this.$store.state.user.name ? this.$store.state.user.name:  "周煌";
+    },
+    dayString() {
+      return this.onDay.format("yyyy-MM-DD")
+    }
+  },
+  methods: {
+    update(status) {
+      console.log("submit report", this.tasks, this.dayString);
+      this.$store.dispatch("report/update", {
+        ...this.tasks,
+        on_day: this.dayString,
+        author: this.author,
+        status,
+      })
+      .then(() => {
+        this.$message.success("工作日志已" + (status == 0 ? "保存" : "提交"))
+      });
+    },
     handleCreateTask() {
-        let defaultProject = 0
-        if (this.tasks.length > 0) {
-            defaultProject = this.tasks[this.tasks.length-1].project.selected
-        }
+      let defaultProject = 0;
+      if (this.tasks.length > 0) {
+        console.log("tasks existed", this.tasks);
+        defaultProject = this.tasks[this.tasks.length - 1].project.selected;
+      }
       let values = {
         name: "新任务",
         details: "任务详情",
         cost: 8,
-        project: defaultProject,
-        product: 0,
+        project_id: defaultProject,
+        product_id: 0,
       };
       const { count, tasks } = this;
-      const project = { selected: values.project, options: this.projects };
+      const project = { selected: values.project_id, options: this.projects };
       const product = {
-        selected: values.product,
-        options: this.productTable[this.projects[values.project].number],
+        selected: values.product_id,
+        options: this.productTable[this.projects[values.project_id].number],
       };
       let newTask = { ...values, key: count, project, product };
       this.tasks = [...tasks, newTask];
