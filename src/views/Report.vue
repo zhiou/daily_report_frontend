@@ -3,7 +3,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 15:34:38
- * @LastEditTime: 2021-10-11 16:20:01
+ * @LastEditTime: 2021-10-12 15:49:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Report.vue
@@ -173,6 +173,7 @@ let productTable = {
 
 export default {
   name: "Home",
+  props: ['date'],
   components: {
     EditableCell,
     EditableNumberCell,
@@ -181,7 +182,7 @@ export default {
   beforeCreate() {
     this.$store
       .dispatch("report/query", {
-        on_day: moment(),
+        on_day: this.onDay,
         author: this.author,
       })
       .then((report) => {
@@ -223,7 +224,7 @@ export default {
           this.count = key + 1
           return { ...task, project, product, key: key };
         });
-        this.onDay = moment(report.on_day);
+
         console.log("this.tasks", this.tasks);
       });
   },
@@ -232,7 +233,7 @@ export default {
       count: 0,
       tasks: [],
       columns,
-      onDay: moment(),
+      onDay: this.date ? moment(this.date) : moment(),
       projects,
       productTable,
     };

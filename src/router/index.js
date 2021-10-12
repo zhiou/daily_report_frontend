@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-22 17:30:02
- * @LastEditTime: 2021-09-26 18:41:25
+ * @LastEditTime: 2021-10-12 15:46:49
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/router/index.js
@@ -43,12 +43,13 @@ const routes = [
     },
   },
   {
-    path: '/report',
+    path: '/report/:date',
     name: 'Report',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: Report,
+    props: true,
     meta: {
       requireAuth: true
     },
