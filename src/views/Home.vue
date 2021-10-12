@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-22 17:30:02
- * @LastEditTime: 2021-10-12 15:55:22
+ * @LastEditTime: 2021-10-12 18:19:25
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Home.vue
@@ -52,13 +52,15 @@ export default {
       })
       .then((reports) => {
         this.tasks = new Array(12)
-        reports.tasks.forEach((task) => {
-          let day = moment(task.on_day).date();
-          console.log("task on day", day)
+        reports['reports'].forEach((report) => {
+          //TODO: 只用date有问题
+          let day = moment(report.on_day).date();
           if (this.tasks[day] == undefined) {
             this.tasks[day] = new Set();
           }
-          this.tasks[day].add({ type: "success", content: task.name });
+          report.tasks.forEach((task) => {
+            this.tasks[day].add({ type: "success", content: task.name });
+          })
         });
       });
   },
