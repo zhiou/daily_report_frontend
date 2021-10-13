@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-05 15:23:46
- * @LastEditTime: 2021-09-27 17:04:32
+ * @LastEditTime: 2021-10-13 14:39:15
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/assets/lang/zh.js
@@ -54,13 +54,13 @@ module.exports = {
   },
   home: {
     menu: {
-      sys: "系统管理",
-      user: "用户管理",
-      role: "角色管理",
-      log: "系统日志",
-      token: "令牌管理",
-      list: "令牌列表",
-      opers: "令牌操作",
+      log: "日志管理",
+      user: "个人日志",
+      dm: "部门日志",
+      pm: "项目日志",
+      worktime: "工时统计",
+      staff: "员工工时",
+      project: "项目工时",
     },
   },
   report: {

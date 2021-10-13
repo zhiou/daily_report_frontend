@@ -1,41 +1,32 @@
-/* eslint-disable vue/no-unused-vars */
-/* eslint-disable vue/no-unused-vars */
 <!--
  * @Author: your name
- * @Date: 2021-09-26 15:34:38
- * @LastEditTime: 2021-10-13 14:51:47
+ * @Date: 2021-10-13 14:50:36
+ * @LastEditTime: 2021-10-13 16:04:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: /daily-report-frontend/src/views/Report.vue
+ * @FilePath: /daily-report-frontend/src/views/DepartmentReport.vue
 -->
 <template>
   <div id="report" v-title data-title="工作日志-创建">
     <div class="report-frame">
       <a-row :gutter="16">
         <a-col :span="4">
+          <a-input
+            :default-value="department"
+            addonBefore="Department"
+            disabled
+          />
+        </a-col>
+        <a-col :span="4">
           <a-date-picker :allowClear="false" v-model="onDay"
         /></a-col>
-        <a-col :span="4">
-          <a-input :default-value="author" addonBefore="Name" disabled />
-        </a-col>
-        <a-col :span="6">
-          <a-input :default-value="department" addonBefore="Department" disabled />
-        </a-col>
-        <a-col :span="4" :offset="6">
-          <a-button-group>
-            <a-button @click="(e) => update(0)">
-              {{ $t("report.button.save") }}
-            </a-button>
-            <a-button type="primary" @click="(e) => update(1)">
-              {{ $t("report.button.submit") }}
-            </a-button>
-          </a-button-group>
-        </a-col>
+
+        <a-col :span="16"> </a-col>
       </a-row>
 
       <a-table
         :columns="columns"
-        :data-source="tasks"
+        :data-source="reports"
         style="margin: 16px"
         :defaultExpandedRowKeys="[0]"
         :pagination="false"
@@ -78,11 +69,12 @@
             @change="onCellChange(record.key, 'cost', $event)"
           />
         </template>
-        <template slot="details" slot-scope="text, record">
-          <editable-area-cell
-            :text="text"
-            @change="onCellChange(record.key, 'details', $event)"
-          />
+        <template slot="details" slot-scope="tasks">
+          <ol>
+              <li v-for="(task,index) in tasks" :key="index">
+                {{task}}
+              </li>
+          </ol>
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-button
@@ -94,13 +86,6 @@
           />
         </template>
       </a-table>
-      <a-button
-        type="dashed"
-        style="width: 40%; margin-top: 8px; margin-left: 30%;"
-        @click="handleCreateTask"
-      >
-        <a-icon type="plus" /> Add Task
-      </a-button>
     </div>
   </div>
 </template>
@@ -114,18 +99,6 @@ import moment from "moment";
 
 const columns = [
   {
-    title: "Project",
-    dataIndex: "project",
-    key: "project",
-    scopedSlots: { customRender: "project-selector" },
-  },
-  {
-    title: "Product",
-    dataIndex: "product",
-    key: "product",
-    scopedSlots: { customRender: "product-selector" },
-  },
-  {
     title: "Name",
     dataIndex: "name",
     key: "name",
@@ -138,15 +111,10 @@ const columns = [
     scopedSlots: { customRender: "cost" },
   },
   {
-    title: "Details",
-    dataIndex: "details",
-    key: "details",
+    title: "Tasks",
+    dataIndex: "tasks",
+    key: "tasks",
     scopedSlots: { customRender: "details" },
-  },
-  {
-    title: "",
-    dataIndex: "operation",
-    scopedSlots: { customRender: "operation" },
   },
 ];
 
@@ -169,95 +137,88 @@ let productTable = {
 };
 
 export default {
-  name: "Report",
-  props: ['date'],
+  name: "DepartmentReport",
   components: {
     EditableCell,
     EditableNumberCell,
-    EditableAreaCell,
   },
   beforeCreate() {
     this.$store
-      .dispatch("report/query", {
+      .dispatch("report/queryDepartment", {
         on_day: this.onDay,
-        author: this.author,
+        department: this.department,
       })
-      .then((report) => {
-        console.log("report queried", report);
-        let tasks = report.tasks;
-        this.tasks = tasks.map((task) => {
-          console.log(
-            "project index",
-            this.projects.findIndex(
-              (project) => task.project_id === project.number
-            )
-          );
-          let selectedProject = this.projects.findIndex(
-              (project) => task.project_id === project.number
-            )
-          const project = {
-            selected: selectedProject < 0 ? 0 : selectedProject,
-            options: this.projects,
-          };
-          console.log(
-            "products for project",
-            project,
-            this.productTable[task.project_id]
-          );
-          console.log(
-            "product index",
-            this.productTable[task.project_id].findIndex(
-              (product) => task.product_id === product.number
-            )
-          );
-          let selectedProduct = this.productTable[task.project_id].findIndex(
-              (product) => task.product_id === product.number
-            )
-          const product = {
-            selected: selectedProduct < 0 ? 0 : selectedProduct,
-            options: this.productTable[task.project_id],
-          };
+      .then((reports) => {
+        console.log("report queried", reports);
+        this.reports = reports['reports'].map((report) => {
+          let name = report.author;
+          let cost = 0;
+          let content = [];
+          report.tasks.forEach((task, index) => {
+            cost += task.cost;
+            let tc = '';
+            if (task.project_id) {
+              let project = this.projects.find(
+                (project) => task.project_id === project.number
+              );
+              tc += "[" + project.name;
+              if (task.product_id) {
+                let product = this.productTable[task.project_id].find(
+                  (product) => task.product_id === product.number
+                );
+                if (product) {
+                    tc += ":" + product.name;
+                }
+              }
+              tc += "]";
+            }
+            tc += task.details;
+            content.push(tc)
+          });
           let key = this.count
-          this.count = key + 1
-          return { ...task, project, product, key: key };
+          this.count ++;
+          return { name, cost, tasks: content, key };
         });
 
-        console.log("this.tasks", this.tasks);
+        console.log("this.reports", this.reports);
       });
   },
   data() {
     return {
       count: 0,
-      tasks: [],
+      reports: [],
       columns,
-      onDay: this.date ? moment(this.date) : moment(),
+      onDay: moment(),
       projects,
       productTable,
     };
   },
   computed: {
     department() {
-      return this.$store.state.user.department ? this.$store.state.user.department : "研发X部"
+      return this.$store.state.user.department
+        ? this.$store.state.user.department
+        : "研发X部";
     },
     author() {
-      return this.$store.state.user.name ? this.$store.state.user.name:  "周煌";
+      return this.$store.state.user.name ? this.$store.state.user.name : "周煌";
     },
     dayString() {
-      return this.onDay.format("yyyy-MM-DD")
-    }
+      return this.onDay.format("yyyy-MM-DD");
+    },
   },
   methods: {
     update(status) {
       console.log("submit report", this.tasks, this.dayString);
-      this.$store.dispatch("report/update", {
-        ...this.tasks,
-        on_day: this.dayString,
-        author: this.author,
-        status,
-      })
-      .then(() => {
-        this.$message.success("工作日志已" + (status == 0 ? "保存" : "提交"))
-      });
+      this.$store
+        .dispatch("report/update", {
+          ...this.tasks,
+          on_day: this.dayString,
+          author: this.author,
+          status,
+        })
+        .then(() => {
+          this.$message.success("工作日志已" + (status == 0 ? "保存" : "提交"));
+        });
     },
     handleCreateTask() {
       let defaultProject = 0;

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-05 15:23:50
- * @LastEditTime: 2021-09-27 17:04:43
+ * @LastEditTime: 2021-10-13 14:39:47
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/assets/lang/en.js
@@ -53,13 +53,13 @@ module.exports = {
   },
   home: {
     menu: {
-      sys: "Console",
-      user: "Users",
-      role: "Roles",
-      log: "Logs",
-      token: "Management",
-      list: "Tokens",
-      opers: "Operations",
+      log: "Log Management",
+      user: "User Log",
+      dm: "Department Log",
+      pm: "Project Log",
+      worktime: "Work Time",
+      staff: "Staff",
+      project: "Project",
     },
   },
   report: {

@@ -1,9 +1,17 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-09-22 17:11:13
+ * @LastEditTime: 2021-10-13 11:07:55
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /daily-report-frontend/src/App.vue
+-->
 <template>
   <div id="app">
-    <div id="nav">
+    <!-- <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
-    </div>
+    </div> -->
     <router-view/>
   </div>
 </template>
@@ -15,6 +23,7 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+    height: 100%;
 }
 
 #nav {

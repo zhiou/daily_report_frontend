@@ -1,124 +1,270 @@
 <!--
  * @Author: your name
- * @Date: 2021-09-22 17:30:02
- * @LastEditTime: 2021-10-12 18:19:25
+ * @Date: 2021-05-27 15:54:31
+ * @LastEditTime: 2021-10-13 16:21:27
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: /daily-report-frontend/src/views/Home.vue
+ * @FilePath: /soft-otp-admin/src/views/Home.vue
 -->
 <template>
-  <div class="home">
-    <a-calendar @select="onSelect" v-model="value" @panelChange="onChange" :mode="mode">
-      <ul slot="dateCellRender" slot-scope="value" class="events">
-        <li v-for="item in getListData(value)" :key="item.content">
-          <a-badge :status="item.type" :text="item.content" />
-        </li>
-      </ul>
-      <template slot="monthCellRender" slot-scope="value">
-        <div v-if="getMonthData(value)" class="notes-month">
-          <section>{{ getMonthData(value) }}</section>
-          <span>Backlog number</span>
-        </div>
-      </template>
-    </a-calendar>
-    <a-button @click="logout">Log out</a-button>
+  <div id="home">
+    <a-layout id="home-layout">
+      <a-layout-sider v-model="collapsed" :trigger="null" collapsible>
+        <div class="logo" />
+        <a-menu
+          :default-selected-keys="['user']"
+          :default-open-keys="['log-mng', 'work-time']"
+          v-model="selectedMenu"
+          mode="inline"
+          theme="dark"
+          :inline-collapsed="collapsed"
+          @click="onMenuChanged"
+        >
+          <a-sub-menu v-for="menu in menus" :key="menu.key">
+            <span slot="title"
+              ><a-icon :type="menu.type" /><span>{{ menu.title }}</span></span
+            >
+            <a-menu-item v-for="item in menu.items" :key="item.key">
+              {{ item.title }}
+            </a-menu-item>
+          </a-sub-menu>
+        </a-menu>
+      </a-layout-sider>
+      <a-layout>
+        <a-layout-header style="background: #fff; padding: 0">
+          <a-icon
+            class="trigger"
+            :type="collapsed ? 'menu-unfold' : 'menu-fold'"
+            @click="toggleCollapsed"
+          />
+          <div class="icons-list">
+            <a-space size="middle">
+              <a-dropdown>
+                <a-icon type="user" />
+                <a-menu slot="overlay" @click="onUserMenu">
+                  <a-menu-item key="info">
+                    {{ this.$t("settings.info.menu") }}
+                  </a-menu-item>
+                  <a-menu-item key="password">
+                    {{ this.$t("settings.password.menu") }}
+                  </a-menu-item>
+                </a-menu>
+              </a-dropdown>
+              <a-icon type="logout" @click="onLogout" />
+            </a-space>
+          </div>
+        </a-layout-header>
+        <a-breadcrumb :routes="routes" class="navigator">
+          <template slot="itemRender" slot-scope="{ route, routes, paths }">
+            <span v-if="routes.indexOf(route) === routes.length - 1">
+              {{ route.breadcrumbName }}
+            </span>
+            <router-link v-else :to="'/' + paths.join('/')">
+              {{ route.breadcrumbName }}
+            </router-link>
+          </template>
+        </a-breadcrumb>
+        <a-layout-content class="content">
+          <router-view />
+        </a-layout-content>
+      </a-layout>
+    </a-layout>
+    <user-settings v-model="userSettingVisible" />
+    <password-dialog v-model="passwordDialogVisible" />
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import moment from "moment";
+import PasswordDialog from "./components/PasswordDialog.vue";
+import UserSettings from "./components/UserSettings.vue";
 
+import moment from "moment";
 export default {
+  components: { UserSettings, PasswordDialog },
   name: "Home",
-  components: {},
-  data() {
+  data: function () {
     return {
-      mode: 'month',
-      value: moment(),
-      tasks: [],
+      base: "/",
+      collapsed: false,
+      routes: [],
+      selectedMenu: ["user"],
+
+      userSettingVisible: false,
+      passwordDialogVisible: false,
     };
   },
   computed: {
-    author() {
-      return this.$store.state.user.name ? this.$store.state.user.name : "周煌";
+    menus: function () {
+      return [
+        {
+          key: "log-mng",
+          title: this.$t("home.menu.log"),
+          type: "appstore",
+          items: [
+            {
+              key: "user",
+              title: this.$t("home.menu.user"),
+            },
+            {
+              key: "dm",
+              title: this.$t("home.menu.dm"),
+            },
+            {
+              key: "pm",
+              title: this.$t("home.menu.pm"),
+            },
+          ],
+        },
+        {
+          key: "work-time",
+          title: this.$t("home.menu.worktime"),
+          type: "setting",
+          items: [
+            {
+              key: "staff",
+              title: this.$t("home.menu.staff"),
+            },
+            {
+              key: "project",
+              title: this.$t("home.menu.project"),
+            },
+          ],
+        },
+      ];
+    },
+    menuSelectableKeys: function () {
+      return [
+        "user",
+        "dm",
+        "pm",
+        "staff",
+        "project",
+      ];
     },
   },
-  beforeCreate() {
-    this.$store
-      .dispatch("report/queryMonth", {
-        author: this.author,
-        on_day: this.value,
-      })
-      .then((reports) => {
-        this.tasks = new Array(12)
-        reports['reports'].forEach((report) => {
-          //TODO: 只用date有问题
-          let day = moment(report.on_day).date();
-          if (this.tasks[day] == undefined) {
-            this.tasks[day] = new Set();
-          }
-          report.tasks.forEach((task) => {
-            this.tasks[day].add({ type: "success", content: task.name });
-          })
-        });
-      });
+  mounted() {
+    console.log("home mounted, path =", this.$route.path);
+    this.getMenuName();
+    this.createBread();
+    if (this.$route.path === "/") {
+      this.$router.push("calendar");
+    }
   },
   methods: {
-    getListData(value) {
-      return this.tasks[value.date()];
+    toggleCollapsed() {
+      this.collapsed = !this.collapsed;
     },
-    getMonthData(value) {
-      console.log("month data", value);
-      if (value.month() === 8) {
-        return 1394;
+    onUserMenu({ key }) {
+      console.log(key);
+      if (key === "info") {
+        this.userSettingVisible = true;
+      } else if (key === "password") {
+        this.passwordDialogVisible = true;
       }
     },
-    logout() {
+    onLogout(e) {
+      e.preventDefault();
+      console.log("logout");
       this.$store
         .dispatch("user/logout")
-        .catch((error) => {
-          console.log("logout error", error);
-          this.$message.error(error, 3);
-        })
-        .finally(() => {
-          this.$router.push("login");
-        });
+        .finally(() => this.$router.push('/login'));
     },
-    onSelect(date) {
-      if (this.mode === 'month') {
-        console.log(date.format("yyyy-MM-DD"));
-        this.$router.push("/report/" + date.format("yyyy-MM-DD"));
-      } else {
-        this.mode = 'month'
-        this.value = date
+    onMenuChanged(e) {
+      console.log("menu changed", e.key);
+      if (e.key === 'user') {
+        this.$router.push('/calendar')
+      }
+      else if (e.key === 'dm') {
+        this.$router.push('/department')
+      }
+      else if (e.key === 'pm') {
+        this.$router.push('/project')
+      }
+      // this.$router.push({ name: e.key });
+    },
+    getMenuName() {
+      const matched = this.$route.matched;
+      for (let i = matched.length - 1; i >= 0; i--) {
+        let name = matched[i].name;
+        if (this.menuSelectableKeys.indexOf(name) > -1) {
+          this.selectedMenu = [matched[i].name];
+        }
       }
     },
-    onChange(date, mode) {
-      this.mode = mode
-    }
+    createBread() {
+      this.routes = this.$route.matched.map((item) => {
+        console.log("route item", item);
+        return {
+          path: item.path,
+          breadcrumbName: item.name,
+        };
+      });
+    },
+  },
+
+  watch: {
+    $route(to, from) {
+      this.getMenuName();
+      this.createBread();
+    },
   },
 };
 </script>
 
-<style scoped>
-.events {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.events .ant-badge-status {
-  overflow: hidden;
-  white-space: nowrap;
+<style>
+#home {
   width: 100%;
-  text-overflow: ellipsis;
-  font-size: 12px;
+  height: 100%;
 }
-.notes-month {
-  text-align: center;
-  font-size: 28px;
+
+#home-layout {
+  width: 100%;
+  height: 100%;
 }
-.notes-month section {
-  font-size: 28px;
+
+#home-layout .trigger {
+  height: 100%;
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+  float: left;
+}
+
+.icons-list {
+  float: right;
+  margin: 0 36px;
+  font-size: 18px;
+}
+
+.icons-list >>> .anticon {
+  margin-right: 12px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+#home-layout .navigator {
+  text-align: left;
+  padding: 8px 8px;
+  margin: 0 8px;
+}
+
+#home-layout .content {
+  margin: 0px 12px;
+  padding: 12px;
+  /* background: #fff; */
+  min-height: 280px;
+  text-align: left;
+}
+
+#home-layout .trigger:hover {
+  color: #1890ff;
+}
+
+#home-layout .logo {
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px;
 }
 </style>
