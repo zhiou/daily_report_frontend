@@ -42,6 +42,10 @@
       >
         <span slot="product-selector" slot-scope="selector, record">
           <a-select
+            show-search
+            option-filter-prop="children"
+            :filter-option="filterOption"
+            style="width: 150px"
             :default-value="selector.selected"
             @change="onProductChanged(record.key, 'product', $event)"
           >
@@ -55,6 +59,10 @@
         </span>
         <span slot="project-selector" slot-scope="selector, record">
           <a-select
+            show-search
+            option-filter-prop="children"
+            :filter-option="filterOption"
+            style="width: 150px"
             :default-value="selector.selected"
             @change="onProjectChanged(record.key, 'project', $event)"
           >
@@ -151,20 +159,27 @@ const columns = [
 ];
 
 let projects = [
-  { number: "0", name: "未立项" },
-  { number: "11223344", name: "项目1" },
-  { number: "22334455", name: "项目2" },
+  { number: "00000000", name: "未立项" },
+  { number: "11223344", name: "中国人民银行" },
+  { number: "22334455", name: "贵州农信银" },
+  { number: "33445566", name: "贵州安元通" },
+  { number: "44556677", name: "深圳农商行" },
+  { number: "55667788", name: "河北银行" },
+  { number: "66778899", name: "天威诚信信创" },
+  { number: "77889900", name: "江苏智慧CA" },
+  { number: "88990011", name: "福建凯特" },
+  { number: "99001122", name: "奔凯" },
 ];
 
 let productTable = {
   0: [{ number: "0", name: "自定义" }],
   11223344: [
     { number: "0", name: "自定义" },
-    { number: "12345", name: "产品1" },
+    { number: "12345", name: "OTP" },
   ],
   22334455: [
     { number: "0", name: "自定义" },
-    { number: "67890", name: "产品2" },
+    { number: "67890", name: "KEY线" },
   ],
 };
 
@@ -316,6 +331,11 @@ export default {
         target[dataIndex].selected = index;
         this.tasks = tasks;
       }
+    },
+    filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+      );
     },
   },
 };

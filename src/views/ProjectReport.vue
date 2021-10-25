@@ -158,7 +158,7 @@ export default {
           let department = report.department
           let cost = 0;
           let content = [];
-          report.tasks.forEach((task, index) => {
+          report.tasks.forEach((task) => {
             cost += task.cost;
             let tc = "";
 
@@ -282,7 +282,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="css" scoped>
 .report-frame {
   background-color: white;
   margin: 30px 30px;
@@ -302,5 +302,8 @@ export default {
 .dynamic-delete-button[disabled] {
   cursor: not-allowed;
   opacity: 0.5;
+}
+.editable-cell:hover /deep/ .editable-cell-icon {
+  display: none;
 }
 </style>

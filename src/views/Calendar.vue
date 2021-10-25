@@ -16,8 +16,9 @@
       :mode="mode"
     >
       <ul slot="dateCellRender" slot-scope="value" class="events">
-        <li v-for="item in getListData(value)" :key="item.content">
-          <a-badge :status="item.type" :text="item.content" />
+        <li v-for="(item, index) in getListData(value)"  :key="item.content" >
+          <a-badge v-if="index<2" :status="item.type" :text="item.content" />
+          <a-badge v-if="index==3" :status="item.type" :text="other" />
         </li>
       </ul>
       <template slot="monthCellRender" slot-scope="value">
@@ -42,6 +43,7 @@ export default {
       mode: "month",
       value: moment(),
       tasks: [],
+      other:"......",
     };
   },
   computed: {
