@@ -94,7 +94,6 @@
 // @ is an alias to /src
 import EditableCell from "./components/EditableAreaCell.vue";
 import EditableNumberCell from "./components/EditableNumberCell.vue";
-import EditableAreaCell from "./components/EditableAreaCell.vue";
 import moment from "moment";
 
 const columns = [
@@ -154,7 +153,7 @@ export default {
           let name = report.author;
           let cost = 0;
           let content = [];
-          report.tasks.forEach((task, index) => {
+          report.tasks.forEach((task) => {
             cost += task.cost;
             let tc = '';
             if (task.project_id) {
@@ -282,7 +281,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="css" scoped>
 .report-frame {
   background-color: white;
   margin: 30px 30px;
@@ -302,5 +301,9 @@ export default {
 .dynamic-delete-button[disabled] {
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+.editable-cell:hover /deep/ .editable-cell-icon {
+  display: none;
 }
 </style>

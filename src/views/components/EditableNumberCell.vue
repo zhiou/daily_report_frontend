@@ -74,7 +74,7 @@ export default {
 }
 
 .editable-cell-icon {
-  line-height: 18px;
+  line-height: 23px;
   display: none;
 }
 

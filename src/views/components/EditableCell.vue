@@ -57,6 +57,7 @@ export default {
 
 .editable-cell-input-wrapper,
 .editable-cell-text-wrapper {
+  white-space: nowrap;
   padding-right: 24px;
 }
 
@@ -73,7 +74,7 @@ export default {
 }
 
 .editable-cell-icon {
-  line-height: 18px;
+  line-height: 23px;
   display: none;
 }
 
