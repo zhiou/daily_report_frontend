@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 16:14:42
- * @LastEditTime: 2021-10-13 16:30:33
+ * @LastEditTime: 2021-10-14 10:26:56
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/ProjectReport.vue
@@ -11,7 +11,7 @@
     <div class="report-frame">
       <a-row :gutter="16">
         <a-col :span="4">
-          <a-input :default-value="project" addonBefore="Project" disabled />
+          <a-input :default-value="projectName" addonBefore="Project" disabled />
         </a-col>
 
         <a-col :span="20"> </a-col>
@@ -188,12 +188,16 @@ export default {
       reports: [],
       columns,
       onDay: moment(),
-      project: "0",
+      project: "11223344",
       projects,
       productTable,
     };
   },
   computed: {
+    projectName() {
+      let p = this.projects.find((project) => this.project === project.number)
+      return p.name
+    },
     department() {
       return this.$store.state.user.department
         ? this.$store.state.user.department

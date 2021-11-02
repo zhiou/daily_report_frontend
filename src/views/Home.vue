@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-27 15:54:31
- * @LastEditTime: 2021-10-13 16:21:27
+ * @LastEditTime: 2021-11-02 17:13:53
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/views/Home.vue
@@ -113,6 +113,10 @@ export default {
               key: "pm",
               title: this.$t("home.menu.pm"),
             },
+            {
+              key: "proj",
+              title: this.$t("home.menu.proj"),
+            }
           ],
         },
         {
@@ -125,8 +129,8 @@ export default {
               title: this.$t("home.menu.staff"),
             },
             {
-              key: "project",
-              title: this.$t("home.menu.project"),
+              key: "proj_stat",
+              title: this.$t("home.menu.proj_stat"),
             },
           ],
         },
@@ -138,7 +142,9 @@ export default {
         "dm",
         "pm",
         "staff",
-        "project",
+        "pm",
+        "proj",
+        "prod",
       ];
     },
   },
@@ -147,7 +153,7 @@ export default {
     this.getMenuName();
     this.createBread();
     if (this.$route.path === "/") {
-      this.$router.push("calendar");
+      this.$router.push("user");
     }
   },
   methods: {
@@ -171,25 +177,21 @@ export default {
     },
     onMenuChanged(e) {
       console.log("menu changed", e.key);
-      if (e.key === 'user') {
-        this.$router.push('/calendar')
-      }
-      else if (e.key === 'dm') {
-        this.$router.push('/department')
-      }
-      else if (e.key === 'pm') {
-        this.$router.push('/project')
-      }
-      // this.$router.push({ name: e.key });
+      this.$router.push(e.key);
     },
     getMenuName() {
       const matched = this.$route.matched;
       for (let i = matched.length - 1; i >= 0; i--) {
-        let name = matched[i].name;
-        if (this.menuSelectableKeys.indexOf(name) > -1) {
-          this.selectedMenu = [matched[i].name];
+        let path = matched[i].path;
+        let index = path.lastIndexOf('/');
+        let key = path.substring(index + 1);
+        console.log("menu matching", key)
+        if (this.menuSelectableKeys.indexOf(key) >= 0) {
+          this.selectedMenu = [key];
+          break;
         }
       }
+      console.log("menu selected", matched, this.selectedMenu)
     },
     createBread() {
       this.routes = this.$route.matched.map((item) => {
@@ -204,7 +206,7 @@ export default {
 
   watch: {
     $route(to, from) {
-      this.getMenuName();
+      // this.getMenuName();
       this.createBread();
     },
   },

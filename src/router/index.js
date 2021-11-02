@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-22 17:30:02
- * @LastEditTime: 2021-10-13 16:22:03
+ * @LastEditTime: 2021-11-02 16:37:50
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/router/index.js
@@ -15,6 +15,7 @@ import Report from '../views/Report.vue'
 import Calendar from '../views/Calendar.vue'
 import DepartmentReport from '../views/DepartmentReport.vue'
 import ProjectReport from '../views/ProjectReport.vue'
+import Project from '../views/Project.vue'
 Vue.use(VueRouter)
 
 
@@ -32,33 +33,30 @@ const routes = [
     // redirect: { name: 'Login' },
     children: [
       {
-        // 当 /user/:id/profile 匹配成功，
-        // UserProfile 会被渲染在 User 的 <router-view> 中
-        path: 'calendar',
-        name: 'Calendar',
+        path: 'user',
+        name: 'User',
         component: Calendar
       },
       {
-        // 当 /user/:id/posts 匹配成功
-        // UserPosts 会被渲染在 User 的 <router-view> 中
         path: 'report/:date',
         name: 'Report',
         component: Report,
         props: true,
       },
       {
-        // 当 /user/:id/posts 匹配成功
-        // UserPosts 会被渲染在 User 的 <router-view> 中
-        path: 'department',
+        path: 'dm',
         name: 'DepartmentReport',
         component: DepartmentReport,
       },
       {
-        // 当 /user/:id/posts 匹配成功
-        // UserPosts 会被渲染在 User 的 <router-view> 中
-        path: 'project',
+        path: 'pm',
         name: 'ProjectReport',
         component: ProjectReport,
+      },
+      {
+        path: 'proj',
+        name: 'Project',
+        component: Project,
       }
     ],
     meta: {
