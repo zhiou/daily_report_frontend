@@ -1,49 +1,57 @@
 <!--
  * @Author: your name
- * @Date: 2021-11-03 14:07:43
- * @LastEditTime: 2021-11-03 14:18:32
+ * @Date: 2021-09-28 14:37:52
+ * @LastEditTime: 2021-11-03 15:13:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: /daily-report-frontend/src/views/components/EditableTagCell.vue
+ * @FilePath: /daily-report-frontend/src/views/components/EditableCell.vue
 -->
 <template>
-  <div class="editable-cell">
+  <div class="editable-tag-cell">
     <div v-if="editable" class="editable-cell-input-wrapper">
-      <a-input
-        :value="value"
-        :allowClear="false"
-        @change="handleChange"
-        @pressEnter="check"
-        @blur="check"
-      /><a-icon type="check" class="editable-cell-icon-check" @click="check" />
+      <a-select :default-value="value" @change="handleChange" @blur="check">
+        <a-select-option v-for="(option, index) in options" :key="index">
+          {{ option }}
+        </a-select-option>
+      </a-select>
     </div>
-    <div v-else class="editable-cell-text-wrapper">
-      {{ value || " " }}
-      <a-icon type="edit" class="editable-cell-icon" @click="edit" />
+    <div v-else >
+      <a-tag
+        :color="tagColor"
+        @click="edit"
+      >
+        {{ options[value] || " " }}
+      </a-tag>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "EditableCell",
-  props: { text: String },
+  name: "EditableTagCell",
+  props: ["tag", "options"],
   data() {
     return {
-      value: this.text,
+      value: this.tag,
       editable: false,
     };
   },
+  computed: {
+    tagColor() {
+      const colors = ['green', 'geekblue', 'volcano', 'gray']
+      return colors[this.value]
+    },
+  },
   methods: {
-    handleChange(e) {
-      const value = e.target.value;
-      this.value = value;
+    handleChange(tag) {
+      console.log("tag selected", tag)
+      this.value = tag;
     },
     check() {
       this.editable = false;
       this.$emit("change", this.value);
     },
-    edit() {
+    edit(checked) {
       this.editable = true;
     },
   },
@@ -51,7 +59,7 @@ export default {
 </script>
 
 <style scoped>
-.editable-cell {
+.editable-tag-cell {
   position: relative;
 }
 

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-02 13:54:50
- * @LastEditTime: 2021-11-03 11:22:02
+ * @LastEditTime: 2021-11-03 15:15:18
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Project.vue
@@ -9,21 +9,6 @@
 <template>
   <div id="project" v-title data-title="项目信息">
     <a-table :columns="columns" :data-source="datasource">
-      <span slot="tags" slot-scope="status">
-        <a-tag
-          :color="
-            status === 4
-              ? 'gray'
-              : status == 3
-              ? 'volcano'
-              : status == 2
-              ? 'geekblue'
-              : 'green'
-          "
-        >
-          {{ status }}
-        </a-tag>
-      </span>
       <template slot="name" slot-scope="text, record">
         <editable-cell
           :text="text"
@@ -42,26 +27,21 @@
           @change="onCellChange(record.key, 'remark', $event)"
         />
       </template>
-      <span slot="state" slot-scope="tag, record">
-          <a-select
-            :default-value="tag"
-            @change="onCellChange(record.key, 'status', $event)"
-          >
-            <a-select-option
-              v-for="(value, index) in [0, 1, 2, 3]"
-              :key="index"
-            >
-              {{ nameIt(value) }}
-            </a-select-option>
-          </a-select>
-        </span>
+      <template slot="state" slot-scope="tag, record">
+        <editable-tag-cell
+          :tag="tag"
+          :options="projectState"
+          @change="onCellChange(record.key, 'status', $event)"
+        />
+      </template>
     </a-table>
   </div>
 </template>
 
 <script>
-import EditableCell from "./components/EditableAreaCell.vue";
-
+import EditableCell from "./components/EditableCell.vue";
+import EditableTagCell from "./components/EditableTagCell.vue";
+const projectState = ["激活", "结项", "暂停", "取消"];
 const columns = [
   {
     dataIndex: "number",
@@ -98,10 +78,12 @@ export default {
   name: "Project",
   components: {
     EditableCell,
+    EditableTagCell,
   },
   data: function () {
     return {
       columns,
+      projectState,
     };
   },
   beforeCreate() {
@@ -122,14 +104,10 @@ export default {
       if (target && target[dataIndex] !== value) {
         console.log("on cell change", key, dataIndex, value);
         target[dataIndex] = value;
-        console.log("target = ", target)
+        console.log("target = ", target);
         // this.tasks = tasks;
       }
     },
-    nameIt(value) {
-      const stateName = ['激活', '结项', '暂停', '取消']
-      return stateName[value]
-    }
   },
 };
 </script>

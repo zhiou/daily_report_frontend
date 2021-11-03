@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-02 13:54:56
- * @LastEditTime: 2021-11-03 11:37:07
+ * @LastEditTime: 2021-11-03 15:15:37
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Product.vue
@@ -28,21 +28,20 @@
         />
       </template>
       <span slot="state" slot-scope="tag, record">
-        <a-select
-          :default-value="tag"
+        <editable-tag-cell
+          :tag="tag"
+          :options="productState"
           @change="onCellChange(record.key, 'status', $event)"
-        >
-          <a-select-option v-for="(value, index) in [0, 1, 2, 3]" :key="index">
-            {{ nameIt(value) }}
-          </a-select-option>
-        </a-select>
+        />
       </span>
     </a-table>
   </div>
 </template>
 
 <script>
-import EditableCell from "./components/EditableAreaCell.vue";
+import EditableCell from "./components/EditableCell.vue";
+import EditableTagCell from "./components/EditableTagCell.vue";
+const productState = ["设计", "研发", "发布", "终止"];
 
 const columns = [
   {
@@ -80,10 +79,12 @@ export default {
   name: "Product",
   components: {
     EditableCell,
+    EditableTagCell,
   },
   data: function () {
     return {
       columns,
+      productState,
     };
   },
   beforeCreate() {
@@ -96,7 +97,7 @@ export default {
       });
     },
   },
-    methods: {
+  methods: {
     onCellChange(key, dataIndex, value) {
       console.log("on product changed", key, dataIndex, value);
       const products = [...this.datasource];
@@ -104,14 +105,10 @@ export default {
       if (target && target[dataIndex] !== value) {
         console.log("on cell change", key, dataIndex, value);
         target[dataIndex] = value;
-        console.log("target = ", target)
+        console.log("target = ", target);
         // this.tasks = tasks;
       }
     },
-    nameIt(value) {
-      const stateName = ['设计', '研发', '发布', '终止']
-      return stateName[value]
-    }
   },
 };
 </script>
