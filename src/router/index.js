@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-22 17:30:02
- * @LastEditTime: 2021-11-02 16:37:50
+ * @LastEditTime: 2021-11-03 10:14:52
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/router/index.js
@@ -16,6 +16,7 @@ import Calendar from '../views/Calendar.vue'
 import DepartmentReport from '../views/DepartmentReport.vue'
 import ProjectReport from '../views/ProjectReport.vue'
 import Project from '../views/Project.vue'
+import Product from '../views/Product.vue'
 Vue.use(VueRouter)
 
 
@@ -57,6 +58,11 @@ const routes = [
         path: 'proj',
         name: 'Project',
         component: Project,
+      },
+      {
+        path: 'prod',
+        name: 'Product',
+        component: Product,
       }
     ],
     meta: {

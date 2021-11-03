@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-27 15:54:31
- * @LastEditTime: 2021-11-02 17:13:53
+ * @LastEditTime: 2021-11-03 10:50:43
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/views/Home.vue
@@ -116,6 +116,10 @@ export default {
             {
               key: "proj",
               title: this.$t("home.menu.proj"),
+            },
+            {
+              key: "prod",
+              title: this.$t("home.menu.prod"),
             }
           ],
         },
@@ -177,7 +181,7 @@ export default {
     },
     onMenuChanged(e) {
       console.log("menu changed", e.key);
-      this.$router.push(e.key);
+      this.$router.push('/' + e.key);
     },
     getMenuName() {
       const matched = this.$route.matched;

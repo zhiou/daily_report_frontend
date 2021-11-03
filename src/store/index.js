@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-26 11:43:31
- * @LastEditTime: 2021-11-02 15:54:16
+ * @LastEditTime: 2021-11-03 10:11:29
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/store/index.js
@@ -12,6 +12,7 @@ import Vue from "vue";
 import user from "./module/user";
 import report from "./module/report";
 import project from "./module/project"
+import product from "./module/product"
 
 Vue.use(Vuex);
 
@@ -20,6 +21,7 @@ export default new Vuex.Store({
         user,
         report,
         project,
+        product,
     },
     state: {},
     mutations: {
