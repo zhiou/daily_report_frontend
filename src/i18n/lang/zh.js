@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-05 15:23:46
- * @LastEditTime: 2021-11-02 16:07:42
+ * @LastEditTime: 2021-11-03 16:35:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/assets/lang/zh.js
@@ -64,6 +64,16 @@ module.exports = {
       proj: "项目信息",
       prod: "产品信息",
     },
+  },
+  project: {
+    button: {
+      save: "保存修改"
+    }
+  },
+  product: {
+    button: {
+      save: "保存修改"
+    }
   },
   report: {
     button: {

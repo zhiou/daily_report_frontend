@@ -1,13 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2021-11-02 15:29:28
- * @LastEditTime: 2021-11-03 10:27:20
+ * @LastEditTime: 2021-11-03 18:18:26
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/api/mock/mock-project.js
  */
 export const mockProject = {
-  login: {
+  list: {
     api: /\/project/,
     method: "get",
     enabled: true,
@@ -21,6 +21,20 @@ export const mockProject = {
           "remark|1": "@csentence",
         },
       ],
+    },
+  },
+  update: {
+    api: /\/project/,
+    method: "put",
+    enabled: true,
+    template: {
+    },
+  },
+  create: {
+    api: /\/project/,
+    method: "post",
+    enabled: true,
+    template: {
     },
   },
 };

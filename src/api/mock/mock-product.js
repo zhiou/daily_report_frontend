@@ -1,13 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2021-11-02 15:29:28
- * @LastEditTime: 2021-11-03 11:31:29
+ * @LastEditTime: 2021-11-03 18:14:32
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/api/mock/mock-project.js
  */
 export const mockProduct = {
-  login: {
+  list: {
     api: /\/product/,
     method: "get",
     enabled: true,
@@ -21,6 +21,20 @@ export const mockProduct = {
           "status|1": "@integer(0,3)",
         },
       ],
+    },
+  },
+  update: {
+    api: /\/product/,
+    method: "put",
+    enabled: true,
+    template: {
+    },
+  },
+  create: {
+    api: /\/product/,
+    method: "post",
+    enabled: true,
+    template: {
     },
   },
 };
