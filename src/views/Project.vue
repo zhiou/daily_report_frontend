@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-02 13:54:50
- * @LastEditTime: 2021-11-03 18:36:22
+ * @LastEditTime: 2021-11-03 18:46:55
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Project.vue
@@ -128,16 +128,14 @@ export default {
       visible: false,
       columns,
       projectState,
-      origin: this.$store.state.project.all.map((project) => {
-        return { ...project, key: project.number };
-      }),
-      projects: this.$store.state.project.all.map((project) => {
-        return { ...project, key: project.number };
-      }),
+      origin: [],
+      projects: [],
     };
   },
   beforeCreate() {
-    this.$store.dispatch("project/list");
+    this.$store.dispatch("project/list").then(()=>{
+      this.refresh()
+    });
   },
   computed: {
     notChanged() {

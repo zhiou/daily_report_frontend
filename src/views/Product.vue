@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-02 13:54:56
- * @LastEditTime: 2021-11-03 18:35:58
+ * @LastEditTime: 2021-11-03 18:47:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Product.vue
@@ -129,16 +129,14 @@ export default {
       visible: false,
       columns,
       productState,
-      origin: this.$store.state.product.all.map((product) => {
-        return { ...product, key: product.number };
-      }),
-      products: this.$store.state.product.all.map((product) => {
-        return { ...product, key: product.number };
-      }),
+      origin: [],
+      products: [],
     };
   },
   beforeCreate() {
-    this.$store.dispatch("product/list");
+    this.$store.dispatch("product/list").then(()=>{
+      this.refresh()
+    });
   },
   computed: {
     notChanged() {
