@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-27 15:54:31
- * @LastEditTime: 2021-11-03 10:50:43
+ * @LastEditTime: 2021-11-04 13:56:13
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/views/Home.vue
@@ -13,7 +13,7 @@
         <div class="logo" />
         <a-menu
           :default-selected-keys="['user']"
-          :default-open-keys="['log-mng', 'work-time']"
+          :default-open-keys="['log-mng', 'statistics', 'data_import']"
           v-model="selectedMenu"
           mode="inline"
           theme="dark"
@@ -113,18 +113,10 @@ export default {
               key: "pm",
               title: this.$t("home.menu.pm"),
             },
-            {
-              key: "proj",
-              title: this.$t("home.menu.proj"),
-            },
-            {
-              key: "prod",
-              title: this.$t("home.menu.prod"),
-            }
           ],
         },
         {
-          key: "work-time",
+          key: "statistics",
           title: this.$t("home.menu.worktime"),
           type: "setting",
           items: [
@@ -133,23 +125,30 @@ export default {
               title: this.$t("home.menu.staff"),
             },
             {
-              key: "proj_stat",
+              key: "proj_stats",
               title: this.$t("home.menu.proj_stat"),
+            },
+          ],
+        },
+        {
+          key: "data_import",
+          title: this.$t("home.menu.data_import"),
+          type: "setting",
+          items: [
+            {
+              key: "proj",
+              title: this.$t("home.menu.proj"),
+            },
+            {
+              key: "prod",
+              title: this.$t("home.menu.prod"),
             },
           ],
         },
       ];
     },
     menuSelectableKeys: function () {
-      return [
-        "user",
-        "dm",
-        "pm",
-        "staff",
-        "pm",
-        "proj",
-        "prod",
-      ];
+      return ["user", "dm", "pm", "staff", "pm", "proj", "prod"];
     },
   },
   mounted() {
@@ -177,25 +176,25 @@ export default {
       console.log("logout");
       this.$store
         .dispatch("user/logout")
-        .finally(() => this.$router.push('/login'));
+        .finally(() => this.$router.push("/login"));
     },
     onMenuChanged(e) {
       console.log("menu changed", e.key);
-      this.$router.push('/' + e.key);
+      this.$router.push("/" + e.key);
     },
     getMenuName() {
       const matched = this.$route.matched;
       for (let i = matched.length - 1; i >= 0; i--) {
         let path = matched[i].path;
-        let index = path.lastIndexOf('/');
+        let index = path.lastIndexOf("/");
         let key = path.substring(index + 1);
-        console.log("menu matching", key)
+        console.log("menu matching", key);
         if (this.menuSelectableKeys.indexOf(key) >= 0) {
           this.selectedMenu = [key];
           break;
         }
       }
-      console.log("menu selected", matched, this.selectedMenu)
+      console.log("menu selected", matched, this.selectedMenu);
     },
     createBread() {
       this.routes = this.$route.matched.map((item) => {

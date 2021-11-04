@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-22 17:30:02
- * @LastEditTime: 2021-11-03 10:14:52
+ * @LastEditTime: 2021-11-04 13:56:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/router/index.js
@@ -17,8 +17,9 @@ import DepartmentReport from '../views/DepartmentReport.vue'
 import ProjectReport from '../views/ProjectReport.vue'
 import Project from '../views/Project.vue'
 import Product from '../views/Product.vue'
+import PersonalStats from '../views/PersonalStats.vue'
+import ProjectStats from '../views/ProjectStats.vue'
 Vue.use(VueRouter)
-
 
 const originalPush = VueRouter.prototype.push;
 
@@ -53,6 +54,16 @@ const routes = [
         path: 'pm',
         name: 'ProjectReport',
         component: ProjectReport,
+      },
+      {
+        path: 'staff',
+        name: 'PersonalStats',
+        component: PersonalStats,
+      },
+      {
+        path: 'proj_stats',
+        name: 'ProjectStats',
+        component: ProjectStats,
       },
       {
         path: 'proj',
