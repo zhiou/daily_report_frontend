@@ -15,7 +15,7 @@ export const mockProduct = {
       "products|1-10": [
         {
           "number|1": "@string",
-          "name|1": "@string",
+          "name|1": "@cname",
           "in_line|1": "@string",
           "remark|1": "@csentence",
           "status|1": "@integer(0,3)",
