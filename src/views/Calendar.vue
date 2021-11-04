@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-22 17:30:02
- * @LastEditTime: 2021-10-13 13:55:32
+ * @LastEditTime: 2021-11-04 18:50:15
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Home.vue
@@ -42,7 +42,7 @@ export default {
     return {
       mode: "month",
       value: moment(),
-      tasks: [],
+      taskNames: [],
       other:"......",
     };
   },
@@ -51,29 +51,29 @@ export default {
       return this.$store.state.user.name ? this.$store.state.user.name : "周煌";
     },
   },
-  beforeCreate() {
+  mounted() {
     this.$store
-      .dispatch("report/queryMonth", {
-        author: this.author,
-        on_day: this.value,
+      .dispatch("report/selfQuery", {
+        from: this.value,
+        to: this.value,
       })
-      .then((reports) => {
-        this.tasks = new Array(12);
-        reports["reports"].forEach((report) => {
+      .then((tasks) => {
+        console.log("month tasks", tasks);
+        let taskNames = [];
+        tasks.forEach((task) => {
           //TODO: 只用date有问题, 目前是测试数据, 用实际数据后再改
-          let day = moment(report.on_day).date();
-          if (this.tasks[day] == undefined) {
-            this.tasks[day] = new Set();
+          let day = moment(task.report_date).date();
+          if (taskNames[day] == undefined) {
+            taskNames[day] = new Set();
           }
-          report.tasks.forEach((task) => {
-            this.tasks[day].add({ type: "success", content: task.name });
-          });
+          taskNames[day].add({ type: "success", content: task.task_name });
         });
+        this.taskNames = taskNames;
       });
   },
   methods: {
     getListData(value) {
-      return this.tasks[value.date()];
+      return this.taskNames[value.date()];
     },
     getMonthData(value) {
       console.log("month data", value);

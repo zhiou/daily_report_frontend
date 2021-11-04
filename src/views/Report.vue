@@ -3,7 +3,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 15:34:38
- * @LastEditTime: 2021-10-13 14:51:47
+ * @LastEditTime: 2021-11-04 17:10:46
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Report.vue
@@ -19,7 +19,11 @@
           <a-input :default-value="author" addonBefore="Name" disabled />
         </a-col>
         <a-col :span="6">
-          <a-input :default-value="department" addonBefore="Department" disabled />
+          <a-input
+            :default-value="department"
+            addonBefore="Department"
+            disabled
+          />
         </a-col>
         <a-col :span="4" :offset="6">
           <a-button-group>
@@ -40,40 +44,41 @@
         :defaultExpandedRowKeys="[0]"
         :pagination="false"
       >
-        <span slot="product-selector" slot-scope="selector, record">
+        <template slot="product_line" slot-scope="text, record">
+          <editable-cell
+            :text="text"
+            @change="onCellChange(record.key, 'product_line', $event)"
+          />
+        </template>
+        <span slot="product-selector" slot-scope="number, record">
           <a-select
             show-search
             option-filter-prop="children"
             :filter-option="filterOption"
             style="width: 150px"
-            :default-value="selector.selected"
+            :default-value="number"
             @change="onProductChanged(record.key, 'product', $event)"
           >
-            <a-select-option
-              v-for="(value, index) in selector.options"
-              :key="index"
-            >
-              {{ value.name }}
+            <a-select-option v-for="product in products" :key="product.number">
+              {{ product.name }}
             </a-select-option>
           </a-select>
         </span>
-        <span slot="project-selector" slot-scope="selector, record">
+        <span slot="project-selector" slot-scope="number, record">
           <a-select
             show-search
             option-filter-prop="children"
             :filter-option="filterOption"
             style="width: 150px"
-            :default-value="selector.selected"
+            :default-value="number"
             @change="onProjectChanged(record.key, 'project', $event)"
           >
-            <a-select-option
-              v-for="(value, index) in selector.options"
-              :key="index"
-            >
-              {{ value.name }}
+            <a-select-option v-for="project in projects" :key="project.number">
+              {{ project.name }}
             </a-select-option>
           </a-select>
         </span>
+
         <template slot="name" slot-scope="text, record">
           <editable-cell
             :text="text"
@@ -104,7 +109,7 @@
       </a-table>
       <a-button
         type="dashed"
-        style="width: 40%; margin-top: 8px; margin-left: 30%;"
+        style="width: 40%; margin-top: 8px; margin-left: 30%"
         @click="handleCreateTask"
       >
         <a-icon type="plus" /> Add Task
@@ -122,32 +127,38 @@ import moment from "moment";
 
 const columns = [
   {
+    title: "Product Line",
+    dataIndex: "product_line",
+    key: "product_line",
+    scopedSlots: { customRender: "product_line" },
+  },
+  {
     title: "Project",
-    dataIndex: "project",
+    dataIndex: "project_number",
     key: "project",
     scopedSlots: { customRender: "project-selector" },
   },
   {
     title: "Product",
-    dataIndex: "product",
+    dataIndex: "product_number",
     key: "product",
     scopedSlots: { customRender: "product-selector" },
   },
   {
     title: "Name",
-    dataIndex: "name",
+    dataIndex: "task_name",
     key: "name",
     scopedSlots: { customRender: "name" },
   },
   {
     title: "Cost",
-    dataIndex: "cost",
+    dataIndex: "task_cost",
     key: "cost",
     scopedSlots: { customRender: "cost" },
   },
   {
     title: "Details",
-    dataIndex: "details",
+    dataIndex: "task_detail",
     key: "details",
     scopedSlots: { customRender: "details" },
   },
@@ -171,70 +182,34 @@ let projects = [
   { number: "99001122", name: "奔凯" },
 ];
 
-let productTable = {
-  0: [{ number: "0", name: "自定义" }],
-  11223344: [
-    { number: "0", name: "自定义" },
-    { number: "12345", name: "OTP" },
-  ],
-  22334455: [
-    { number: "0", name: "自定义" },
-    { number: "67890", name: "KEY线" },
-  ],
-};
+let products = [
+  { number: "0", name: "自定义" },
+
+  { number: "12345", name: "OTP" },
+
+  { number: "67890", name: "KEY线" },
+];
 
 export default {
   name: "Report",
-  props: ['date'],
+  props: ["date"],
   components: {
     EditableCell,
     EditableNumberCell,
     EditableAreaCell,
   },
-  beforeCreate() {
+  mounted() {
     this.$store
-      .dispatch("report/query", {
-        on_day: this.onDay,
-        author: this.author,
+      .dispatch("report/selfQuery", {
+        from: moment(),
+        to: moment().add(1, "day"),
       })
-      .then((report) => {
-        console.log("report queried", report);
-        let tasks = report.tasks;
+      .then((tasks) => {
+        console.log("report queried", tasks);
         this.tasks = tasks.map((task) => {
-          console.log(
-            "project index",
-            this.projects.findIndex(
-              (project) => task.project_id === project.number
-            )
-          );
-          let selectedProject = this.projects.findIndex(
-              (project) => task.project_id === project.number
-            )
-          const project = {
-            selected: selectedProject < 0 ? 0 : selectedProject,
-            options: this.projects,
-          };
-          console.log(
-            "products for project",
-            project,
-            this.productTable[task.project_id]
-          );
-          console.log(
-            "product index",
-            this.productTable[task.project_id].findIndex(
-              (product) => task.product_id === product.number
-            )
-          );
-          let selectedProduct = this.productTable[task.project_id].findIndex(
-              (product) => task.product_id === product.number
-            )
-          const product = {
-            selected: selectedProduct < 0 ? 0 : selectedProduct,
-            options: this.productTable[task.project_id],
-          };
-          let key = this.count
-          this.count = key + 1
-          return { ...task, project, product, key: key };
+          let key = this.count;
+          this.count = key + 1;
+          return { ...task, key: key };
         });
 
         console.log("this.tasks", this.tasks);
@@ -247,56 +222,42 @@ export default {
       columns,
       onDay: this.date ? moment(this.date) : moment(),
       projects,
-      productTable,
+      products,
     };
   },
   computed: {
     department() {
-      return this.$store.state.user.department ? this.$store.state.user.department : "研发X部"
+      return this.$store.state.user.department
+        ? this.$store.state.user.department
+        : "研发X部";
     },
     author() {
-      return this.$store.state.user.name ? this.$store.state.user.name:  "周煌";
+      return this.$store.state.user.name ? this.$store.state.user.name : "周煌";
     },
     dayString() {
-      return this.onDay.format("yyyy-MM-DD")
-    }
+      return this.onDay.format("yyyy-MM-DD");
+    },
   },
   methods: {
     update(status) {
       console.log("submit report", this.tasks, this.dayString);
-      this.$store.dispatch("report/update", {
-        ...this.tasks,
-        on_day: this.dayString,
-        author: this.author,
-        status,
-      })
-      .then(() => {
-        this.$message.success("工作日志已" + (status == 0 ? "保存" : "提交"))
-      });
+      this.$store
+        .dispatch("report/update", {
+          ...this.tasks,
+          on_day: this.dayString,
+          author: this.author,
+          status,
+        })
+        .then(() => {
+          this.$message.success("工作日志已" + (status == 0 ? "保存" : "提交"));
+        });
     },
     handleCreateTask() {
-      let defaultProject = 0;
-      if (this.tasks.length > 0) {
-        console.log("tasks existed", this.tasks);
-        defaultProject = this.tasks[this.tasks.length - 1].project.selected;
-      }
-      let values = {
-        name: "新任务",
-        details: "任务详情",
-        cost: 8,
-        project_id: defaultProject,
-        product_id: 0,
-      };
       const { count, tasks } = this;
-      const project = { selected: values.project_id, options: this.projects };
-      const product = {
-        selected: values.product_id,
-        options: this.productTable[this.projects[values.project_id].number],
-      };
-      let newTask = { ...values, key: count, project, product };
-      this.tasks = [...tasks, newTask];
+
+      let newTask = { ...this.$_.last(tasks), key: count };
       this.count = count + 1;
-      console.log("tasks: ", this.tasks);
+      this.tasks = [...tasks, newTask];
     },
     onCellChange(key, dataIndex, value) {
       const tasks = [...this.tasks];
@@ -311,30 +272,29 @@ export default {
       const tasks = [...this.tasks];
       this.tasks = tasks.filter((item) => item.key !== key);
     },
-    onProjectChanged(key, dataIndex, index) {
-      console.log("on project change", key, index);
+    onProjectChanged(key, dataIndex, number) {
+      console.log("on project change", key, number);
       const tasks = [...this.tasks];
       const target = tasks.find((item) => item.key === key);
       if (target) {
-        target[dataIndex].selected = index;
-        target["product"].selected = 0;
-        target["product"].options =
-          this.productTable[target.project.options[index].number];
+        target[dataIndex] = number;
         this.tasks = tasks;
       }
     },
-    onProductChanged(key, dataIndex, index) {
-      console.log("on product change", key, index);
+    onProductChanged(key, dataIndex, number) {
+      console.log("on product change", key, number);
       const tasks = [...this.tasks];
       const target = tasks.find((item) => item.key === key);
       if (target) {
-        target[dataIndex].selected = index;
+        target[dataIndex] = number;
         this.tasks = tasks;
       }
     },
     filterOption(input, option) {
       return (
-        option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+        option.componentOptions.children[0].text
+          .toLowerCase()
+          .indexOf(input.toLowerCase()) >= 0
       );
     },
   },

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-10-11 11:05:41
- * @LastEditTime: 2021-10-13 16:24:44
+ * @LastEditTime: 2021-11-04 15:50:21
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/api/report.js
@@ -16,7 +16,7 @@ export function update(report) {
     })
   }
 
-  export function query(report) {
+  export function selfQuery(report) {
     return request({
       url: '/report',
       method: 'get',
@@ -24,25 +24,25 @@ export function update(report) {
     })
   }
 
-  export function queryMonth(report) {
+  export function dmQuery(report) {
     return request({
-      url: '/lookup',
+      url: '/report/dm',
       method: 'get',
       data: report
     })
   }
 
-  export function queryDepartment(report) {
+  export function pmQuery(report) {
     return request({
-      url: '/depart',
+      url: '/report/pm',
       method: 'get',
       data: report
     })
   }
 
-  export function queryProject(report) {
+  export function pmoQuery(report) {
     return request({
-      url: '/project',
+      url: '/report/pmo',
       method: 'get',
       data: report
     })

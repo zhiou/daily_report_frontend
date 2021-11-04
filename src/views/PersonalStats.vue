@@ -1,13 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-04 10:56:50
- * @LastEditTime: 2021-11-04 13:49:21
+ * @LastEditTime: 2021-11-04 15:06:29
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Personal.vue
 -->
 <template>
-  <div style="width: 100%; height: 100%; margin: 16px 16px;">
+  <div style="width: 100%; height: 100%">
+    <a-range-picker @change="onDateRange" v-model="dateRange" style="margin: 16px 16px" />
     <div id="work-time-line" class="charts" />
     <div id="task-distribute-pie" class="charts" />
     <div id="project-distribute-pie" class="charts" />
@@ -16,10 +17,13 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
   name: "PersonalStats",
   data() {
-    return {};
+    return {
+      dateRange: this.lastMonth(),
+    };
   },
   mounted() {
     this.drawLine();
@@ -28,6 +32,17 @@ export default {
     this.drawProductPie();
   },
   methods: {
+    lastMonth() {
+      let startDate = moment()
+        .month(moment().month() - 1)
+        .startOf('month');
+      let endDate = moment().month(moment().month() - 1).endOf('month');
+      console.log("last month date", startDate, endDate);
+      return [startDate, endDate];
+    },
+    onDateRange(date, dateString) {
+      console.log("date range select", date, dateString);
+    },
     drawLine() {
       // 基于准备好的dom，初始化echarts实例
       let line = this.$echarts.init(document.getElementById("work-time-line"));
