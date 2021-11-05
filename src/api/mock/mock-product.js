@@ -14,8 +14,8 @@ export const mockProduct = {
     template: {
       "products|1-10": [
         {
-          "number|1": "@string",
-          "name|1": "@cname",
+          "number|1": "@natural(1,1000)",
+          "name|1": "@cword(3,10)",
           "in_line|1": "@string",
           "remark|1": "@csentence",
           "status|1": "@integer(0,3)",

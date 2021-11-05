@@ -14,9 +14,9 @@ export const mockProject = {
     template: {
       "projects|1-10": [
         {
-          "number|1": "@string",
-          "name|1": "@string",
-          "manager_number|1": "@string",
+          "number|1": "@natural(1,1000)",
+          "name|1": "@cword(7,10)",
+          "manager_number|1": "@cname",
           "status|1": "@integer(0,3)",
           "remark|1": "@csentence",
         },
