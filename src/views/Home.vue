@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-27 15:54:31
- * @LastEditTime: 2021-11-04 13:56:13
+ * @LastEditTime: 2021-11-05 16:26:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/views/Home.vue
@@ -148,7 +148,7 @@ export default {
       ];
     },
     menuSelectableKeys: function () {
-      return ["user", "dm", "pm", "staff", "pm", "proj", "prod"];
+      return ["user", "dm", "pm", "staff", 'proj_stats', "pm", "proj", "prod"];
     },
   },
   mounted() {

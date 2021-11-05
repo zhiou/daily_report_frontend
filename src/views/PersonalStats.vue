@@ -1,14 +1,18 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-04 10:56:50
- * @LastEditTime: 2021-11-04 15:06:29
+ * @LastEditTime: 2021-11-05 14:25:03
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Personal.vue
 -->
 <template>
   <div style="width: 100%; height: 100%">
-    <a-range-picker @change="onDateRange" v-model="dateRange" style="margin: 16px 16px" />
+    <a-range-picker
+      @change="onDataChanged"
+      v-model="dateRange"
+      style="margin: 16px 16px"
+    />
     <div id="work-time-line" class="charts" />
     <div id="task-distribute-pie" class="charts" />
     <div id="project-distribute-pie" class="charts" />
@@ -17,56 +21,139 @@
 </template>
 
 <script>
-import moment from 'moment'
+import moment from "moment";
 export default {
   name: "PersonalStats",
   data() {
     return {
       dateRange: this.lastMonth(),
+      reports: [],
+      taskLineChart: null,
+      taskPieChart: null,
+      projectPieChart: null,
+      productPieChart: null,
     };
   },
   mounted() {
-    this.drawLine();
-    this.drawTaskPie();
-    this.drawProjectPie();
-    this.drawProductPie();
+    this.fetchReport();
+  },
+  computed: {
+    taskLineData() {
+      let data = this.$_.groupBy(this.reports, "report_date");
+      return this.$_.mapValues(data, (tasks) => {
+        let total = this.$_.reduce(
+          tasks,
+          (sum, task) => sum + task.task_cost,
+          0
+        );
+        return total;
+      });
+    },
+    taskPieData() {
+      return this.makePie("task_name");
+    },
+    projectPieData() {
+      return this.makePie("project_name");
+    },
+    productPieData() {
+      return this.makePie("product_name");
+    },
   },
   methods: {
+    makePie(prop) {
+      let data = this.$_.groupBy(this.reports, prop);
+      let axis = [];
+      let grouped = this.$_.mapValues(data, (tasks) => {
+        let total = this.$_.reduce(
+          tasks,
+          (sum, task) => sum + task.task_cost,
+          0
+        );
+        return total;
+      });
+      this.$_.forIn(grouped, (value, key) => {
+        axis.push({ value: value, name: key });
+      });
+      return axis;
+    },
+    render() {
+      if (this.taskLineChart) {
+        this.taskLineChart.dispose();
+        this.taskLineChart = null;
+      }
+      if (this.taskPieChart) {
+        this.taskPieChart.dispose();
+        this.taskPieChart = null;
+      }
+      if (this.projectPieChart) {
+        this.projectPieChart.dispose();
+        this.projectPieChart = null;
+      }
+      if (this.productPieChart) {
+        this.productPieChart.dispose();
+        this.productPieChart = null;
+      }
+
+      this.drawLine();
+      this.drawTaskPie();
+      this.drawProjectPie();
+      this.drawProductPie();
+    },
+    onDataChanged(date, dateString) {
+      this.fetchReport();
+    },
+    fetchReport() {
+      console.log("date range", this.dateRange);
+      this.$store
+        .dispatch("report/selfQuery", {
+          from: this.dateRange[0],
+          end: this.dateRange[1],
+        })
+        .then((data) => {
+          this.reports = data;
+          console.log("fetch report", data);
+          this.render();
+        });
+    },
     lastMonth() {
       let startDate = moment()
         .month(moment().month() - 1)
-        .startOf('month');
-      let endDate = moment().month(moment().month() - 1).endOf('month');
+        .startOf("month");
+      let endDate = moment()
+        .month(moment().month() - 1)
+        .endOf("month");
       console.log("last month date", startDate, endDate);
       return [startDate, endDate];
-    },
-    onDateRange(date, dateString) {
-      console.log("date range select", date, dateString);
     },
     drawLine() {
       // 基于准备好的dom，初始化echarts实例
       let line = this.$echarts.init(document.getElementById("work-time-line"));
+      let axis = this.taskLineData;
+      console.log("task line data", axis);
       // 绘制图表
       line.setOption({
         title: { text: "本周每日工时" },
         tooltip: {},
         xAxis: {
-          data: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+          data: this.$_.keys(axis), //["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
         },
         yAxis: {},
         series: [
           {
             name: "工时",
             type: "bar",
-            data: [7, 8, 7, 8, 6, 0, 0],
+            data: this.$_.values(axis),
           },
         ],
       });
+      this.taskLineChart = line;
     },
     drawTaskPie() {
       let pie = this.$echarts.init(
         document.getElementById("task-distribute-pie")
       );
+      let axis = this.taskPieData;
+      console.log("drao task pie", axis);
       pie.setOption({
         title: {
           text: "任务工时分布",
@@ -84,13 +171,7 @@ export default {
             name: "工时分布",
             type: "pie",
             radius: "60%",
-            data: [
-              { value: 1048, name: "Search Engine" },
-              { value: 735, name: "Direct" },
-              { value: 580, name: "Email" },
-              { value: 484, name: "Union Ads" },
-              { value: 300, name: "Video Ads" },
-            ],
+            data: axis,
             emphasis: {
               itemStyle: {
                 shadowBlur: 10,
@@ -101,11 +182,14 @@ export default {
           },
         ],
       });
+      this.taskPieChart = pie;
     },
     drawProjectPie() {
       let pie = this.$echarts.init(
         document.getElementById("project-distribute-pie")
       );
+
+      let axis = this.projectPieData;
       pie.setOption({
         title: {
           text: "项目工时分布",
@@ -123,13 +207,7 @@ export default {
             name: "工时分布",
             type: "pie",
             radius: "60%",
-            data: [
-              { value: 1048, name: "Search Engine" },
-              { value: 735, name: "Direct" },
-              { value: 580, name: "Email" },
-              { value: 484, name: "Union Ads" },
-              { value: 300, name: "Video Ads" },
-            ],
+            data: axis,
             emphasis: {
               itemStyle: {
                 shadowBlur: 10,
@@ -140,11 +218,13 @@ export default {
           },
         ],
       });
+      this.projectPieChart = pie;
     },
     drawProductPie() {
       let pie = this.$echarts.init(
         document.getElementById("product-distribute-pie")
       );
+      let axis = this.productPieData;
       pie.setOption({
         title: {
           text: "产品工时分布",
@@ -162,13 +242,7 @@ export default {
             name: "工时分布",
             type: "pie",
             radius: "60%",
-            data: [
-              { value: 1048, name: "Search Engine" },
-              { value: 735, name: "Direct" },
-              { value: 580, name: "Email" },
-              { value: 484, name: "Union Ads" },
-              { value: 300, name: "Video Ads" },
-            ],
+            data: axis,
             emphasis: {
               itemStyle: {
                 shadowBlur: 10,
@@ -179,6 +253,7 @@ export default {
           },
         ],
       });
+      this.productPieChart = pie;
     },
   },
 };

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-04 10:56:50
- * @LastEditTime: 2021-11-04 14:31:40
+ * @LastEditTime: 2021-11-05 16:31:15
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Personal.vue
@@ -14,19 +14,110 @@
 </template>
 
 <script>
+import moment from "moment";
+
 export default {
   name: "ProjectStats",
   data() {
-    return {};
+    return {
+      lineChart: null,
+      reports: [],
+    };
   },
   mounted() {
-    this.drawLine();
-    // this.drawMemberPie();
+    this.fetchProjectReports();
+  },
+  computed: {
+    lineData() {
+      let xAxis = this.$_.map(this.reports, "report_date").sort();
+      let grouped = this.$_.groupBy(this.reports, "staff_name");
+      let yAxis = this.$_.mapValues(grouped, (tasks) => {
+        let report = this.$_.groupBy(tasks, "report_date");
+        return this.$_.map(xAxis, (x) => {
+          if (report[x]) {
+            return this.$_.reduce(
+              report[x],
+              (sum, task) => sum + task.task_cost,
+              0
+            );
+          }
+          return 0;
+        });
+      });
+      console.log("yAxis", yAxis);
+      let grid = this.$_.map(yAxis, (v, k) => {
+        return [k, ...v];
+      });
+
+      let result = this.$_.concat([["工时", ...xAxis]], grid);
+      console.log("result = ", result);
+      return result;
+    },
+    pieData() {
+      let grouped = this.$_.groupBy(this.reports, "staff_name");
+      let totals = this.$_.mapValues(grouped, (tasks) => {
+        let total = this.$_.reduce(
+          tasks,
+          (sum, task) => sum + task.task_cost,
+          0
+        );
+        return total;
+      });
+      let axis = [];
+      this.$_.forIn(totals, (value, key) => {
+        axis.push({ value: value, name: key });
+      });
+      console.log("axis = ", axis);
+      return axis;
+    },
   },
   methods: {
+    fetchProjectReports() {
+      this.$store
+        .dispatch("report/pmoQuery", {
+          type: 2,
+          condition: "11223344",
+          from: moment().format(),
+          to: moment().format(),
+        })
+        .then((data) => {
+          console.log("fetch", data);
+          this.reports = data;
+          this.render();
+        });
+    },
+    render() {
+      if (this.lineChart) {
+        this.lineChart.dispose();
+        this.lineChart = null;
+      }
+      this.drawLine();
+    },
     drawLine() {
       // 基于准备好的dom，初始化echarts实例
       let line = this.$echarts.init(document.getElementById("work-time-line"));
+
+      let dbview = this.lineData;
+      let pieData = this.pieData;
+      line.on("updateAxisPointer", function (event) {
+        const xAxisInfo = event.axesInfo[0];
+        if (xAxisInfo) {
+          const dimension = xAxisInfo.value + 1;
+          console.log("dimension", dimension);
+          line.setOption({
+            series: {
+              id: "pie",
+              label: {
+                formatter: "{b}: {@[" + dimension + "]} ({d}%)",
+              },
+              encode: {
+                value: dimension,
+                tooltip: dimension,
+              },
+            },
+          });
+        }
+      });
       // 绘制图表
       line.setOption({
         legend: {},
@@ -35,13 +126,7 @@ export default {
           showContent: false,
         },
         dataset: {
-          source: [
-            ["product", "2012", "2013", "2014", "2015", "2016", "2017"],
-            ["Milk Tea", 56.5, 82.1, 88.7, 70.1, 53.4, 85.1],
-            ["Matcha Latte", 51.1, 51.4, 55.1, 53.3, 73.8, 68.7],
-            ["Cheese Cocoa", 40.1, 62.2, 69.5, 36.4, 45.2, 32.5],
-            ["Walnut Brownie", 25.2, 37.1, 41.2, 18, 33.9, 49.1],
-          ],
+          source: dbview,
         },
         xAxis: { type: "category" },
         yAxis: { gridIndex: 0 },
@@ -80,12 +165,12 @@ export default {
               focus: "self",
             },
             label: {
-              formatter: "{b}: {@2012} ({d}%)",
+              formatter: "{b}: {@1} ({d}%)",
             },
             encode: {
-              itemName: "product",
-              value: "2012",
-              tooltip: "2012",
+              itemName: "工时",
+              value: dbview[0][1],
+              tooltip: dbview[0][1],
             },
           },
           {
@@ -97,66 +182,25 @@ export default {
             label: {
               show: false,
               position: "center",
+              formatter: "{b}\n{d}%",
+            },
+            tooltip: {
+              trigger: "item",
+              showContent: true,
             },
             emphasis: {
               label: {
                 show: true,
-                fontSize: "15",
-                fontWeight: "bold",
               },
             },
             labelLine: {
               show: false,
             },
-            data: [
-              { value: 1048, name: "Search Engine" },
-              { value: 735, name: "Direct" },
-              { value: 580, name: "Email" },
-              { value: 484, name: "Union Ads" },
-              { value: 300, name: "Video Ads" },
-            ],
+            data: pieData,
           },
         ],
       });
-    },
-    drawMemberPie() {
-      let pie = this.$echarts.init(
-        document.getElementById("member-distribute-pie")
-      );
-      pie.setOption({
-        title: {
-          text: "成员工时分布",
-          left: "center",
-        },
-        tooltip: {
-          trigger: "item",
-        },
-        legend: {
-          orient: "vertical",
-          left: "left",
-        },
-        series: [
-          {
-            name: "工时分布",
-            type: "pie",
-            radius: "60%",
-            data: [
-              { value: 1048, name: "Search Engine" },
-              { value: 735, name: "Direct" },
-              { value: 580, name: "Email" },
-              { value: 484, name: "Union Ads" },
-              { value: 300, name: "Video Ads" },
-            ],
-            emphasis: {
-              itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: "rgba(0, 0, 0, 0.5)",
-              },
-            },
-          },
-        ],
-      });
+      this.lineChart = line;
     },
   },
 };
