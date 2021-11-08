@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-06-24 14:42:06
- * @LastEditTime: 2021-10-13 11:03:07
+ * @LastEditTime: 2021-11-08 10:19:42
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/views/home/UserSettings.vue
@@ -94,7 +94,6 @@ export default {
   },
   methods: {
     onUserSettingChanged(e) {
-      console.log("setting changed", e)
       this.confirmLoading = true;
       this.$store
         .dispatch("users/update", {
@@ -114,7 +113,6 @@ export default {
         });
     },
     onUserInfoModalCancel(e) {
-      console.log("Clicked cancel button", e);
       this.modalShow = false;
     },
   },

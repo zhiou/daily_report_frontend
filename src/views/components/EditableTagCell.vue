@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-28 14:37:52
- * @LastEditTime: 2021-11-03 15:13:41
+ * @LastEditTime: 2021-11-08 10:16:44
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/components/EditableCell.vue
@@ -44,7 +44,6 @@ export default {
   },
   methods: {
     handleChange(tag) {
-      console.log("tag selected", tag)
       this.value = tag;
     },
     check() {

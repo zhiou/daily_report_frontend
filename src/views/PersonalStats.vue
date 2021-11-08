@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-04 10:56:50
- * @LastEditTime: 2021-11-05 14:25:03
+ * @LastEditTime: 2021-11-08 10:18:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Personal.vue
@@ -103,7 +103,6 @@ export default {
       this.fetchReport();
     },
     fetchReport() {
-      console.log("date range", this.dateRange);
       this.$store
         .dispatch("report/selfQuery", {
           from: this.dateRange[0],
@@ -111,7 +110,6 @@ export default {
         })
         .then((data) => {
           this.reports = data;
-          console.log("fetch report", data);
           this.render();
         });
     },
@@ -122,14 +120,12 @@ export default {
       let endDate = moment()
         .month(moment().month() - 1)
         .endOf("month");
-      console.log("last month date", startDate, endDate);
       return [startDate, endDate];
     },
     drawLine() {
       // 基于准备好的dom，初始化echarts实例
       let line = this.$echarts.init(document.getElementById("work-time-line"));
       let axis = this.taskLineData;
-      console.log("task line data", axis);
       // 绘制图表
       line.setOption({
         title: { text: "本周每日工时" },
@@ -153,7 +149,6 @@ export default {
         document.getElementById("task-distribute-pie")
       );
       let axis = this.taskPieData;
-      console.log("drao task pie", axis);
       pie.setOption({
         title: {
           text: "任务工时分布",

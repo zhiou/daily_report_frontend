@@ -98,7 +98,6 @@ export default {
             .then(() => {
                 that.$message.success(this.$t("error.tips.login.success"), 3);
                 let redirect_name = that.$route.query.redirect;
-                console.log("redirect_name", redirect_name);
                 if (redirect_name) {
                   that.$router.push({ name: redirect_name });
                 } else {
@@ -106,7 +105,6 @@ export default {
                 }
             })
             .catch((error) => {
-              console.log("login error", error);
               that.$message.error(error, 3);
             });
         }

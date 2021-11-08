@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-27 15:54:31
- * @LastEditTime: 2021-11-05 16:26:17
+ * @LastEditTime: 2021-11-08 10:19:32
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/views/Home.vue
@@ -152,7 +152,6 @@ export default {
     },
   },
   mounted() {
-    console.log("home mounted, path =", this.$route.path);
     this.getMenuName();
     this.createBread();
     if (this.$route.path === "/") {
@@ -164,7 +163,6 @@ export default {
       this.collapsed = !this.collapsed;
     },
     onUserMenu({ key }) {
-      console.log(key);
       if (key === "info") {
         this.userSettingVisible = true;
       } else if (key === "password") {
@@ -173,13 +171,11 @@ export default {
     },
     onLogout(e) {
       e.preventDefault();
-      console.log("logout");
       this.$store
         .dispatch("user/logout")
         .finally(() => this.$router.push("/login"));
     },
     onMenuChanged(e) {
-      console.log("menu changed", e.key);
       this.$router.push("/" + e.key);
     },
     getMenuName() {
@@ -188,17 +184,14 @@ export default {
         let path = matched[i].path;
         let index = path.lastIndexOf("/");
         let key = path.substring(index + 1);
-        console.log("menu matching", key);
         if (this.menuSelectableKeys.indexOf(key) >= 0) {
           this.selectedMenu = [key];
           break;
         }
       }
-      console.log("menu selected", matched, this.selectedMenu);
     },
     createBread() {
       this.routes = this.$route.matched.map((item) => {
-        console.log("route item", item);
         return {
           path: item.path,
           breadcrumbName: item.name,

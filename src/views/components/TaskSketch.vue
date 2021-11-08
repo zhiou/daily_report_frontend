@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 16:52:56
- * @LastEditTime: 2021-09-27 17:27:06
+ * @LastEditTime: 2021-11-08 10:17:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/components/Tasks.vue
@@ -103,7 +103,6 @@ export default {
   },
   watch: {
     current: function () {
-      console.log("task changed", this.current);
       this.$emit("change", this.current);
     },
   },

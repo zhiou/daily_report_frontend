@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-22 17:30:02
- * @LastEditTime: 2021-11-04 18:50:15
+ * @LastEditTime: 2021-11-08 10:19:34
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Home.vue
@@ -58,7 +58,6 @@ export default {
         to: this.value,
       })
       .then((tasks) => {
-        console.log("month tasks", tasks);
         let taskNames = [];
         tasks.forEach((task) => {
           //TODO: 只用date有问题, 目前是测试数据, 用实际数据后再改
@@ -76,13 +75,11 @@ export default {
       return this.taskNames[value.date()];
     },
     getMonthData(value) {
-      console.log("month data", value);
       if (value.month() === 8) {
         return 1394;
       }
     },
     onSelect(date) {
-      console.log("calendar", date.format("yyyy-MM-DD"));
       if (this.mode === "month") {
         this.$router.push("/report/" + date.format("yyyy-MM-DD"));
       } else {

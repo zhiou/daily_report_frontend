@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-10-11 10:55:51
- * @LastEditTime: 2021-11-03 10:09:33
+ * @LastEditTime: 2021-11-08 10:17:25
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/api/mock/mock.js
@@ -34,7 +34,6 @@ const MockConfig = {
 };
 mockList.forEach(configs=>{
   Object.keys(configs).forEach(key=>{
-    console.log("template", Mock.mock(configs[key].template))
     MockConfig.mocks.push({...configs[key], data:Mock.mock(configs[key].template)});
   });
 });

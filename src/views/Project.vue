@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-02 13:54:50
- * @LastEditTime: 2021-11-03 18:46:55
+ * @LastEditTime: 2021-11-08 10:18:07
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Project.vue
@@ -139,24 +139,15 @@ export default {
   },
   computed: {
     notChanged() {
-      console.log(
-        "project changed?",
-        this.projects,
-        this.origin,
-        this.$_.isEqual(this.projects, this.origin)
-      );
       return this.$_.isEqual(this.projects, this.origin);
     },
   },
   methods: {
     onCellChange(key, dataIndex, value) {
-      console.log("on project changed", key, dataIndex, value);
       const projects = [...this.projects];
       const target = projects.find((item) => item.key === key);
       if (target && target[dataIndex] !== value) {
-        console.log("on cell change", key, dataIndex, value);
         target[dataIndex] = value;
-        console.log("target = ", target);
         this.projects = projects;
       }
     },
@@ -166,7 +157,6 @@ export default {
         if (err) {
           return;
         }
-        console.log("Received values of form: ", project);
         modalForm.resetFields();
         this.visible = false;
         this.$store
@@ -181,7 +171,6 @@ export default {
       this.projects = projects.filter((item) => item.key !== key);
     },
     onSave() {
-      console.log("save projects");
       this.$store.dispatch("project/update", this.projects).finally(() => {
         this.refresh();
       });
@@ -193,7 +182,6 @@ export default {
       this.projects = this.$store.state.project.all.map((project) => {
         return { ...project, key: project.number };
       });
-      console.log("projects refreshed", this.projects);
     },
   },
 };
