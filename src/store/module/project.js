@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-02 15:43:20
- * @LastEditTime: 2021-11-03 18:12:07
+ * @LastEditTime: 2021-11-08 10:19:20
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/store/module/project.js
@@ -18,7 +18,6 @@ const actions = {
     return new Promise((resolve, reject) => {
       list()
         .then((data) => {
-          console.log("projects", data.projects);
           commit("SET_PROJECTS", data.projects);
           resolve();
         })

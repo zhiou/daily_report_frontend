@@ -1,7 +1,7 @@
 /*
  * @Author: zhiou
  * @Date: 2021-09-26 10:33:57
- * @LastEditTime: 2021-10-11 14:14:49
+ * @LastEditTime: 2021-11-08 10:19:36
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/request/index.js
@@ -22,7 +22,6 @@ const service = axios.create({
 
 MockConfig.mocks.forEach((config) => {
   if (config.enabled) {
-    console.log("mock config:", config.api, config.method, config.data)
     Mock.mock(config.api, config.method, () => {
       return {
         message: "ok",
@@ -61,7 +60,6 @@ service.interceptors.response.use(
 );
 
 let onTokenInvalid = function() {
-  console.log("on token invalid");
   removeToken(); // 防止每次都进了home再跳转
   router.replace({
     name: "/Login",

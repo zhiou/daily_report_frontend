@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-02 13:54:56
- * @LastEditTime: 2021-11-03 18:47:23
+ * @LastEditTime: 2021-11-08 10:16:30
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Product.vue
@@ -145,13 +145,10 @@ export default {
   },
   methods: {
     onCellChange(key, dataIndex, value) {
-      console.log("on product changed", key, dataIndex, value);
       const products = [...this.products];
       const target = products.find((item) => item.key === key);
       if (target && target[dataIndex] !== value) {
-        console.log("on cell change", key, dataIndex, value);
         target[dataIndex] = value;
-        console.log("target = ", target);
         this.products = products;
       }
     },
@@ -161,7 +158,6 @@ export default {
         if (err) {
           return;
         }
-        console.log("Received values of form: ", product);
         modalForm.resetFields();
         this.visible = false;
         this.$store
@@ -176,7 +172,6 @@ export default {
       this.products = products.filter((item) => item.key !== key);
     },
     onSave() {
-      console.log("save products");
       this.$store.dispatch("product/update", this.products).finally(() => {
         this.refresh();
       });
@@ -188,7 +183,6 @@ export default {
       this.products = this.$store.state.product.all.map((product) => {
         return { ...product, key: product.number };
       });
-      console.log("products refreshed", this.products);
     },
   },
 };

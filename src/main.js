@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-22 17:11:13
- * @LastEditTime: 2021-11-04 11:15:49
+ * @LastEditTime: 2021-11-08 10:17:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/main.js
@@ -40,12 +40,10 @@ Vue.directive("title", function(el) {
 
   router.beforeEach((to, from, next) => {
     const token = store.state.user.token
-    console.log("router beforeEach", to.meta.requireAuth, token);
     if (!to.meta.requireAuth || (token && token != "")) {
       next();
       return;
     }
-    console.log("goto login");
     next({
       path: "/login",
       query: {

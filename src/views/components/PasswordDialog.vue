@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-06-24 14:42:06
- * @LastEditTime: 2021-10-13 10:59:21
+ * @LastEditTime: 2021-11-08 10:19:40
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/views/home/UserSettings.vue
@@ -138,7 +138,6 @@ export default {
     onSubmit(e) {
       this.confirmLoading = true;
       this.form.validateFields((err, values) => {
-        console.log("password", values, e);
         this.$store
           .dispatch("account/update", {
             origin: values.password,
@@ -155,7 +154,6 @@ export default {
       });
     },
     onCancel(e) {
-      console.log("Clicked cancel button", e);
       this.modalShow = false;
     },
     handleConfirmBlur(e) {

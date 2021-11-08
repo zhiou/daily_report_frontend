@@ -3,7 +3,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 15:34:38
- * @LastEditTime: 2021-11-04 17:10:46
+ * @LastEditTime: 2021-11-08 10:18:40
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Report.vue
@@ -205,14 +205,11 @@ export default {
         to: moment().add(1, "day"),
       })
       .then((tasks) => {
-        console.log("report queried", tasks);
         this.tasks = tasks.map((task) => {
           let key = this.count;
           this.count = key + 1;
           return { ...task, key: key };
         });
-
-        console.log("this.tasks", this.tasks);
       });
   },
   data() {
@@ -240,7 +237,6 @@ export default {
   },
   methods: {
     update(status) {
-      console.log("submit report", this.tasks, this.dayString);
       this.$store
         .dispatch("report/update", {
           ...this.tasks,
@@ -263,7 +259,7 @@ export default {
       const tasks = [...this.tasks];
       const target = tasks.find((item) => item.key === key);
       if (target && target[dataIndex] !== value) {
-        console.log("on cell change", key, dataIndex, value);
+
         target[dataIndex] = value;
         this.tasks = tasks;
       }
@@ -273,7 +269,6 @@ export default {
       this.tasks = tasks.filter((item) => item.key !== key);
     },
     onProjectChanged(key, dataIndex, number) {
-      console.log("on project change", key, number);
       const tasks = [...this.tasks];
       const target = tasks.find((item) => item.key === key);
       if (target) {
@@ -282,7 +277,6 @@ export default {
       }
     },
     onProductChanged(key, dataIndex, number) {
-      console.log("on product change", key, number);
       const tasks = [...this.tasks];
       const target = tasks.find((item) => item.key === key);
       if (target) {

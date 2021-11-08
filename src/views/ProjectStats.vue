@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-04 10:56:50
- * @LastEditTime: 2021-11-05 16:31:15
+ * @LastEditTime: 2021-11-08 10:18:31
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Personal.vue
@@ -44,13 +44,12 @@ export default {
           return 0;
         });
       });
-      console.log("yAxis", yAxis);
+
       let grid = this.$_.map(yAxis, (v, k) => {
         return [k, ...v];
       });
 
       let result = this.$_.concat([["工时", ...xAxis]], grid);
-      console.log("result = ", result);
       return result;
     },
     pieData() {
@@ -67,7 +66,6 @@ export default {
       this.$_.forIn(totals, (value, key) => {
         axis.push({ value: value, name: key });
       });
-      console.log("axis = ", axis);
       return axis;
     },
   },
@@ -81,7 +79,6 @@ export default {
           to: moment().format(),
         })
         .then((data) => {
-          console.log("fetch", data);
           this.reports = data;
           this.render();
         });
@@ -103,7 +100,6 @@ export default {
         const xAxisInfo = event.axesInfo[0];
         if (xAxisInfo) {
           const dimension = xAxisInfo.value + 1;
-          console.log("dimension", dimension);
           line.setOption({
             series: {
               id: "pie",

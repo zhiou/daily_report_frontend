@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 14:50:36
- * @LastEditTime: 2021-11-04 18:30:29
+ * @LastEditTime: 2021-11-08 10:17:36
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/DepartmentReport.vue
@@ -130,9 +130,7 @@ export default {
         to: moment(),
       })
       .then((tasks) => {
-        console.log("project reports queried", tasks);
         let nameBased = this.$_.groupBy(tasks, "staff_name");
-        console.log("nameBased projects", nameBased);
         this.reports = Object.keys(nameBased).map((name) => {
           let tasks = nameBased[name];
           let department = tasks[0].department;
@@ -156,7 +154,6 @@ export default {
           this.count++;
           return { name, cost, tasks: content, department, key };
         });
-        console.log("this.reports", this.reports);
       });
   },
   data() {
