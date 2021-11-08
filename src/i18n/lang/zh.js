@@ -58,6 +58,7 @@ module.exports = {
       user: "个人日志",
       dm: "部门日志",
       pm: "项目日志",
+      pmo: "PMO",
       worktime: "工时统计",
       staff: "员工工时",
       proj_stat: "项目工时统计",

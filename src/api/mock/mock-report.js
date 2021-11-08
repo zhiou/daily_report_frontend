@@ -6,6 +6,25 @@
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/api/mock/mock-report.js
  */
+
+  function rangeDate(min,max) {
+    var  days = (new Date(max) - new Date(min))/1000/60/60/24;
+    var  i = 0;
+    var  len = Math.floor(days);
+    var  dates = [];
+    for(;i<len;i++){
+      dates.push(format(new Date(min).getTime()+1000*60*60*24*i));
+    } 
+    return  dates; 
+  }
+
+  function format(date) {
+    var dateString = new Date(date),
+        month = (dateString.getMonth()+1)<10 ? '0'+(dateString.getMonth()+1): (dateString.getMonth()+1),
+        day = dateString.getDate()<10 ? '0'+dateString.getDate() : dateString.getDate();
+    return dateString.getFullYear()+'-'+month+'-'+day
+  }
+
 export const mockReport = {
   update: {
     api: /\/report$/,
@@ -28,11 +47,11 @@ export const mockReport = {
           "staff_name|1":"@cname",
           "task_cost|1":"@integer(1, 12)",
           "project_number|1":["11223344", "22334455", "33445566", "44556677", "55667788", "66778899", "77889900", "88990011", "99001122", "00000000"],
-          "project_name|1":["贵州农信银", "贵州安元通", "深圳农商行", "深圳农商行", "中国人民银行", "河北银行", "天威诚信信创", "江苏智慧CA", "福建凯特", "奔凯", "未立项"],
-          "report_date|1":"@datetime",
+          "project_name|1":["贵州农信银", "贵州安元通", "深圳农商行", "北京农商行", "中国人民银行", "河北银行", "天威诚信信创", "江苏智慧CA", "福建凯特", "奔凯", "未立项"],
+          "report_date|1": rangeDate('2021-01-01','2021-12-31'),
           "task_name|1":["任务1", "任务2", "任务3", "任务4", "任务5"],
           "task_detail|1":"@cparagraph(1,5)",
-          "commit_data|1":"@datetime",
+          "commit_data|1":rangeDate('2021-01-01','2021-12-31'),
         },
       ],
     },
@@ -52,7 +71,7 @@ export const mockReport = {
           "staff_name|1":"@cname",
           "task_cost|1":"@integer(1, 12)",
           "project_number|1":["11223344", "22334455", "33445566", "44556677", "55667788", "66778899", "77889900", "88990011", "99001122", "00000000"],
-          "project_name|1":["贵州农信银", "贵州安元通", "深圳农商行", "深圳农商行", "中国人民银行", "河北银行", "天威诚信信创", "江苏智慧CA", "福建凯特", "奔凯", "未立项"],
+          "project_name|1":["贵州农信银", "贵州安元通", "深圳农商行", "北京农商行", "中国人民银行", "河北银行", "天威诚信信创", "江苏智慧CA", "福建凯特", "奔凯", "未立项"],
           "report_date|1":"@datetime",
           "task_name|1":["任务1", "任务2", "任务3", "任务4", "任务5"],
           "task_detail|1":"@cparagraph(1,5)",
@@ -76,7 +95,7 @@ export const mockReport = {
           "staff_name|1":["周", "吴", "郑", "王"],
           "task_cost|1":"@integer(1, 12)",
           "project_number|1":["11223344", "22334455", "33445566", "44556677", "55667788", "66778899", "77889900", "88990011", "99001122", "00000000"],
-          "project_name|1":["贵州农信银", "贵州安元通", "深圳农商行", "深圳农商行", "中国人民银行", "河北银行", "天威诚信信创", "江苏智慧CA", "福建凯特", "奔凯", "未立项"],
+          "project_name|1":["贵州农信银", "贵州安元通", "深圳农商行", "北京农商行", "中国人民银行", "河北银行", "天威诚信信创", "江苏智慧CA", "福建凯特", "奔凯", "未立项"],
           "report_date|1":"@datetime",
           "task_name|1":["任务1", "任务2", "任务3", "任务4", "任务5"],
           "task_detail|1":"@cparagraph(1,5)",

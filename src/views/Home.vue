@@ -113,6 +113,10 @@ export default {
               key: "pm",
               title: this.$t("home.menu.pm"),
             },
+            {
+              key: "pmo",
+              title: this.$t("home.menu.pmo"),
+            },
           ],
         },
         {
@@ -148,7 +152,7 @@ export default {
       ];
     },
     menuSelectableKeys: function () {
-      return ["user", "dm", "pm", "staff", 'proj_stats', "pm", "proj", "prod"];
+      return ["user", "dm", "pm", "pmo", "staff", 'proj_stats', "pm", "proj", "prod"];
     },
   },
   mounted() {

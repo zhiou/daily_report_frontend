@@ -19,6 +19,8 @@ import Project from '../views/Project.vue'
 import Product from '../views/Product.vue'
 import PersonalStats from '../views/PersonalStats.vue'
 import ProjectStats from '../views/ProjectStats.vue'
+import PMOReport from '../views/PMOReport.vue'
+
 Vue.use(VueRouter)
 
 const originalPush = VueRouter.prototype.push;
@@ -54,6 +56,11 @@ const routes = [
         path: 'pm',
         name: 'ProjectReport',
         component: ProjectReport,
+      },
+      {
+        path: 'pmo',
+        name: 'PMOReport',
+        component: PMOReport,
       },
       {
         path: 'staff',
