@@ -18,7 +18,7 @@
             show-search
             option-filter-prop="children"
             :filter-option="filterOption"
-            style="width: 150px"
+            style="width: 150px" 
             @change="onQueryItemChanged($event)"
           >
             <a-select-option v-for="item in queryitems" :key="item.number">
@@ -27,12 +27,11 @@
           </a-select>
         </a-col>
       <a-col :span="4">
-          <a-select
+          <a-select v-model="clearflag"
             show-search
             option-filter-prop="children"
             :filter-option="filterOption"
             style="width: 150px"
-            :default-value="number"
             @change="onProductChanged(record.key, 'product', $event)"
           >
             <a-select-option v-for="item in multiItems" :key="item.number">
@@ -42,7 +41,7 @@
         </a-col>
         <a-description>请选择查询时间：</a-description>
         <a-col :span="4">
-           <a-range-picker  showTime format="YYYY/MM/DD" :placeholder="['开始时间', '结束时间']" @change="onChange"/>
+           <a-range-picker showTime format="YYYY/MM/DD" :placeholder="['开始时间', '结束时间']" @change="onChange"/>
         </a-col>
          </a-space>
         <a-col :span="24"> </a-col>
@@ -211,6 +210,7 @@ export default {
       projects,
       products,
       employers,
+      clearflag: "",
     };
   },
   computed: {
@@ -226,6 +226,7 @@ export default {
       else{
         this.multiItems = employers;
       }
+      this.clearflag = "";
     },
     onProjectChanged(key, dataIndex, number) {
       const tasks = [...this.tasks];
