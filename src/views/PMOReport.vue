@@ -6,13 +6,27 @@
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/ProjectReport.vue
 -->
+
 <template>
   <div id="PMOreport" v-title data-title="PMO日志">
     <div class="report-frame">
-      <a-row type="flex" justify="start" :gutter="2">
+      <a-row type="flex" justify="start" :gutter="2" style= "margin:30px 20px">
         <a-space>
-        <a-description>请选择产品：</a-description>
-        <a-col :span="4">
+        <a-description>请选择查询项：</a-description>
+          <a-col :span="4">
+          <a-select
+            show-search
+            option-filter-prop="children"
+            :filter-option="filterOption"
+            style="width: 150px"
+            @change="onQueryItemChanged($event)"
+          >
+            <a-select-option v-for="item in queryitems" :key="item.number">
+              {{ item.name }}
+            </a-select-option>
+          </a-select>
+        </a-col>
+      <a-col :span="4">
           <a-select
             show-search
             option-filter-prop="children"
@@ -21,38 +35,8 @@
             :default-value="number"
             @change="onProductChanged(record.key, 'product', $event)"
           >
-            <a-select-option v-for="product in products" :key="product.number">
-              {{ product.name }}
-            </a-select-option>
-          </a-select>
-        </a-col>
-        <a-description>请选择项目：</a-description>
-        <a-col :span="4">
-          <a-select
-            show-search
-            option-filter-prop="children"
-            :filter-option="filterOption"
-            style="width: 150px"
-            :default-value="number"
-            @change="onProjectChanged(record.key, 'project', $event)"
-          >
-            <a-select-option v-for="project in projects" :key="project.number">
-              {{ project.name }}
-            </a-select-option>
-          </a-select>
-        </a-col>
-        <a-description>请选择员工：</a-description>
-        <a-col :span="4">
-          <a-select
-            show-search
-            option-filter-prop="children"
-            :filter-option="filterOption"
-            style="width: 150px"
-            :default-value="number"
-            @change="onEmployerChanged(record.key, 'employer', $event)"
-          >
-            <a-select-option v-for="employer in employers" :key="employer.number">
-              {{ employer.name }}
+            <a-select-option v-for="item in multiItems" :key="item.number">
+              {{ item.name }}
             </a-select-option>
           </a-select>
         </a-col>
@@ -134,11 +118,15 @@ const columns = [
   },
 ];
 
+let queryitems = [
+    {number: "0", name: "产品"},
+    {number: "1", name: "项目"},
+    {number: "2", name: "员工"},
+];
+
 let products = [
-  { number: "0", name: "自定义" },
-
+  { number: "01234", name: "自定义" },
   { number: "12345", name: "OTP" },
-
   { number: "67890", name: "KEY线" },
 ];
 
@@ -212,12 +200,14 @@ export default {
     return {
       count: 0,
       reports: [],
+      multiItems: [],
       columns,
       onDay: moment(),
       //project: "11223344",
      // projectName: "",
       dateFormat: 'YYYY/MM/DD',
       monthFormat: 'YYYY/MM',
+      queryitems,
       projects,
       products,
       employers,
@@ -226,6 +216,17 @@ export default {
   computed: {
   },
   methods: {
+    onQueryItemChanged(number){
+      if(0 == number){
+        this.multiItems = products;
+      }
+      else if(1 == number){
+        this.multiItems = projects;
+      }
+      else{
+        this.multiItems = employers;
+      }
+    },
     onProjectChanged(key, dataIndex, number) {
       const tasks = [...this.tasks];
       const target = tasks.find((item) => item.key === key);
