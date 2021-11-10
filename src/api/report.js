@@ -1,12 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2021-10-11 11:05:41
- * @LastEditTime: 2021-11-04 15:50:21
+ * @LastEditTime: 2021-11-10 15:35:53
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/api/report.js
  */
 import request from './request'
+import { downloader } from './request/downloader'
 
 export function update(report) {
     return request({
@@ -45,5 +46,12 @@ export function update(report) {
       url: '/report/pmo',
       method: 'get',
       data: report
+    })
+  }
+
+  export function download(report) {
+    return downloader({
+      url: '/report/download',
+      params: report
     })
   }
