@@ -13,6 +13,7 @@ import {
   dmQuery,
   pmQuery,
   pmoQuery,
+  download,
 } from "../../api/report";
 
 const state = () => ({
@@ -76,6 +77,17 @@ const actions = {
         });
     });
   },
+  download({ commit }, info) {
+    return new Promise((resolve, reject) => {
+      download(info)
+        .then((data) => {
+          resolve(data.tasks);
+        })
+        .catch((e) => {
+          reject(e);
+        });
+    });
+  }
 };
 
 const mutations = {
