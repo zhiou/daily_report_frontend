@@ -165,54 +165,17 @@ export default {
     EditableCell,
     EditableNumberCell,
   },
-  beforeCreate() {
-    //TODO: 参数不对,要改
-    this.$store
-      .dispatch("report/pmoQuery", {
-        type:0,
-        condition:"ES0092",
-        from: moment(),
-        to: moment(),
-      })
-      .then((tasks) => {
-        this.projectName = tasks[0].project_name;
-
-        let nameBased = this.$_.groupBy(tasks, 'staff_name')
- 
-        this.reports = Object.keys(nameBased).map(name => {
-          let tasks = nameBased[name];
-          let department = tasks[0].department
-          let cost = 0;
-          let content = [];
-          let sn = 1;
-          tasks.forEach((task) => {
-            cost += task.task_cost;
-            let tc = sn +". <" + task.task_name + ">";
-            sn++;
-            if (task.product_name) {
-                tc += "[" + task.product_name + "]";
-            }
-
-            tc += task.task_detail;
-            content.push(tc);
-          });
-          let key = this.count;
-          this.count++;
-          return { name, cost, tasks: content, department, key };
-        })
-      });
-  },
   data() {
     return {
       count: 0,
       reports: [],
       multiItems: [],
       columns,
-      onDay: moment(),
+      //onDay: moment(),
       //project: "11223344",
      // projectName: "",
-      dateFormat: 'YYYY/MM/DD',
-      monthFormat: 'YYYY/MM',
+     // dateFormat: 'YYYY/MM/DD',
+     // monthFormat: 'YYYY/MM',
       queryitems,
       projects,
       products,
@@ -251,13 +214,37 @@ export default {
     },
     onQueryLog() {
       this.$store
-      .dispatch("report/pmo", {
+      .dispatch("report/pmoQuery", {
         type:"1",
         condition:"106",
         from: "2021-10-26",
         to: "2021-10-27",
-      }).then((tasks)=>{
-          console.log(tasks);
+      }).then((tasks) => {
+        this.projectName = tasks[0].project_name;
+
+        let nameBased = this.$_.groupBy(tasks, 'staff_name')
+ 
+        this.reports = Object.keys(nameBased).map(name => {
+          let tasks = nameBased[name];
+          let department = tasks[0].department
+          let cost = 0;
+          let content = [];
+          let sn = 1;
+          tasks.forEach((task) => {
+            cost += task.task_cost;
+            let tc = sn +". <" + task.task_name + ">";
+            sn++;
+            if (task.product_name) {
+                tc += "[" + task.product_name + "]";
+            }
+
+            tc += task.task_detail;
+            content.push(tc);
+          });
+          let key = this.count;
+          this.count++;
+          return { name, cost, tasks: content, department, key };
+        })
       }).catch((e)=>{
         console.log(e)
           this.$message.error(e);
