@@ -12,7 +12,7 @@
     <div class="report-frame">
       <a-row type="flex" justify="start" :gutter="2" style= "margin:30px 20px">
         <a-space>
-        <a-description>请选择查询项：</a-description>
+        <a-span>请选择查询项：</a-span>
           <a-col :span="4">
           <a-select
             show-search
@@ -32,17 +32,23 @@
             option-filter-prop="children"
             :filter-option="filterOption"
             style="width: 150px"
-            @change="onProductChanged(record.key, 'product', $event)"
+            @change="onProductorProjectorEmployerChanged(record.key, 'product', $event)"
           >
             <a-select-option v-for="item in multiItems" :key="item.number">
               {{ item.name }}
             </a-select-option>
           </a-select>
         </a-col>
-        <a-description>请选择查询时间：</a-description>
+        <a-span>请选择查询时间：</a-span>
         <a-col :span="4">
-           <a-range-picker showTime format="YYYY/MM/DD" :placeholder="['开始时间', '结束时间']" @change="onChange"/>
+           <a-range-picker v-model="resetdate" showTime format="YYYY/MM/DD" :placeholder="['开始时间', '结束时间']" @change="onChange"/>
         </a-col>
+        <a-button :span="4" type="primary" @click="onQueryLog">
+          查询
+        </a-button>
+        <a-button :span="4" type="primary" @click="onDownload">
+          Download
+        </a-button>
          </a-space>
         <a-col :span="24"> </a-col>
       </a-row>
@@ -54,30 +60,25 @@
         :defaultExpandedRowKeys="[0]"
         :pagination="false"
       >
-        <template slot="name" slot-scope="text, record">
+        <template slot="name" slot-scope="text">
           <editable-cell
             :text="text"
-            @change="onCellChange(record.key, 'name', $event)"
           />
         </template>
-        <template slot="cost" slot-scope="number, record">
+        <template slot="cost" slot-scope="number">
           <editable-number-cell
             :number="number"
-            @change="onCellChange(record.key, 'cost', $event)"
           />
         </template>
-        <template slot="department" slot-scope="department, record">
+        <template slot="department" slot-scope="department">
           <editable-cell
             :text="department"
-            @change="onCellChange(record.key, 'department', $event)"
           />
         </template>
         <template slot="details" slot-scope="tasks">
-          <ol>
-            <li v-for="(task, index) in tasks" :key="index">
-              {{ task }}
-            </li>
-          </ol>
+          <editable-cell v-for="(task, index) in tasks" :key="index"
+            :text= "task"
+          />
         </template>
       </a-table>
     </div>
@@ -96,18 +97,21 @@ const columns = [
     dataIndex: "name",
     key: "name",
     scopedSlots: { customRender: "name" },
+    width:120,
   },
   {
     title: "Cost",
     dataIndex: "cost",
     key: "cost",
     scopedSlots: { customRender: "cost" },
+    width:100,
   },
   {
     title: "Department",
     dataIndex: "department",
     key: "department",
     scopedSlots: { customRender: "department" },
+    width:140,
   },
   {
     title: "Tasks",
@@ -156,7 +160,7 @@ let employers = [
 ];
 
 export default {
-  name: "ProjectReport",
+  name: "PMOReport",
   components: {
     EditableCell,
     EditableNumberCell,
@@ -164,7 +168,9 @@ export default {
   beforeCreate() {
     //TODO: 参数不对,要改
     this.$store
-      .dispatch("report/pmQuery", {
+      .dispatch("report/pmoQuery", {
+        type:0,
+        condition:"ES0092",
         from: moment(),
         to: moment(),
       })
@@ -176,12 +182,13 @@ export default {
         this.reports = Object.keys(nameBased).map(name => {
           let tasks = nameBased[name];
           let department = tasks[0].department
-           let cost = 0;
+          let cost = 0;
           let content = [];
+          let sn = 1;
           tasks.forEach((task) => {
             cost += task.task_cost;
-            let tc = "<" + task.task_name + ">";
-
+            let tc = sn +". <" + task.task_name + ">";
+            sn++;
             if (task.product_name) {
                 tc += "[" + task.product_name + "]";
             }
@@ -211,6 +218,7 @@ export default {
       products,
       employers,
       clearflag: "",
+      resetdate: ['',''],
     };
   },
   computed: {
@@ -227,16 +235,9 @@ export default {
         this.multiItems = employers;
       }
       this.clearflag = "";
+      this.resetdate = ['',''];
     },
-    onProjectChanged(key, dataIndex, number) {
-      const tasks = [...this.tasks];
-      const target = tasks.find((item) => item.key === key);
-      if (target) {
-        target[dataIndex] = number;
-        this.tasks = tasks;
-      }
-    },
-    onProductChanged(key, dataIndex, number) {
+    onProductorProjectorEmployerChanged(key, dataIndex, number) {
       const tasks = [...this.tasks];
       const target = tasks.find((item) => item.key === key);
       if (target) {
@@ -247,6 +248,32 @@ export default {
     onChange(dates, dateStrings) {
      // console.log('From: ', dates[0], ', to: ', dates[1]);
      // console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
+    },
+    onQueryLog() {
+      this.$store
+      .dispatch("report/pmo", {
+        type:"1",
+        condition:"106",
+        from: "2021-10-26",
+        to: "2021-10-27",
+      }).then((tasks)=>{
+          console.log(tasks);
+      }).catch((e)=>{
+        console.log(e)
+          this.$message.error(e);
+      }) 
+    },
+    onDownload() {
+      this.$store
+      .dispatch("report/download", {
+        type:"1",
+        condition:"106",
+        from: "2021-10-26",
+        to: "2021-10-27",
+      }).catch((e)=>{
+        console.log(e)
+          this.$message.error(e);
+      })
     },
     filterOption(input, option) {
       return (

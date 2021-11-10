@@ -80,8 +80,8 @@ const actions = {
   download({ commit }, info) {
     return new Promise((resolve, reject) => {
       download(info)
-        .then((data) => {
-          resolve(data.tasks);
+        .then(() => {
+          resolve();
         })
         .catch((e) => {
           reject(e);

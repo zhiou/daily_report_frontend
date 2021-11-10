@@ -43,11 +43,9 @@
           />
         </template>
         <template slot="details" slot-scope="tasks">
-          <ol>
-            <li v-for="(task, index) in tasks" :key="index">
-              {{ task }}
-            </li>
-          </ol>
+          <editable-cell v-for="(task, index) in tasks" :key="index"
+            :text= "task"
+          />
         </template>
  
       </a-table>
@@ -67,18 +65,21 @@ const columns = [
     dataIndex: "name",
     key: "name",
     scopedSlots: { customRender: "name" },
+    width:120,
   },
   {
     title: "Cost",
     dataIndex: "cost",
     key: "cost",
     scopedSlots: { customRender: "cost" },
+    width:100,
   },
   {
     title: "Department",
     dataIndex: "department",
     key: "department",
     scopedSlots: { customRender: "department" },
+    width:140,
   },
   {
     title: "Tasks",
@@ -112,10 +113,11 @@ export default {
           let department = tasks[0].department
            let cost = 0;
           let content = [];
+          let sn = 1;
           tasks.forEach((task) => {
             cost += task.task_cost;
-            let tc = "<" + task.task_name + ">";
-
+            let tc = sn +". <" + task.task_name + ">";
+            sn++;
             if (task.product_name) {
                 tc += "[" + task.product_name + "]";
             }

@@ -20,17 +20,17 @@ const service = axios.create({
   timeout: 10000,
 });
 
-MockConfig.mocks.forEach((config) => {
-  if (config.enabled) {
-    Mock.mock(config.api, config.method, () => {
-      return {
-        message: "ok",
-        code: 0,
-        data: config.data,
-      };
-    });
-  }
-});
+// MockConfig.mocks.forEach((config) => {
+//   if (config.enabled) {
+//     Mock.mock(config.api, config.method, () => {
+//       return {
+//         message: "ok",
+//         code: 0,
+//         data: config.data,
+//       };
+//     });
+//   }
+// });
 
 service.interceptors.request.use(
   (request) => {

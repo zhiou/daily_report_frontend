@@ -184,9 +184,7 @@ let projects = [
 
 let products = [
   { number: "0", name: "自定义" },
-
   { number: "12345", name: "OTP" },
-
   { number: "67890", name: "KEY线" },
 ];
 

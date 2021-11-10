@@ -30,8 +30,8 @@ downloader.interceptors.request.use(
 downloader.interceptors.response.use(
   (response) => {
     console.log(response);
-    let fileName = response.headers["Content-disposition"].split("=")[1];
-    console.log("Content-disposition", response.headers["Content-disposition"]);
+    console.log("Content-disposition", response.headers['content-disposition']);
+    let fileName = response.headers['content-disposition'].split("=")[1];
     fileDownload(response.data, fileName, "application/vnd.ms-excel");
   },
   (error) => {
