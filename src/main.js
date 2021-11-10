@@ -15,6 +15,7 @@ import "ant-design-vue/dist/antd.css";
 import moment from "moment";
 import i18n from "./i18n";
 import lodash from "lodash";
+
 const echarts = require("echarts")
 
 Vue.config.productionTip = false

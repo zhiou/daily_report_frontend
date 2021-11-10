@@ -57,7 +57,7 @@
             :filter-option="filterOption"
             style="width: 150px"
             :default-value="number"
-            @change="onProductChanged(record.key, 'product', $event)"
+            @change="onProductChanged(record.key, 'product_number', $event)"
           >
             <a-select-option v-for="product in products" :key="product.number">
               {{ product.name }}
@@ -71,7 +71,7 @@
             :filter-option="filterOption"
             style="width: 150px"
             :default-value="number"
-            @change="onProjectChanged(record.key, 'project', $event)"
+            @change="onProjectChanged(record.key, 'project_number', $event)"
           >
             <a-select-option v-for="project in projects" :key="project.number">
               {{ project.name }}
@@ -82,19 +82,19 @@
         <template slot="name" slot-scope="text, record">
           <editable-cell
             :text="text"
-            @change="onCellChange(record.key, 'name', $event)"
+            @change="onCellChange(record.key, 'task_name', $event)"
           />
         </template>
         <template slot="cost" slot-scope="number, record">
           <editable-number-cell
             :number="number"
-            @change="onCellChange(record.key, 'cost', $event)"
+            @change="onCellChange(record.key, 'task_cost', $event)"
           />
         </template>
         <template slot="details" slot-scope="text, record">
           <editable-area-cell
             :text="text"
-            @change="onCellChange(record.key, 'details', $event)"
+            @change="onCellChange(record.key, 'task_detail', $event)"
           />
         </template>
         <template slot="operation" slot-scope="text, record">
@@ -184,9 +184,7 @@ let projects = [
 
 let products = [
   { number: "0", name: "自定义" },
-
   { number: "12345", name: "OTP" },
-
   { number: "67890", name: "KEY线" },
 ];
 

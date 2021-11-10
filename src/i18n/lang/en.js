@@ -57,6 +57,7 @@ module.exports = {
       user: "User Log",
       dm: "Department Log",
       pm: "Project Log",
+      pmo: "PMO",
       worktime: "Work Time",
       staff: "Staff",
       proj_stat: "Project Statistics",
@@ -187,7 +188,7 @@ module.exports = {
       menu: "Change Password",
       title: "Change Password",
       label: {
-        origin: "Origin Password", 
+        origin: "Origin Password",
         newp: "New Password",
         confirm: "Confirm Password",
       },
