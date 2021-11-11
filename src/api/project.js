@@ -29,3 +29,11 @@ export function create(project) {
     data: project,
   });
 }
+
+export function remove(project) {
+  return request({
+    url: "/project",
+    method: "delete",
+    data: project,
+  });
+}

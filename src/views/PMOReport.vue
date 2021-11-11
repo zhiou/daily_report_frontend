@@ -12,7 +12,7 @@
     <div class="report-frame">
       <a-row type="flex" justify="start" :gutter="2" style= "margin:30px 20px">
         <a-space>
-        <a-span>请选择查询项：</a-span>
+        <span>请选择查询项：</span>
           <a-col :span="4">
           <a-select
             show-search
@@ -39,7 +39,7 @@
             </a-select-option>
           </a-select>
         </a-col>
-        <a-span>请选择查询时间：</a-span>
+        <span>请选择查询时间：</span>
         <a-col :span="4">
            <a-range-picker v-model="resetdate" showTime format="YYYY/MM/DD" :placeholder="['开始时间', '结束时间']" @change="onChange"/>
         </a-col>
@@ -215,8 +215,8 @@ export default {
     onQueryLog() {
       this.$store
       .dispatch("report/pmoQuery", {
-        type:"1",
-        condition:"106",
+        type:"0",
+        condition:"ES0092",
         from: "2021-10-26",
         to: "2021-10-27",
       }).then((tasks) => {

@@ -34,6 +34,7 @@ const service = axios.create({
 
 service.interceptors.request.use(
   (request) => {
+    console.log('request params', request.data)
     request.headers["Authorization"] = getToken();
     return request;
   },

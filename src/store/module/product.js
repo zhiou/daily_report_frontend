@@ -7,7 +7,7 @@
  * @FilePath: /daily-report-frontend/src/store/module/project.js
  */
 
-import { list, update, create } from "../../api/product";
+import { list, update, create, remove} from "../../api/product";
 
 const state = () => ({
   all: [],
@@ -18,7 +18,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       list()
         .then((data) => {
-          commit("SET_PRODUCTS", data.products);
+          commit("SET_PRODUCTS", data);
           resolve();
         })
         .catch((error) => {
@@ -50,6 +50,18 @@ const actions = {
         });
     });
   },
+  remove({ commit }, product) {
+    return new Promise((resolve, reject) => {
+      remove(product)
+        .then(() => {
+          commit("REMOVE_PRODUCT", product);
+          resolve();
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
 };
 
 const mutations = {
@@ -58,7 +70,18 @@ const mutations = {
   },
   ADD_PRODUCT: (state, product) => {
     state.all = [...state.all, product];
-  }
+  },
+  REMOVE_PRODUCT: (state, product) => {
+    let products = [];
+    for (let p of state.all)
+    { 
+      if(p.number !== product.numbers[0])
+      {
+        products.push(p);
+      }
+    }
+    state.all = products;
+  },
 };
 
 export default {

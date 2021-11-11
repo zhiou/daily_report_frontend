@@ -116,7 +116,10 @@
 </template>
 
 <script>
-let staffs = [{ name: "zhiou", number: "ES0092" }];
+let staffs = [{ name: "周煌", number: "ES0092" },
+{ name: "刘纳", number: "ES0150" },
+{ name: "刘淼淼", number: "ES0256" },
+];
 const options = ["激活", "结项", "暂停", "取消"];
 export default {
   name: "ProjectModalForm",
