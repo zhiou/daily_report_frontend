@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 14:50:36
- * @LastEditTime: 2021-11-12 16:33:26
+ * @LastEditTime: 2021-11-12 17:12:12
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/DepartmentReport.vue
@@ -129,8 +129,8 @@ export default {
   mounted() {
     this.$store
       .dispatch("report/dmQuery", {
-        from: moment(),
-        to: moment(),
+        from: this.dayString,
+        to: this.dayString,
       })
       .then((tasks) => {
         let nameBased = this.$_.groupBy(tasks, "staff_name");

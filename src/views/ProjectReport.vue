@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 16:14:42
- * @LastEditTime: 2021-11-12 16:34:21
+ * @LastEditTime: 2021-11-12 17:12:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/ProjectReport.vue
@@ -101,8 +101,8 @@ export default {
     //TODO: 参数不对,要改
     this.$store
       .dispatch("report/pmQuery", {
-        from: moment(),
-        to: moment(),
+        from: this.dayString,
+        to: this.dayString,
       })
       .then((tasks) => {
         this.projectName = tasks[0].project_name;
@@ -148,6 +148,9 @@ export default {
   computed: {
     spinning() {
       return this.$store.state.report.spinning;
+    },
+    dayString() {
+      return this.onDay.format("yyyy-MM-DD");
     },
   },
   methods: {},
