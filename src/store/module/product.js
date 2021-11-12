@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-02 15:43:20
- * @LastEditTime: 2021-11-12 15:24:48
+ * @LastEditTime: 2021-11-12 16:01:51
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/store/module/project.js
@@ -20,7 +20,7 @@ const actions = {
       commit("SET_SPINNING", true);
       list()
         .then((data) => {
-          commit("SET_PRODUCTS", data.products);
+          commit("SET_PRODUCTS", data);
           resolve();
         })
         .catch((error) => {

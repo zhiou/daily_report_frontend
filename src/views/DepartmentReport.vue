@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 14:50:36
- * @LastEditTime: 2021-11-12 15:40:10
+ * @LastEditTime: 2021-11-12 15:56:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/DepartmentReport.vue
@@ -126,7 +126,7 @@ export default {
     EditableCell,
     EditableNumberCell,
   },
-  beforeCreate() {
+  mounted() {
     this.$store
       .dispatch("report/dmQuery", {
         from: moment(),

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 16:14:42
- * @LastEditTime: 2021-11-12 15:39:42
+ * @LastEditTime: 2021-11-12 15:56:05
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/ProjectReport.vue
@@ -97,7 +97,7 @@ export default {
     EditableCell,
     EditableNumberCell,
   },
-  beforeCreate() {
+  mounted() {
     //TODO: 参数不对,要改
     this.$store
       .dispatch("report/pmQuery", {

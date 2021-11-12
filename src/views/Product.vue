@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-02 13:54:56
- * @LastEditTime: 2021-11-12 15:39:59
+ * @LastEditTime: 2021-11-12 16:02:47
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Product.vue
@@ -135,7 +135,7 @@ export default {
       products: [],
     };
   },
-  beforeCreate() {
+  mounted() {
     this.$store.dispatch("product/list").then(() => {
       this.refresh();
     });

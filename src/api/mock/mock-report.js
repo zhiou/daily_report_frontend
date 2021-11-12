@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-10-11 11:07:46
- * @LastEditTime: 2021-11-05 15:35:13
+ * @LastEditTime: 2021-11-12 15:51:25
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/api/mock/mock-report.js
@@ -37,7 +37,9 @@ export const mockReport = {
     method: "get",
     enabled: true,
     template: {
-      "tasks|1-10": [
+      "message|1": "@csentence",
+      "code|1": [0],
+      "data|1-10": [
         {
           "product_line|1":["KEY线", "OTP", "FIDO", "自定义"],
           "product_number|1":["0", "12345" ,"67890"],
@@ -61,7 +63,9 @@ export const mockReport = {
     method: "get",
     enabled: true,
     template: {
-      "tasks|1-30": [
+      "message|1": "@csentence",
+      "code|1": [0],
+      "data|1-30": [
         {
           "product_line|1":["KEY线", "OTP", "FIDO", "自定义"],
           "product_number|1":["0", "12345" ,"67890"],
@@ -85,7 +89,9 @@ export const mockReport = {
     method: "get",
     enabled: true,
     template: {
-      "tasks|30-100": [
+      "message|1": "@csentence",
+      "code|1": [0],
+      "data|30-100": [
         {
           "product_line|1":["KEY线", "OTP", "FIDO", "自定义"],
           "product_number|1":["0", "12345" ,"67890"],
@@ -109,7 +115,9 @@ export const mockReport = {
     method: "get",
     enabled: true,
     template: {
-      "tasks|1-30": [
+      "message|1": "@csentence",
+      "code|1": [0],
+      "data|1-30": [
         {
           "product_line|1":["KEY线", "OTP", "FIDO", "自定义"],
           "product_number|1":["0", "12345" ,"67890"],

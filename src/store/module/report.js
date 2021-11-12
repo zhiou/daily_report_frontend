@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-10-11 10:15:57
- * @LastEditTime: 2021-11-12 15:31:37
+ * @LastEditTime: 2021-11-12 16:03:55
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/store/module/report.js
@@ -38,7 +38,7 @@ const actions = {
       commit("SET_SPINNING", true);
       selfQuery(info)
         .then((data) => {
-          resolve(data.tasks);
+          resolve(data);
         })
         .catch((e) => {
           reject(e);
@@ -53,7 +53,7 @@ const actions = {
       commit("SET_SPINNING", true);
       dmQuery(info)
         .then((data) => {
-          resolve(data.tasks);
+          resolve(data);
         })
         .catch((e) => {
           reject(e);
@@ -68,7 +68,7 @@ const actions = {
       commit("SET_SPINNING", true);
       pmQuery(info)
         .then((data) => {
-          resolve(data.tasks);
+          resolve(data);
         })
         .catch((e) => {
           reject(e);
@@ -83,7 +83,7 @@ const actions = {
       commit("SET_SPINNING", true);
       pmoQuery(info)
         .then((data) => {
-          resolve(data.tasks);
+          resolve(data);
         })
         .catch((e) => {
           reject(e);

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-26 11:43:31
- * @LastEditTime: 2021-11-12 15:22:26
+ * @LastEditTime: 2021-11-12 15:58:05
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/store/index.js
@@ -24,12 +24,8 @@ export default new Vuex.Store({
     product,
   },
   state: {
-    spinning: false,
   },
   mutations: {
-    SET_SPINNING(state, spinning) {
-      state.spinning = spinning;
-    },
   },
   actions: {},
 });
