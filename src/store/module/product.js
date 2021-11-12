@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-02 15:43:20
- * @LastEditTime: 2021-11-12 16:01:51
+ * @LastEditTime: 2021-11-12 16:53:03
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/store/module/project.js
@@ -78,7 +78,7 @@ const mutations = {
   },
   SET_SPINNING(state, spinning) {
     state.spinning = spinning;
-  }
+  },
   REMOVE_PRODUCT: (state, product) => {
     let products = [];
     for (let p of state.all)
