@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 16:14:42
- * @LastEditTime: 2021-11-11 18:32:58
+ * @LastEditTime: 2021-11-12 15:41:21
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/ProjectReport.vue
@@ -10,77 +10,87 @@
 <template>
   <div id="PMOreport" v-title data-title="PMO日志">
     <div class="report-frame">
-      <a-row type="flex" justify="start" :gutter="2" style= "margin:30px 20px">
+      <a-row type="flex" justify="start" :gutter="2" style="margin: 30px 20px">
         <a-space>
-        <a-span>请选择查询项：</a-span>
+          <a-span>请选择查询项：</a-span>
           <a-col :span="4">
-          <a-select
-            show-search
-            option-filter-prop="children"
-            :filter-option="filterOption"
-            style="width: 150px" 
-            @change="onQueryItemChanged($event)"
-          >
-            <a-select-option v-for="item in queryitems" :key="item.number">
-              {{ item.name }}
-            </a-select-option>
-          </a-select>
-        </a-col>
-      <a-col :span="4">
-          <a-select v-model="clearflag"
-            show-search
-            option-filter-prop="children"
-            :filter-option="filterOption"
-            style="width: 150px"
-            @change="onProductorProjectorEmployerChanged(record.key, 'product', $event)"
-          >
-            <a-select-option v-for="item in multiItems" :key="item.number">
-              {{ item.name }}
-            </a-select-option>
-          </a-select>
-        </a-col>
-        <a-span>请选择查询时间：</a-span>
-        <a-col :span="4">
-           <a-range-picker v-model="resetdate" showTime format="YYYY/MM/DD" :placeholder="['开始时间', '结束时间']" @change="onChange"/>
-        </a-col>
-        <a-button :span="4" type="primary" @click="onQueryLog">
-          查询
-        </a-button>
-        <a-button :span="4" type="primary" @click="onDownload">
-          Download
-        </a-button>
-         </a-space>
+            <a-select
+              show-search
+              option-filter-prop="children"
+              :filter-option="filterOption"
+              style="width: 150px"
+              @change="onQueryItemChanged($event)"
+            >
+              <a-select-option v-for="item in queryitems" :key="item.number">
+                {{ item.name }}
+              </a-select-option>
+            </a-select>
+          </a-col>
+          <a-col :span="4">
+            <a-select
+              v-model="clearflag"
+              show-search
+              option-filter-prop="children"
+              :filter-option="filterOption"
+              style="width: 150px"
+              @change="
+                onProductorProjectorEmployerChanged(
+                  record.key,
+                  'product',
+                  $event
+                )
+              "
+            >
+              <a-select-option v-for="item in multiItems" :key="item.number">
+                {{ item.name }}
+              </a-select-option>
+            </a-select>
+          </a-col>
+          <a-span>请选择查询时间：</a-span>
+          <a-col :span="4">
+            <a-range-picker
+              v-model="resetdate"
+              showTime
+              format="YYYY/MM/DD"
+              :placeholder="['开始时间', '结束时间']"
+              @change="onChange"
+            />
+          </a-col>
+          <a-button :span="4" type="primary" @click="onQueryLog">
+            查询
+          </a-button>
+          <a-button :span="4" type="primary" @click="onDownload">
+            Download
+          </a-button>
+        </a-space>
         <a-col :span="24"> </a-col>
       </a-row>
-
-      <a-table
-        :columns="columns"
-        :data-source="reports"
-        style="margin: 16px"
-        :defaultExpandedRowKeys="[0]"
-        :pagination="false"
-      >
-        <template slot="name" slot-scope="text">
-          <editable-cell
-            :text="text"
-          />
-        </template>
-        <template slot="cost" slot-scope="number">
-          <editable-number-cell
-            :number="number"
-          />
-        </template>
-        <template slot="department" slot-scope="department">
-          <editable-cell
-            :text="department"
-          />
-        </template>
-        <template slot="details" slot-scope="tasks">
-          <editable-cell v-for="(task, index) in tasks" :key="index"
-            :text= "task"
-          />
-        </template>
-      </a-table>
+      <a-spin :spinning="spinning">
+        <a-table
+          :columns="columns"
+          :data-source="reports"
+          style="margin: 16px"
+          :defaultExpandedRowKeys="[0]"
+          :pagination="false"
+        >
+          <template slot="name" slot-scope="text">
+            <editable-cell :text="text" />
+          </template>
+          <template slot="cost" slot-scope="number">
+            <editable-number-cell :number="number" />
+          </template>
+          <template slot="department" slot-scope="department">
+            <editable-cell :text="department" />
+          </template>
+          <template slot="details" slot-scope="tasks">
+            <editable-cell
+              v-for="(task, index) in tasks"
+              :key="index"
+              :text="task"
+            />
+          </template>
+        </a-table>
+      </a-spin>
     </div>
   </div>
 </template>
@@ -97,21 +107,21 @@ const columns = [
     dataIndex: "name",
     key: "name",
     scopedSlots: { customRender: "name" },
-    width:120,
+    width: 120,
   },
   {
     title: "Cost",
     dataIndex: "cost",
     key: "cost",
     scopedSlots: { customRender: "cost" },
-    width:100,
+    width: 100,
   },
   {
     title: "Department",
     dataIndex: "department",
     key: "department",
     scopedSlots: { customRender: "department" },
-    width:140,
+    width: 140,
   },
   {
     title: "Tasks",
@@ -122,9 +132,9 @@ const columns = [
 ];
 
 let queryitems = [
-    {number: "0", name: "产品"},
-    {number: "1", name: "项目"},
-    {number: "2", name: "员工"},
+  { number: "0", name: "产品" },
+  { number: "1", name: "项目" },
+  { number: "2", name: "员工" },
 ];
 
 let products = [
@@ -169,28 +179,28 @@ export default {
     //TODO: 参数不对,要改
     this.$store
       .dispatch("report/pmoQuery", {
-        type:0,
-        condition:"ES0092",
+        type: 0,
+        condition: "ES0092",
         from: moment(),
         to: moment(),
       })
       .then((tasks) => {
         this.projectName = tasks[0].project_name;
 
-        let nameBased = this.$_.groupBy(tasks, 'staff_name')
- 
-        this.reports = Object.keys(nameBased).map(name => {
+        let nameBased = this.$_.groupBy(tasks, "staff_name");
+
+        this.reports = Object.keys(nameBased).map((name) => {
           let tasks = nameBased[name];
-          let department = tasks[0].department
+          let department = tasks[0].department;
           let cost = 0;
           let content = [];
           let sn = 1;
           tasks.forEach((task) => {
             cost += task.task_cost;
-            let tc = sn +". <" + task.task_name + ">";
+            let tc = sn + ". <" + task.task_name + ">";
             sn++;
             if (task.product_name) {
-                tc += "[" + task.product_name + "]";
+              tc += "[" + task.product_name + "]";
             }
 
             tc += task.task_detail;
@@ -199,7 +209,7 @@ export default {
           let key = this.count;
           this.count++;
           return { name, cost, tasks: content, department, key };
-        })
+        });
       });
   },
   data() {
@@ -210,32 +220,33 @@ export default {
       columns,
       onDay: moment(),
       //project: "11223344",
-     // projectName: "",
-      dateFormat: 'YYYY/MM/DD',
-      monthFormat: 'YYYY/MM',
+      // projectName: "",
+      dateFormat: "YYYY/MM/DD",
+      monthFormat: "YYYY/MM",
       queryitems,
       projects,
       products,
       employers,
       clearflag: "",
-      resetdate: ['',''],
+      resetdate: ["", ""],
     };
   },
   computed: {
+    spinning() {
+      return this.$store.state.report.spinning;
+    }
   },
   methods: {
-    onQueryItemChanged(number){
-      if(0 == number){
+    onQueryItemChanged(number) {
+      if (0 == number) {
         this.multiItems = products;
-      }
-      else if(1 == number){
+      } else if (1 == number) {
         this.multiItems = projects;
-      }
-      else{
+      } else {
         this.multiItems = employers;
       }
       this.clearflag = "";
-      this.resetdate = ['',''];
+      this.resetdate = ["", ""];
     },
     onProductorProjectorEmployerChanged(key, dataIndex, number) {
       const tasks = [...this.tasks];
@@ -246,34 +257,37 @@ export default {
       }
     },
     onChange(dates, dateStrings) {
-     // console.log('From: ', dates[0], ', to: ', dates[1]);
-     // console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
+      // console.log('From: ', dates[0], ', to: ', dates[1]);
+      // console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
     },
     onQueryLog() {
       this.$store
-      .dispatch("report/pmo", {
-        type:"1",
-        condition:"106",
-        from: "2021-10-26",
-        to: "2021-10-27",
-      }).then((tasks)=>{
+        .dispatch("report/pmo", {
+          type: "1",
+          condition: "106",
+          from: "2021-10-26",
+          to: "2021-10-27",
+        })
+        .then((tasks) => {
           console.log(tasks);
-      }).catch((e)=>{
-        console.log(e)
+        })
+        .catch((e) => {
+          console.log(e);
           this.$message.error(e);
-      }) 
+        });
     },
     onDownload() {
       this.$store
-      .dispatch("report/download", {
-        type:"1",
-        condition:"106",
-        from: "2021-10-26",
-        to: "2021-10-27",
-      }).catch((e)=>{
-        console.log(e)
+        .dispatch("report/download", {
+          type: "1",
+          condition: "106",
+          from: "2021-10-26",
+          to: "2021-10-27",
+        })
+        .catch((e) => {
+          console.log(e);
           this.$message.error(e);
-      })
+        });
     },
     filterOption(input, option) {
       return (

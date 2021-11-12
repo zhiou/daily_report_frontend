@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-10 15:27:12
- * @LastEditTime: 2021-11-12 10:33:17
+ * @LastEditTime: 2021-11-12 11:30:19
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: /daily-report-frontend/src/api/request/download.js
@@ -31,7 +31,7 @@ downloader.interceptors.response.use(
   (response) => {
     console.log(response);
     console.log("Content-disposition", response.headers['content-disposition']);
-    const filename = response.headers['content-disposition'].split('=')[1]
+    const [, filename] = response.headers['content-disposition'].split('=')
     fileDownload(response.data, decodeURI(filename), "application/vnd.ms-excel");
   },
   (error) => {

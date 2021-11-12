@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 16:14:42
- * @LastEditTime: 2021-11-08 10:16:36
+ * @LastEditTime: 2021-11-12 15:39:42
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/ProjectReport.vue
@@ -16,7 +16,7 @@
 
         <a-col :span="20"> </a-col>
       </a-row>
-
+   <a-spin :spinning="spinning">
       <a-table
         :columns="columns"
         :data-source="reports"
@@ -43,12 +43,14 @@
           />
         </template>
         <template slot="details" slot-scope="tasks">
-          <editable-cell v-for="(task, index) in tasks" :key="index"
-            :text= "task"
+          <editable-cell
+            v-for="(task, index) in tasks"
+            :key="index"
+            :text="task"
           />
         </template>
- 
       </a-table>
+   </a-spin>
     </div>
   </div>
 </template>
@@ -65,21 +67,21 @@ const columns = [
     dataIndex: "name",
     key: "name",
     scopedSlots: { customRender: "name" },
-    width:120,
+    width: 120,
   },
   {
     title: "Cost",
     dataIndex: "cost",
     key: "cost",
     scopedSlots: { customRender: "cost" },
-    width:100,
+    width: 100,
   },
   {
     title: "Department",
     dataIndex: "department",
     key: "department",
     scopedSlots: { customRender: "department" },
-    width:140,
+    width: 140,
   },
   {
     title: "Tasks",
@@ -88,7 +90,6 @@ const columns = [
     scopedSlots: { customRender: "details" },
   },
 ];
-
 
 export default {
   name: "ProjectReport",
@@ -106,20 +107,20 @@ export default {
       .then((tasks) => {
         this.projectName = tasks[0].project_name;
 
-        let nameBased = this.$_.groupBy(tasks, 'staff_name')
- 
-        this.reports = Object.keys(nameBased).map(name => {
+        let nameBased = this.$_.groupBy(tasks, "staff_name");
+
+        this.reports = Object.keys(nameBased).map((name) => {
           let tasks = nameBased[name];
-          let department = tasks[0].department
-           let cost = 0;
+          let department = tasks[0].department;
+          let cost = 0;
           let content = [];
           let sn = 1;
           tasks.forEach((task) => {
             cost += task.task_cost;
-            let tc = sn +". <" + task.task_name + ">";
+            let tc = sn + ". <" + task.task_name + ">";
             sn++;
             if (task.product_name) {
-                tc += "[" + task.product_name + "]";
+              tc += "[" + task.product_name + "]";
             }
 
             tc += task.task_detail;
@@ -128,7 +129,7 @@ export default {
           let key = this.count;
           this.count++;
           return { name, cost, tasks: content, department, key };
-        })
+        });
       });
   },
   data() {
@@ -142,9 +143,11 @@ export default {
     };
   },
   computed: {
+    spinning() {
+      return this.$store.state.report.spinning;
+    },
   },
-  methods: {
-  },
+  methods: {},
 };
 </script>
 

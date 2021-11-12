@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-02 13:54:50
- * @LastEditTime: 2021-11-08 10:18:07
+ * @LastEditTime: 2021-11-12 15:39:52
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Project.vue
@@ -15,55 +15,57 @@
         </a-button>
       </a-col>
     </a-row>
-    <a-table
-      :columns="columns"
-      :data-source="projects"
-      style="margin: 16px"
-      :defaultExpandedRowKeys="[0]"
-      :pagination="false"
-    >
-      <template slot="name" slot-scope="text, record">
-        <editable-cell
-          :text="text"
-          @change="onCellChange(record.key, 'name', $event)"
-        />
-      </template>
-      <template slot="manager_number" slot-scope="text, record">
-        <editable-cell
-          :text="text"
-          @change="onCellChange(record.key, 'manager_number', $event)"
-        />
-      </template>
-      <template slot="remark" slot-scope="text, record">
-        <editable-cell
-          :text="text"
-          @change="onCellChange(record.key, 'remark', $event)"
-        />
-      </template>
-      <template slot="state" slot-scope="tag, record">
-        <editable-tag-cell
-          :tag="tag"
-          :options="projectState"
-          @change="onCellChange(record.key, 'status', $event)"
-        />
-      </template>
-      <template slot="operation" slot-scope="text, record">
-        <a-button
-          type="danger"
-          shape="circle"
-          icon="delete"
-          v-if="projects.length"
-          @click="() => onDelete(record.key)"
-        />
-      </template>
-    </a-table>
-    <a-button
-      type="dashed"
-      style="width: 40%; margin-top: 8px; margin-left: 30%"
-      @click="() => (visible = true)"
-    >
-      <a-icon type="plus" /> Add Project
-    </a-button>
+    <a-spin :spinning="spinning">
+      <a-table
+        :columns="columns"
+        :data-source="projects"
+        style="margin: 16px"
+        :defaultExpandedRowKeys="[0]"
+        :pagination="false"
+      >
+        <template slot="name" slot-scope="text, record">
+          <editable-cell
+            :text="text"
+            @change="onCellChange(record.key, 'name', $event)"
+          />
+        </template>
+        <template slot="manager_number" slot-scope="text, record">
+          <editable-cell
+            :text="text"
+            @change="onCellChange(record.key, 'manager_number', $event)"
+          />
+        </template>
+        <template slot="remark" slot-scope="text, record">
+          <editable-cell
+            :text="text"
+            @change="onCellChange(record.key, 'remark', $event)"
+          />
+        </template>
+        <template slot="state" slot-scope="tag, record">
+          <editable-tag-cell
+            :tag="tag"
+            :options="projectState"
+            @change="onCellChange(record.key, 'status', $event)"
+          />
+        </template>
+        <template slot="operation" slot-scope="text, record">
+          <a-button
+            type="danger"
+            shape="circle"
+            icon="delete"
+            v-if="projects.length"
+            @click="() => onDelete(record.key)"
+          />
+        </template>
+      </a-table>
+      <a-button
+        type="dashed"
+        style="width: 40%; margin-top: 8px; margin-left: 30%"
+        @click="() => (visible = true)"
+      >
+        <a-icon type="plus" /> Add Project
+      </a-button>
+    </a-spin>
     <project-modal-form
       ref="projectForm"
       :visible="visible"
@@ -133,13 +135,16 @@ export default {
     };
   },
   beforeCreate() {
-    this.$store.dispatch("project/list").then(()=>{
-      this.refresh()
+    this.$store.dispatch("project/list").then(() => {
+      this.refresh();
     });
   },
   computed: {
     notChanged() {
       return this.$_.isEqual(this.projects, this.origin);
+    },
+    spinning() {
+      return this.$store.state.project.spinning;
     },
   },
   methods: {
@@ -159,11 +164,9 @@ export default {
         }
         modalForm.resetFields();
         this.visible = false;
-        this.$store
-          .dispatch("project/create", project)
-          .then(() => {
-            this.refresh();
-          });
+        this.$store.dispatch("project/create", project).then(() => {
+          this.refresh();
+        });
       });
     },
     onDelete(key) {
