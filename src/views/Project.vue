@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-02 13:54:50
- * @LastEditTime: 2021-11-12 15:55:37
+ * @LastEditTime: 2021-11-12 16:34:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Project.vue
@@ -135,9 +135,14 @@ export default {
     };
   },
   mounted() {
-    this.$store.dispatch("project/list").then(() => {
-      this.refresh();
-    });
+    this.$store
+      .dispatch("project/list")
+      .then(() => {
+        this.refresh();
+      })
+      .catch((error) => {
+        this.$message.error(error, 3);
+      });
   },
   computed: {
     notChanged() {

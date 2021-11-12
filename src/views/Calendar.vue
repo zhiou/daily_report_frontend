@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-22 17:30:02
- * @LastEditTime: 2021-11-12 15:40:16
+ * @LastEditTime: 2021-11-12 16:31:46
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Home.vue
@@ -77,6 +77,9 @@ export default {
           taskNames[day].add({ type: "success", content: task.task_name });
         });
         this.taskNames = taskNames;
+      })
+      .catch((e) => {
+        this.$message.error(e)
       });
   },
   methods: {

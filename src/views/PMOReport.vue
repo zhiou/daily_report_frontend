@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 16:14:42
- * @LastEditTime: 2021-11-12 15:56:01
+ * @LastEditTime: 2021-11-12 16:36:49
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/ProjectReport.vue
@@ -210,7 +210,10 @@ export default {
           this.count++;
           return { name, cost, tasks: content, department, key };
         });
-      });
+      })
+      .catch((error) => {
+        this.$message.error(error, 3);
+      })
   },
   data() {
     return {

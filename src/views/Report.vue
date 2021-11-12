@@ -3,7 +3,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 15:34:38
- * @LastEditTime: 2021-11-12 15:39:30
+ * @LastEditTime: 2021-11-12 16:34:29
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Report.vue
@@ -215,6 +215,9 @@ export default {
           this.count = key + 1;
           return { ...task, key: key };
         });
+      })
+      .catch((error) => {
+        this.$message.error(error, 3);
       });
   },
   data() {

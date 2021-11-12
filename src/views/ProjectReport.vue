@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 16:14:42
- * @LastEditTime: 2021-11-12 15:56:05
+ * @LastEditTime: 2021-11-12 16:34:21
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/ProjectReport.vue
@@ -16,41 +16,41 @@
 
         <a-col :span="20"> </a-col>
       </a-row>
-   <a-spin :spinning="spinning">
-      <a-table
-        :columns="columns"
-        :data-source="reports"
-        style="margin: 16px"
-        :defaultExpandedRowKeys="[0]"
-        :pagination="false"
-      >
-        <template slot="name" slot-scope="text, record">
-          <editable-cell
-            :text="text"
-            @change="onCellChange(record.key, 'name', $event)"
-          />
-        </template>
-        <template slot="cost" slot-scope="number, record">
-          <editable-number-cell
-            :number="number"
-            @change="onCellChange(record.key, 'cost', $event)"
-          />
-        </template>
-        <template slot="department" slot-scope="department, record">
-          <editable-cell
-            :text="department"
-            @change="onCellChange(record.key, 'department', $event)"
-          />
-        </template>
-        <template slot="details" slot-scope="tasks">
-          <editable-cell
-            v-for="(task, index) in tasks"
-            :key="index"
-            :text="task"
-          />
-        </template>
-      </a-table>
-   </a-spin>
+      <a-spin :spinning="spinning">
+        <a-table
+          :columns="columns"
+          :data-source="reports"
+          style="margin: 16px"
+          :defaultExpandedRowKeys="[0]"
+          :pagination="false"
+        >
+          <template slot="name" slot-scope="text, record">
+            <editable-cell
+              :text="text"
+              @change="onCellChange(record.key, 'name', $event)"
+            />
+          </template>
+          <template slot="cost" slot-scope="number, record">
+            <editable-number-cell
+              :number="number"
+              @change="onCellChange(record.key, 'cost', $event)"
+            />
+          </template>
+          <template slot="department" slot-scope="department, record">
+            <editable-cell
+              :text="department"
+              @change="onCellChange(record.key, 'department', $event)"
+            />
+          </template>
+          <template slot="details" slot-scope="tasks">
+            <editable-cell
+              v-for="(task, index) in tasks"
+              :key="index"
+              :text="task"
+            />
+          </template>
+        </a-table>
+      </a-spin>
     </div>
   </div>
 </template>
@@ -130,6 +130,9 @@ export default {
           this.count++;
           return { name, cost, tasks: content, department, key };
         });
+      })
+      .catch((error) => {
+        this.$message.error(error, 3);
       });
   },
   data() {
