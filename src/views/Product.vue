@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-02 13:54:56
- * @LastEditTime: 2021-11-08 10:16:30
+ * @LastEditTime: 2021-11-12 16:33:52
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Product.vue
@@ -15,55 +15,57 @@
         </a-button>
       </a-col>
     </a-row>
-    <a-table
-      :columns="columns"
-      :data-source="products"
-      style="margin: 16px"
-      :defaultExpandedRowKeys="[0]"
-      :pagination="false"
-    >
-      <template slot="name" slot-scope="text, record">
-        <editable-cell
-          :text="text"
-          @change="onCellChange(record.key, 'name', $event)"
-        />
-      </template>
-      <template slot="in_line" slot-scope="text, record">
-        <editable-cell
-          :text="text"
-          @change="onCellChange(record.key, 'in_line', $event)"
-        />
-      </template>
-      <template slot="remark" slot-scope="text, record">
-        <editable-cell
-          :text="text"
-          @change="onCellChange(record.key, 'remark', $event)"
-        />
-      </template>
-      <span slot="state" slot-scope="tag, record">
-        <editable-tag-cell
-          :tag="tag"
-          :options="productState"
-          @change="onCellChange(record.key, 'status', $event)"
-        />
-      </span>
-      <template slot="operation" slot-scope="text, record">
-        <a-button
-          type="danger"
-          shape="circle"
-          icon="delete"
-          v-if="products.length"
-          @click="() => onDelete(record.key)"
-        />
-      </template>
-    </a-table>
-    <a-button
-      type="dashed"
-      style="width: 40%; margin-top: 8px; margin-left: 30%"
-      @click="() => (visible = true)"
-    >
-      <a-icon type="plus" /> Add Product
-    </a-button>
+    <a-spin :spinning="spinning">
+      <a-table
+        :columns="columns"
+        :data-source="products"
+        style="margin: 16px"
+        :defaultExpandedRowKeys="[0]"
+        :pagination="false"
+      >
+        <template slot="name" slot-scope="text, record">
+          <editable-cell
+            :text="text"
+            @change="onCellChange(record.key, 'name', $event)"
+          />
+        </template>
+        <template slot="in_line" slot-scope="text, record">
+          <editable-cell
+            :text="text"
+            @change="onCellChange(record.key, 'in_line', $event)"
+          />
+        </template>
+        <template slot="remark" slot-scope="text, record">
+          <editable-cell
+            :text="text"
+            @change="onCellChange(record.key, 'remark', $event)"
+          />
+        </template>
+        <span slot="state" slot-scope="tag, record">
+          <editable-tag-cell
+            :tag="tag"
+            :options="productState"
+            @change="onCellChange(record.key, 'status', $event)"
+          />
+        </span>
+        <template slot="operation" slot-scope="text, record">
+          <a-button
+            type="danger"
+            shape="circle"
+            icon="delete"
+            v-if="products.length"
+            @click="() => onDelete(record.key)"
+          />
+        </template>
+      </a-table>
+      <a-button
+        type="dashed"
+        style="width: 40%; margin-top: 8px; margin-left: 30%"
+        @click="() => (visible = true)"
+      >
+        <a-icon type="plus" /> Add Product
+      </a-button>
+    </a-spin>
     <product-modal-form
       ref="productForm"
       :visible="visible"
@@ -133,14 +135,22 @@ export default {
       products: [],
     };
   },
-  beforeCreate() {
-    this.$store.dispatch("product/list").then(()=>{
-      this.refreshAll();
-    });
+  mounted() {
+    this.$store
+      .dispatch("product/list")
+      .then(() => {
+        this.refreshAll();
+      })
+      .catch((error) => {
+        this.$message.error(error, 3);
+      });
   },
   computed: {
     notChanged() {
       return this.$_.isEqual(this.products, this.origin);
+    },
+    spinning() {
+      return this.$store.state.product.spinning;
     },
   },
   methods: {
@@ -160,6 +170,7 @@ export default {
         }
         modalForm.resetFields();
         this.visible = false;
+
         this.$store
           .dispatch("product/create", product)
           .then(() => {

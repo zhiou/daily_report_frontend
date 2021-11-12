@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-02 15:29:28
- * @LastEditTime: 2021-11-03 18:14:32
+ * @LastEditTime: 2021-11-12 15:56:29
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/api/mock/mock-project.js
@@ -12,7 +12,9 @@ export const mockProduct = {
     method: "get",
     enabled: true,
     template: {
-      "products|1-10": [
+      "message|1": "@csentence",
+      "code|1": [0],
+      "data|1-10": [
         {
           "number|1": "@natural(1,1000)",
           "name|1": "@cword(3,10)",

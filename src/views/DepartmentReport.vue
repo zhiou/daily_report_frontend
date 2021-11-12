@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 14:50:36
- * @LastEditTime: 2021-11-08 10:17:36
+ * @LastEditTime: 2021-11-12 16:33:26
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/DepartmentReport.vue
@@ -23,67 +23,70 @@
 
         <a-col :span="16"> </a-col>
       </a-row>
-
-      <a-table
-        :columns="columns"
-        :data-source="reports"
-        style="margin: 16px"
-        :defaultExpandedRowKeys="[0]"
-        :pagination="false"
-      >
-        <span slot="product-selector" slot-scope="selector, record">
-          <a-select
-            :default-value="selector.selected"
-            @change="onProductChanged(record.key, 'product', $event)"
-          >
-            <a-select-option
-              v-for="(value, index) in selector.options"
-              :key="index"
+      <a-spin :spinning="spinning">
+        <a-table
+          :columns="columns"
+          :data-source="reports"
+          style="margin: 16px"
+          :defaultExpandedRowKeys="[0]"
+          :pagination="false"
+        >
+          <span slot="product-selector" slot-scope="selector, record">
+            <a-select
+              :default-value="selector.selected"
+              @change="onProductChanged(record.key, 'product', $event)"
             >
-              {{ value.name }}
-            </a-select-option>
-          </a-select>
-        </span>
-        <span slot="project-selector" slot-scope="selector, record">
-          <a-select
-            :default-value="selector.selected"
-            @change="onProjectChanged(record.key, 'project', $event)"
-          >
-            <a-select-option
-              v-for="(value, index) in selector.options"
-              :key="index"
+              <a-select-option
+                v-for="(value, index) in selector.options"
+                :key="index"
+              >
+                {{ value.name }}
+              </a-select-option>
+            </a-select>
+          </span>
+          <span slot="project-selector" slot-scope="selector, record">
+            <a-select
+              :default-value="selector.selected"
+              @change="onProjectChanged(record.key, 'project', $event)"
             >
-              {{ value.name }}
-            </a-select-option>
-          </a-select>
-        </span>
-        <template slot="name" slot-scope="text, record">
-          <editable-cell
-            :text="text"
-            @change="onCellChange(record.key, 'name', $event)"
-          />
-        </template>
-        <template slot="cost" slot-scope="number, record">
-          <editable-number-cell
-            :number="number"
-            @change="onCellChange(record.key, 'cost', $event)"
-          />
-        </template>
-        <template slot="details" slot-scope="tasks">
-          <editable-cell v-for="(task, index) in tasks" :key="index"
-            :text= "task"
-          />
-        </template>
-        <template slot="operation" slot-scope="text, record">
-          <a-button
-            type="danger"
-            shape="circle"
-            icon="delete"
-            v-if="tasks.length"
-            @click="() => onDelete(record.key)"
-          />
-        </template>
-      </a-table>
+              <a-select-option
+                v-for="(value, index) in selector.options"
+                :key="index"
+              >
+                {{ value.name }}
+              </a-select-option>
+            </a-select>
+          </span>
+          <template slot="name" slot-scope="text, record">
+            <editable-cell
+              :text="text"
+              @change="onCellChange(record.key, 'name', $event)"
+            />
+          </template>
+          <template slot="cost" slot-scope="number, record">
+            <editable-number-cell
+              :number="number"
+              @change="onCellChange(record.key, 'cost', $event)"
+            />
+          </template>
+          <template slot="details" slot-scope="tasks">
+            <editable-cell
+              v-for="(task, index) in tasks"
+              :key="index"
+              :text="task"
+            />
+          </template>
+          <template slot="operation" slot-scope="text, record">
+            <a-button
+              type="danger"
+              shape="circle"
+              icon="delete"
+              v-if="tasks.length"
+              @click="() => onDelete(record.key)"
+            />
+          </template>
+        </a-table>
+      </a-spin>
     </div>
   </div>
 </template>
@@ -100,14 +103,14 @@ const columns = [
     dataIndex: "name",
     key: "name",
     scopedSlots: { customRender: "name" },
-    width:120,
+    width: 120,
   },
   {
     title: "Cost",
     dataIndex: "cost",
     key: "cost",
     scopedSlots: { customRender: "cost" },
-    width:100,
+    width: 100,
   },
   {
     title: "Tasks",
@@ -123,7 +126,7 @@ export default {
     EditableCell,
     EditableNumberCell,
   },
-  beforeCreate() {
+  mounted() {
     this.$store
       .dispatch("report/dmQuery", {
         from: moment(),
@@ -139,7 +142,7 @@ export default {
           let sn = 1;
           tasks.forEach((task) => {
             cost += task.task_cost;
-            let tc = sn +". <" + task.task_name + ">" + "[";
+            let tc = sn + ". <" + task.task_name + ">" + "[";
             sn++;
             if (task.project_name) {
               tc += task.project_name + ":";
@@ -155,6 +158,9 @@ export default {
           this.count++;
           return { name, cost, tasks: content, department, key };
         });
+      })
+      .catch((e)=> {
+        this.$message.error(e)
       });
   },
   data() {
@@ -171,6 +177,9 @@ export default {
     },
     dayString() {
       return this.onDay.format("yyyy-MM-DD");
+    },
+    spinning() {
+      return this.$store.state.report.spinning;
     },
   },
   methods: {},

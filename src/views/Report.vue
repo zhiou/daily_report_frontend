@@ -3,7 +3,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 15:34:38
- * @LastEditTime: 2021-11-08 10:18:40
+ * @LastEditTime: 2021-11-12 16:34:29
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Report.vue
@@ -36,84 +36,91 @@
           </a-button-group>
         </a-col>
       </a-row>
+      <a-spin :spinning="spinning">
+        <a-table
+          :columns="columns"
+          :data-source="tasks"
+          style="margin: 16px"
+          :defaultExpandedRowKeys="[0]"
+          :pagination="false"
+        >
+          <template slot="product_line" slot-scope="text, record">
+            <editable-cell
+              :text="text"
+              @change="onCellChange(record.key, 'product_line', $event)"
+            />
+          </template>
+          <span slot="product-selector" slot-scope="number, record">
+            <a-select
+              show-search
+              option-filter-prop="children"
+              :filter-option="filterOption"
+              style="width: 150px"
+              :default-value="number"
+              @change="onProductChanged(record.key, 'product_number', $event)"
+            >
+              <a-select-option
+                v-for="product in products"
+                :key="product.number"
+              >
+                {{ product.name }}
+              </a-select-option>
+            </a-select>
+          </span>
+          <span slot="project-selector" slot-scope="number, record">
+            <a-select
+              show-search
+              option-filter-prop="children"
+              :filter-option="filterOption"
+              style="width: 150px"
+              :default-value="number"
+              @change="onProjectChanged(record.key, 'project_number', $event)"
+            >
+              <a-select-option
+                v-for="project in projects"
+                :key="project.number"
+              >
+                {{ project.name }}
+              </a-select-option>
+            </a-select>
+          </span>
 
-      <a-table
-        :columns="columns"
-        :data-source="tasks"
-        style="margin: 16px"
-        :defaultExpandedRowKeys="[0]"
-        :pagination="false"
-      >
-        <template slot="product_line" slot-scope="text, record">
-          <editable-cell
-            :text="text"
-            @change="onCellChange(record.key, 'product_line', $event)"
-          />
-        </template>
-        <span slot="product-selector" slot-scope="number, record">
-          <a-select
-            show-search
-            option-filter-prop="children"
-            :filter-option="filterOption"
-            style="width: 150px"
-            :default-value="number"
-            @change="onProductChanged(record.key, 'product_number', $event)"
-          >
-            <a-select-option v-for="product in products" :key="product.number">
-              {{ product.name }}
-            </a-select-option>
-          </a-select>
-        </span>
-        <span slot="project-selector" slot-scope="number, record">
-          <a-select
-            show-search
-            option-filter-prop="children"
-            :filter-option="filterOption"
-            style="width: 150px"
-            :default-value="number"
-            @change="onProjectChanged(record.key, 'project_number', $event)"
-          >
-            <a-select-option v-for="project in projects" :key="project.number">
-              {{ project.name }}
-            </a-select-option>
-          </a-select>
-        </span>
-
-        <template slot="name" slot-scope="text, record">
-          <editable-cell
-            :text="text"
-            @change="onCellChange(record.key, 'task_name', $event)"
-          />
-        </template>
-        <template slot="cost" slot-scope="number, record">
-          <editable-number-cell
-            :number="number"
-            @change="onCellChange(record.key, 'task_cost', $event)"
-          />
-        </template>
-        <template slot="details" slot-scope="text, record">
-          <editable-area-cell
-            :text="text"
-            @change="onCellChange(record.key, 'task_detail', $event)"
-          />
-        </template>
-        <template slot="operation" slot-scope="text, record">
-          <a-button
-            type="danger"
-            shape="circle"
-            icon="delete"
-            v-if="tasks.length"
-            @click="() => onDelete(record.key)"
-          />
-        </template>
-      </a-table>
-      <a-button
-        type="dashed"
-        style="width: 40%; margin-top: 8px; margin-left: 30%"
-        @click="handleCreateTask"
-      >
-        <a-icon type="plus" /> Add Task
-      </a-button>
+          <template slot="name" slot-scope="text, record">
+            <editable-cell
+              :text="text"
+              @change="onCellChange(record.key, 'task_name', $event)"
+            />
+          </template>
+          <template slot="cost" slot-scope="number, record">
+            <editable-number-cell
+              :number="number"
+              @change="onCellChange(record.key, 'task_cost', $event)"
+            />
+          </template>
+          <template slot="details" slot-scope="text, record">
+            <editable-area-cell
+              :text="text"
+              @change="onCellChange(record.key, 'task_detail', $event)"
+            />
+          </template>
+          <template slot="operation" slot-scope="text, record">
+            <a-button
+              type="danger"
+              shape="circle"
+              icon="delete"
+              v-if="tasks.length"
+              @click="() => onDelete(record.key)"
+            />
+          </template>
+        </a-table>
+        <a-button
+          type="dashed"
+          style="width: 40%; margin-top: 8px; margin-left: 30%"
+          @click="handleCreateTask"
+        >
+          <a-icon type="plus" /> Add Task
+        </a-button>
+      </a-spin>
     </div>
   </div>
 </template>
@@ -208,6 +215,9 @@ export default {
           this.count = key + 1;
           return { ...task, key: key };
         });
+      })
+      .catch((error) => {
+        this.$message.error(error, 3);
       });
   },
   data() {
@@ -231,6 +241,9 @@ export default {
     },
     dayString() {
       return this.onDay.format("yyyy-MM-DD");
+    },
+    spinning() {
+      return this.$store.state.report.spinning;
     },
   },
   methods: {
@@ -257,7 +270,6 @@ export default {
       const tasks = [...this.tasks];
       const target = tasks.find((item) => item.key === key);
       if (target && target[dataIndex] !== value) {
-
         target[dataIndex] = value;
         this.tasks = tasks;
       }

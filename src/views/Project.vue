@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-02 13:54:50
- * @LastEditTime: 2021-11-08 10:18:07
+ * @LastEditTime: 2021-11-12 16:34:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Project.vue
@@ -15,6 +15,7 @@
         </a-button>
       </a-col>
     </a-row>
+    <a-spin :spinning="spinning">
     <a-table
       :columns="columns"
       :data-source="projects"
@@ -64,6 +65,8 @@
     >
       <a-icon type="plus" /> Add Project
     </a-button>
+       </a-spin>
+
     <project-modal-form
       ref="projectForm"
       :visible="visible"
@@ -137,14 +140,22 @@ export default {
       projects: [],
     };
   },
-  beforeCreate() {
-    this.$store.dispatch("project/list").then(()=>{
-      this.refreshAll()
-    });
+  mounted() {
+    this.$store
+      .dispatch("project/list")
+      .then(() => {
+        this.refreshAll();
+      })
+      .catch((error) => {
+        this.$message.error(error, 3);
+      });
   },
   computed: {
     notChanged() {
       return this.$_.isEqual(this.projects, this.origin);
+    },
+    spinning() {
+      return this.$store.state.project.spinning;
     },
   },
   methods: {
@@ -164,6 +175,7 @@ export default {
         }
         modalForm.resetFields();
         this.visible = false;
+
         const manager_name = staffs.find((staff) => {
           return staff.number === project.manager_number
         }).name

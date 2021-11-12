@@ -1,33 +1,39 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-22 17:30:02
- * @LastEditTime: 2021-11-08 10:19:34
+ * @LastEditTime: 2021-11-12 16:31:46
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Home.vue
 -->
 <template>
   <div class="calendar">
-    <a-calendar
-      class="calendar-frame"
-      @select="onSelect"
-      v-model="value"
-      @panelChange="onChange"
-      :mode="mode"
-    >
-      <ul slot="dateCellRender" slot-scope="value" class="events">
-        <li v-for="(item, index) in getListData(value)"  :key="item.content" >
-          <a-badge v-if="index<2" :status="item.type" :text="item.content" />
-          <a-badge v-if="index==3" :status="item.type" :text="other" />
-        </li>
-      </ul>
-      <template slot="monthCellRender" slot-scope="value">
-        <div v-if="getMonthData(value)" class="notes-month">
-          <section>{{ getMonthData(value) }}</section>
-          <span>Backlog number</span>
-        </div>
-      </template>
-    </a-calendar>
+    <a-spin :spinning="spinning">
+      <a-calendar
+        class="calendar-frame"
+        @select="onSelect"
+        v-model="value"
+        @panelChange="onChange"
+        :mode="mode"
+      >
+        <ul slot="dateCellRender" slot-scope="value" class="events">
+          <li v-for="(item, index) in getListData(value)" :key="item.content">
+            <a-badge
+              v-if="index < 2"
+              :status="item.type"
+              :text="item.content"
+            />
+            <a-badge v-if="index == 3" :status="item.type" :text="other" />
+          </li>
+        </ul>
+        <template slot="monthCellRender" slot-scope="value">
+          <div v-if="getMonthData(value)" class="notes-month">
+            <section>{{ getMonthData(value) }}</section>
+            <span>Backlog number</span>
+          </div>
+        </template>
+      </a-calendar>
+    </a-spin>
   </div>
 </template>
 
@@ -43,12 +49,15 @@ export default {
       mode: "month",
       value: moment(),
       taskNames: [],
-      other:"......",
+      other: "......",
     };
   },
   computed: {
     author() {
       return this.$store.state.user.name ? this.$store.state.user.name : "周煌";
+    },
+    spinning() {
+      return this.$store.state.report.spinning;
     },
   },
   mounted() {
@@ -68,6 +77,9 @@ export default {
           taskNames[day].add({ type: "success", content: task.task_name });
         });
         this.taskNames = taskNames;
+      })
+      .catch((e) => {
+        this.$message.error(e)
       });
   },
   methods: {
@@ -95,7 +107,6 @@ export default {
 </script>
 
 <style scoped>
-
 .calendar-frame {
   position: relative;
   margin: auto;

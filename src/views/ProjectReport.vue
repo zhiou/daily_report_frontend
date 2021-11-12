@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 16:14:42
- * @LastEditTime: 2021-11-08 10:16:36
+ * @LastEditTime: 2021-11-12 16:34:21
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/ProjectReport.vue
@@ -16,39 +16,41 @@
 
         <a-col :span="20"> </a-col>
       </a-row>
-
-      <a-table
-        :columns="columns"
-        :data-source="reports"
-        style="margin: 16px"
-        :defaultExpandedRowKeys="[0]"
-        :pagination="false"
-      >
-        <template slot="name" slot-scope="text, record">
-          <editable-cell
-            :text="text"
-            @change="onCellChange(record.key, 'name', $event)"
-          />
-        </template>
-        <template slot="cost" slot-scope="number, record">
-          <editable-number-cell
-            :number="number"
-            @change="onCellChange(record.key, 'cost', $event)"
-          />
-        </template>
-        <template slot="department" slot-scope="department, record">
-          <editable-cell
-            :text="department"
-            @change="onCellChange(record.key, 'department', $event)"
-          />
-        </template>
-        <template slot="details" slot-scope="tasks">
-          <editable-cell v-for="(task, index) in tasks" :key="index"
-            :text= "task"
-          />
-        </template>
- 
-      </a-table>
+      <a-spin :spinning="spinning">
+        <a-table
+          :columns="columns"
+          :data-source="reports"
+          style="margin: 16px"
+          :defaultExpandedRowKeys="[0]"
+          :pagination="false"
+        >
+          <template slot="name" slot-scope="text, record">
+            <editable-cell
+              :text="text"
+              @change="onCellChange(record.key, 'name', $event)"
+            />
+          </template>
+          <template slot="cost" slot-scope="number, record">
+            <editable-number-cell
+              :number="number"
+              @change="onCellChange(record.key, 'cost', $event)"
+            />
+          </template>
+          <template slot="department" slot-scope="department, record">
+            <editable-cell
+              :text="department"
+              @change="onCellChange(record.key, 'department', $event)"
+            />
+          </template>
+          <template slot="details" slot-scope="tasks">
+            <editable-cell
+              v-for="(task, index) in tasks"
+              :key="index"
+              :text="task"
+            />
+          </template>
+        </a-table>
+      </a-spin>
     </div>
   </div>
 </template>
@@ -65,21 +67,21 @@ const columns = [
     dataIndex: "name",
     key: "name",
     scopedSlots: { customRender: "name" },
-    width:120,
+    width: 120,
   },
   {
     title: "Cost",
     dataIndex: "cost",
     key: "cost",
     scopedSlots: { customRender: "cost" },
-    width:100,
+    width: 100,
   },
   {
     title: "Department",
     dataIndex: "department",
     key: "department",
     scopedSlots: { customRender: "department" },
-    width:140,
+    width: 140,
   },
   {
     title: "Tasks",
@@ -89,14 +91,13 @@ const columns = [
   },
 ];
 
-
 export default {
   name: "ProjectReport",
   components: {
     EditableCell,
     EditableNumberCell,
   },
-  beforeCreate() {
+  mounted() {
     //TODO: 参数不对,要改
     this.$store
       .dispatch("report/pmQuery", {
@@ -106,20 +107,20 @@ export default {
       .then((tasks) => {
         this.projectName = tasks[0].project_name;
 
-        let nameBased = this.$_.groupBy(tasks, 'staff_name')
- 
-        this.reports = Object.keys(nameBased).map(name => {
+        let nameBased = this.$_.groupBy(tasks, "staff_name");
+
+        this.reports = Object.keys(nameBased).map((name) => {
           let tasks = nameBased[name];
-          let department = tasks[0].department
-           let cost = 0;
+          let department = tasks[0].department;
+          let cost = 0;
           let content = [];
           let sn = 1;
           tasks.forEach((task) => {
             cost += task.task_cost;
-            let tc = sn +". <" + task.task_name + ">";
+            let tc = sn + ". <" + task.task_name + ">";
             sn++;
             if (task.product_name) {
-                tc += "[" + task.product_name + "]";
+              tc += "[" + task.product_name + "]";
             }
 
             tc += task.task_detail;
@@ -128,7 +129,10 @@ export default {
           let key = this.count;
           this.count++;
           return { name, cost, tasks: content, department, key };
-        })
+        });
+      })
+      .catch((error) => {
+        this.$message.error(error, 3);
       });
   },
   data() {
@@ -142,9 +146,11 @@ export default {
     };
   },
   computed: {
+    spinning() {
+      return this.$store.state.report.spinning;
+    },
   },
-  methods: {
-  },
+  methods: {},
 };
 </script>
 

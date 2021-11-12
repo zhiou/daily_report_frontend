@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-04 10:56:50
- * @LastEditTime: 2021-11-08 10:18:31
+ * @LastEditTime: 2021-11-12 16:36:11
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Personal.vue
@@ -81,6 +81,9 @@ export default {
         .then((data) => {
           this.reports = data;
           this.render();
+        })
+        .catch((error) => {
+          this.$message.error(error, 3);
         });
     },
     render() {

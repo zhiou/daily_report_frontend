@@ -1,7 +1,7 @@
 /*
  * @Author: zhiou
  * @Date: 2021-09-26 10:33:57
- * @LastEditTime: 2021-11-10 15:31:54
+ * @LastEditTime: 2021-11-12 16:28:06
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/request/index.js
@@ -23,11 +23,7 @@ const service = axios.create({
 // MockConfig.mocks.forEach((config) => {
 //   if (config.enabled) {
 //     Mock.mock(config.api, config.method, () => {
-//       return {
-//         message: "ok",
-//         code: 0,
-//         data: config.data,
-//       };
+//       return config.data
 //     });
 //   }
 // });

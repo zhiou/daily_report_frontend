@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-02 15:43:20
- * @LastEditTime: 2021-11-08 10:17:31
+ * @LastEditTime: 2021-11-12 16:01:51
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/store/module/project.js
@@ -10,12 +10,14 @@
 import { list, update, create, remove} from "../../api/product";
 
 const state = () => ({
+  spinning: false,
   all: [],
 });
 
 const actions = {
   list({ commit }) {
     return new Promise((resolve, reject) => {
+      commit("SET_SPINNING", true);
       list()
         .then((data) => {
           commit("SET_PRODUCTS", data);
@@ -23,6 +25,9 @@ const actions = {
         })
         .catch((error) => {
           reject(error);
+        })
+        .finally(() => {
+          commit("SET_SPINNING", false);
         });
     });
   },
@@ -71,6 +76,9 @@ const mutations = {
   ADD_PRODUCT: (state, product) => {
     state.all = [...state.all, product];
   },
+  SET_SPINNING(state, spinning) {
+    state.spinning = spinning;
+  }
   REMOVE_PRODUCT: (state, product) => {
     let products = [];
     for (let p of state.all)

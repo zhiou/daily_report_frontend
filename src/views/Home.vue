@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-27 15:54:31
- * @LastEditTime: 2021-11-08 10:19:32
+ * @LastEditTime: 2021-11-12 15:25:22
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/views/Home.vue
@@ -59,6 +59,7 @@
             <span v-if="routes.indexOf(route) === routes.length - 1">
               {{ route.breadcrumbName }}
             </span>
+
             <router-link v-else :to="'/' + paths.join('/')">
               {{ route.breadcrumbName }}
             </router-link>
@@ -152,7 +153,17 @@ export default {
       ];
     },
     menuSelectableKeys: function () {
-      return ["user", "dm", "pm", "pmo", "staff", 'proj_stats', "pm", "proj", "prod"];
+      return [
+        "user",
+        "dm",
+        "pm",
+        "pmo",
+        "staff",
+        "proj_stats",
+        "pm",
+        "proj",
+        "prod",
+      ];
     },
   },
   mounted() {
