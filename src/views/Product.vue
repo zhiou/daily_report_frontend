@@ -139,7 +139,7 @@ export default {
     this.$store
       .dispatch("product/list")
       .then(() => {
-        this.refresh();
+        this.refreshAll();
       })
       .catch((error) => {
         this.$message.error(error, 3);
@@ -170,27 +170,45 @@ export default {
         }
         modalForm.resetFields();
         this.visible = false;
-        this.$store.dispatch("product/create", product).then(() => {
-          this.refresh();
-        });
+
+        this.$store
+          .dispatch("product/create", product)
+          .then(() => {
+            this.refreshProducts();
+          });
       });
     },
     onDelete(key) {
-      const products = [...this.products];
-      this.products = products.filter((item) => item.key !== key);
+      this.$store.dispatch("product/remove", {numbers:[key]})
+      .then(()=>{
+        this.refreshProducts();
+      }).catch((e)=>{
+        console.log(e);
+      })
     },
+
     onSave() {
       this.$store.dispatch("product/update", this.products).finally(() => {
-        this.refresh();
+        this.refreshOrigin();
       });
     },
-    refresh() {
+    refreshProducts() {
+      this.products = this.$store.state.product.all.map((product) => {
+        return { ...product, key: product.number };
+     });
+    },
+    refreshOrigin() {
+      this.origin = this.$store.state.product.all.map((product) => {
+        return { ...product, key: product.number };
+      });
+    },
+    refreshAll() {
       this.origin = this.$store.state.product.all.map((product) => {
         return { ...product, key: product.number };
       });
       this.products = this.$store.state.product.all.map((product) => {
         return { ...product, key: product.number };
-      });
+     });
     },
   },
 };

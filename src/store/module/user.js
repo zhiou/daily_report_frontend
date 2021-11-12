@@ -10,6 +10,7 @@ import { getToken, setToken } from "../../api/request/token";
 import { login, logout, modify } from "../../api/login";
 
 const state = () => ({
+  all:[],
   token: getToken(),
   name: '',
   department: '',

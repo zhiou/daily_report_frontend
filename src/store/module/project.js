@@ -7,7 +7,7 @@
  * @FilePath: /daily-report-frontend/src/store/module/project.js
  */
 
-import { list, update, create } from "../../api/project";
+import { list, update, create, remove} from "../../api/project";
 
 const state = () => ({
   spinning: false,
@@ -55,6 +55,18 @@ const actions = {
         });
     });
   },
+  remove({ commit }, project) {
+    return new Promise((resolve, reject) => {
+      remove(project)
+        .then(() => {
+          commit("REMOVE_PROJECTS", project);
+          resolve();
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
 };
 
 const mutations = {
@@ -66,6 +78,17 @@ const mutations = {
   },
   SET_SPINNING(state, spinning) {
     state.spinning = spinning;
+  },
+  REMOVE_PROJECTS: (state, project) => {
+    let projects = [];
+    for (let p of state.all)
+    { 
+      if(p.number !== project.numbers[0])
+      {
+        projects.push(p);
+      }
+    }
+    state.all = projects;
   },
 };
 

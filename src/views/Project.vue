@@ -16,56 +16,57 @@
       </a-col>
     </a-row>
     <a-spin :spinning="spinning">
-      <a-table
-        :columns="columns"
-        :data-source="projects"
-        style="margin: 16px"
-        :defaultExpandedRowKeys="[0]"
-        :pagination="false"
-      >
-        <template slot="name" slot-scope="text, record">
-          <editable-cell
-            :text="text"
-            @change="onCellChange(record.key, 'name', $event)"
-          />
-        </template>
-        <template slot="manager_number" slot-scope="text, record">
-          <editable-cell
-            :text="text"
-            @change="onCellChange(record.key, 'manager_number', $event)"
-          />
-        </template>
-        <template slot="remark" slot-scope="text, record">
-          <editable-cell
-            :text="text"
-            @change="onCellChange(record.key, 'remark', $event)"
-          />
-        </template>
-        <template slot="state" slot-scope="tag, record">
-          <editable-tag-cell
-            :tag="tag"
-            :options="projectState"
-            @change="onCellChange(record.key, 'status', $event)"
-          />
-        </template>
-        <template slot="operation" slot-scope="text, record">
-          <a-button
-            type="danger"
-            shape="circle"
-            icon="delete"
-            v-if="projects.length"
-            @click="() => onDelete(record.key)"
-          />
-        </template>
-      </a-table>
-      <a-button
-        type="dashed"
-        style="width: 40%; margin-top: 8px; margin-left: 30%"
-        @click="() => (visible = true)"
-      >
-        <a-icon type="plus" /> Add Project
-      </a-button>
-    </a-spin>
+    <a-table
+      :columns="columns"
+      :data-source="projects"
+      style="margin: 16px"
+      :defaultExpandedRowKeys="[0]"
+      :pagination="false"
+    >
+      <template slot="name" slot-scope="text, record">
+        <editable-cell
+          :text="text"
+          @change="onCellChange(record.key, 'name', $event)"
+        />
+      </template>
+      <template slot="manager_name" slot-scope="text, record">
+        <editable-cell
+          :text="text"
+          @change="onCellChange(record.key, 'manager_name', $event)"
+        />
+      </template>
+      <template slot="remark" slot-scope="text, record">
+        <editable-cell
+          :text="text"
+          @change="onCellChange(record.key, 'remark', $event)"
+        />
+      </template>
+      <template slot="state" slot-scope="tag, record">
+        <editable-tag-cell
+          :tag="tag"
+          :options="projectState"
+          @change="onCellChange(record.key, 'status', $event)"
+        />
+      </template>
+      <template slot="operation" slot-scope="text, record">
+        <a-button
+          type="danger"
+          shape="circle"
+          icon="delete"
+          v-if="projects.length"
+          @click="() => onDelete(record.key)"
+        />
+      </template>
+    </a-table>
+    <a-button
+      type="dashed"
+      style="width: 40%; margin-top: 8px; margin-left: 30%"
+      @click="() => (visible = true)"
+    >
+      <a-icon type="plus" /> Add Project
+    </a-button>
+       </a-spin>
+
     <project-modal-form
       ref="projectForm"
       :visible="visible"
@@ -101,9 +102,9 @@ const columns = [
   },
   {
     title: "项目经理",
-    key: "manager_number",
-    dataIndex: "manager_number",
-    scopedSlots: { customRender: "manager_number" },
+    key: "manager_name",
+    dataIndex: "manager_name",
+    scopedSlots: { customRender: "manager_name" },
   },
   {
     title: "备注",
@@ -116,6 +117,11 @@ const columns = [
     dataIndex: "operation",
     scopedSlots: { customRender: "operation" },
   },
+];
+
+let staffs = [{ name: "周煌", number: "ES0092" },
+{ name: "刘纳", number: "ES0150" },
+{ name: "刘淼淼", number: "ES0256" },
 ];
 
 export default {
@@ -138,7 +144,7 @@ export default {
     this.$store
       .dispatch("project/list")
       .then(() => {
-        this.refresh();
+        this.refreshAll();
       })
       .catch((error) => {
         this.$message.error(error, 3);
@@ -169,21 +175,41 @@ export default {
         }
         modalForm.resetFields();
         this.visible = false;
-        this.$store.dispatch("project/create", project).then(() => {
-          this.refresh();
-        });
+
+        const manager_name = staffs.find((staff) => {
+          return staff.number === project.manager_number
+        }).name
+        this.$store
+          .dispatch("project/create", {...project, manager_name})
+          .then(() => {
+            this.refreshProjects();
+          });
       });
     },
     onDelete(key) {
-      const projects = [...this.projects];
-      this.projects = projects.filter((item) => item.key !== key);
+      this.$store.dispatch("project/remove", {numbers:[key]})
+      .then(()=>{
+          this.refreshProjects();
+      }).catch((e)=>{
+        console.log(e);
+      })
     },
     onSave() {
       this.$store.dispatch("project/update", this.projects).finally(() => {
-        this.refresh();
+        this.refreshOrigin();
       });
     },
-    refresh() {
+    refreshOrigin() {
+      this.origin = this.$store.state.project.all.map((project) => {
+        return { ...project, key: project.number };
+      });
+    },
+    refreshProjects() {
+      this.projects = this.$store.state.project.all.map((project) => {
+        return { ...project, key: project.number };
+      });
+    },
+    refreshAll() {
       this.origin = this.$store.state.project.all.map((project) => {
         return { ...project, key: project.number };
       });

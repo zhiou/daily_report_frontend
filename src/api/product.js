@@ -29,3 +29,11 @@ export function create(product) {
     data: product,
   });
 }
+
+export function remove(product) {
+  return request({
+    url: "/product",
+    method: "delete",
+    data: product,
+  });
+}

@@ -12,57 +12,45 @@
     <div class="report-frame">
       <a-row type="flex" justify="start" :gutter="2" style="margin: 30px 20px">
         <a-space>
-          <a-span>请选择查询项：</a-span>
+        <span>请选择查询项：</span>
           <a-col :span="4">
-            <a-select
-              show-search
-              option-filter-prop="children"
-              :filter-option="filterOption"
-              style="width: 150px"
-              @change="onQueryItemChanged($event)"
-            >
-              <a-select-option v-for="item in queryitems" :key="item.number">
-                {{ item.name }}
-              </a-select-option>
-            </a-select>
-          </a-col>
-          <a-col :span="4">
-            <a-select
-              v-model="clearflag"
-              show-search
-              option-filter-prop="children"
-              :filter-option="filterOption"
-              style="width: 150px"
-              @change="
-                onProductorProjectorEmployerChanged(
-                  record.key,
-                  'product',
-                  $event
-                )
-              "
-            >
-              <a-select-option v-for="item in multiItems" :key="item.number">
-                {{ item.name }}
-              </a-select-option>
-            </a-select>
-          </a-col>
-          <a-span>请选择查询时间：</a-span>
-          <a-col :span="4">
-            <a-range-picker
-              v-model="resetdate"
-              showTime
-              format="YYYY/MM/DD"
-              :placeholder="['开始时间', '结束时间']"
-              @change="onChange"
-            />
-          </a-col>
-          <a-button :span="4" type="primary" @click="onQueryLog">
-            查询
-          </a-button>
-          <a-button :span="4" type="primary" @click="onDownload">
-            Download
-          </a-button>
-        </a-space>
+          <a-select
+            show-search
+            option-filter-prop="children"
+            :filter-option="filterOption"
+            style="width: 150px" 
+            @change="onQueryItemChanged($event)"
+          >
+            <a-select-option v-for="item in queryitems" :key="item.number">
+              {{ item.name }}
+            </a-select-option>
+          </a-select>
+        </a-col>
+      <a-col :span="4">
+          <a-select v-model="clearflag"
+            show-search
+            option-filter-prop="children"
+            :filter-option="filterOption"
+            style="width: 150px"
+            @change="onProductorProjectorEmployerChanged(record.key, 'product', $event)"
+          >
+            <a-select-option v-for="item in multiItems" :key="item.number">
+              {{ item.name }}
+            </a-select-option>
+          </a-select>
+        </a-col>
+        <span>请选择查询时间：</span>
+        <a-col :span="4">
+           <a-range-picker v-model="resetdate" showTime format="YYYY/MM/DD" :placeholder="['开始时间', '结束时间']" @change="onChange"/>
+        </a-col>
+        <a-button :span="4" type="primary" @click="onQueryLog">
+          查询
+        </a-button>
+        <a-button :span="4" type="primary" @click="onDownload">
+          Download
+        </a-button>
+         </a-space>
+
         <a-col :span="24"> </a-col>
       </a-row>
       <a-spin :spinning="spinning">
@@ -221,11 +209,6 @@ export default {
       reports: [],
       multiItems: [],
       columns,
-      onDay: moment(),
-      //project: "11223344",
-      // projectName: "",
-      dateFormat: "YYYY/MM/DD",
-      monthFormat: "YYYY/MM",
       queryitems,
       projects,
       products,
@@ -265,17 +248,39 @@ export default {
     },
     onQueryLog() {
       this.$store
-        .dispatch("report/pmo", {
-          type: "1",
-          condition: "106",
-          from: "2021-10-26",
-          to: "2021-10-27",
+      .dispatch("report/pmoQuery", {
+        type:"0",
+        condition:"ES0092",
+        from: "2021-10-26",
+        to: "2021-10-27",
+      }).then((tasks) => {
+        this.projectName = tasks[0].project_name;
+
+        let nameBased = this.$_.groupBy(tasks, 'staff_name')
+ 
+        this.reports = Object.keys(nameBased).map(name => {
+          let tasks = nameBased[name];
+          let department = tasks[0].department
+          let cost = 0;
+          let content = [];
+          let sn = 1;
+          tasks.forEach((task) => {
+            cost += task.task_cost;
+            let tc = sn +". <" + task.task_name + ">";
+            sn++;
+            if (task.product_name) {
+                tc += "[" + task.product_name + "]";
+            }
+
+            tc += task.task_detail;
+            content.push(tc);
+          });
+          let key = this.count;
+          this.count++;
+          return { name, cost, tasks: content, department, key };
         })
-        .then((tasks) => {
-          console.log(tasks);
-        })
-        .catch((e) => {
-          console.log(e);
+      }).catch((e)=>{
+        console.log(e)
           this.$message.error(e);
         });
     },
