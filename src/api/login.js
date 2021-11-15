@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-27 16:43:11
- * @LastEditTime: 2021-09-26 14:25:20
+ * @LastEditTime: 2021-11-15 15:54:24
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/api/login.js
@@ -36,5 +36,12 @@ export function modify(password, new_password) {
       password,
       new_password
     }
+  })
+}
+
+export function info() {
+  return request({
+    url: '/user/info',
+    method: 'get',
   })
 }

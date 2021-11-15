@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-22 17:11:13
- * @LastEditTime: 2021-11-08 10:17:23
+ * @LastEditTime: 2021-11-15 15:46:46
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/main.js
@@ -30,6 +30,7 @@ console.log = (function (oriLogFunc) {
 })(console.log);
 
 moment.locale("zh-cn"); //设置语言 或 moment.lang('zh-cn');
+
 Object.defineProperty(Vue.prototype, "$_", { value: lodash });
 Vue.prototype.$echarts = echarts;
 

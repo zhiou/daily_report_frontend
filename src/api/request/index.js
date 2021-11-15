@@ -1,7 +1,7 @@
 /*
  * @Author: zhiou
  * @Date: 2021-09-26 10:33:57
- * @LastEditTime: 2021-11-12 16:28:06
+ * @LastEditTime: 2021-11-15 14:45:55
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/request/index.js
@@ -30,7 +30,7 @@ const service = axios.create({
 
 service.interceptors.request.use(
   (request) => {
-    console.log('request params', request.data)
+    console.log('request params', request.data || request.params)
     request.headers["Authorization"] = getToken();
     return request;
   },

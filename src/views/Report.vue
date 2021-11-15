@@ -3,7 +3,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 15:34:38
- * @LastEditTime: 2021-11-12 16:34:29
+ * @LastEditTime: 2021-11-15 15:00:31
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Report.vue
@@ -206,8 +206,8 @@ export default {
   mounted() {
     this.$store
       .dispatch("report/selfQuery", {
-        from: moment(),
-        to: moment().add(1, "day"),
+        from: this.onDay.format('yyyy-MM-DD'),
+        to: this.onDay.add(1, "day").format('yyyy-MM-DD'),
       })
       .then((tasks) => {
         this.tasks = tasks.map((task) => {

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 14:50:36
- * @LastEditTime: 2021-11-12 16:33:26
+ * @LastEditTime: 2021-11-15 17:24:06
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/DepartmentReport.vue
@@ -10,15 +10,14 @@
   <div id="report" v-title data-title="工作日志-创建">
     <div class="report-frame">
       <a-row :gutter="16">
-        <a-col :span="4">
-          <a-input
-            :default-value="department"
-            addonBefore="Department"
-            disabled
-          />
+        <a-col :span="6">
+          <a-input v-model="department" addonBefore="Department" disabled />
         </a-col>
         <a-col :span="4">
-          <a-date-picker :allowClear="false" v-model="onDay"
+          <a-date-picker
+            :allowClear="false"
+            :default-value="onDay"
+            @change="onDayChanged"
         /></a-col>
 
         <a-col :span="16"> </a-col>
@@ -31,59 +30,12 @@
           :defaultExpandedRowKeys="[0]"
           :pagination="false"
         >
-          <span slot="product-selector" slot-scope="selector, record">
-            <a-select
-              :default-value="selector.selected"
-              @change="onProductChanged(record.key, 'product', $event)"
-            >
-              <a-select-option
-                v-for="(value, index) in selector.options"
-                :key="index"
-              >
-                {{ value.name }}
-              </a-select-option>
-            </a-select>
-          </span>
-          <span slot="project-selector" slot-scope="selector, record">
-            <a-select
-              :default-value="selector.selected"
-              @change="onProjectChanged(record.key, 'project', $event)"
-            >
-              <a-select-option
-                v-for="(value, index) in selector.options"
-                :key="index"
-              >
-                {{ value.name }}
-              </a-select-option>
-            </a-select>
-          </span>
-          <template slot="name" slot-scope="text, record">
-            <editable-cell
-              :text="text"
-              @change="onCellChange(record.key, 'name', $event)"
-            />
-          </template>
-          <template slot="cost" slot-scope="number, record">
-            <editable-number-cell
-              :number="number"
-              @change="onCellChange(record.key, 'cost', $event)"
-            />
-          </template>
           <template slot="details" slot-scope="tasks">
-            <editable-cell
-              v-for="(task, index) in tasks"
-              :key="index"
-              :text="task"
-            />
-          </template>
-          <template slot="operation" slot-scope="text, record">
-            <a-button
-              type="danger"
-              shape="circle"
-              icon="delete"
-              v-if="tasks.length"
-              @click="() => onDelete(record.key)"
-            />
+            <ul>
+              <li v-for="(task, index) in tasks" :key="index">
+                {{ task }}
+              </li>
+            </ul>
           </template>
         </a-table>
       </a-spin>
@@ -102,14 +54,12 @@ const columns = [
     title: "Name",
     dataIndex: "name",
     key: "name",
-    scopedSlots: { customRender: "name" },
     width: 120,
   },
   {
     title: "Cost",
     dataIndex: "cost",
     key: "cost",
-    scopedSlots: { customRender: "cost" },
     width: 100,
   },
   {
@@ -122,46 +72,10 @@ const columns = [
 
 export default {
   name: "DepartmentReport",
-  components: {
-    EditableCell,
-    EditableNumberCell,
-  },
+  components: {},
   mounted() {
-    this.$store
-      .dispatch("report/dmQuery", {
-        from: moment(),
-        to: moment(),
-      })
-      .then((tasks) => {
-        let nameBased = this.$_.groupBy(tasks, "staff_name");
-        this.reports = Object.keys(nameBased).map((name) => {
-          let tasks = nameBased[name];
-          let department = tasks[0].department;
-          let cost = 0;
-          let content = [];
-          let sn = 1;
-          tasks.forEach((task) => {
-            cost += task.task_cost;
-            let tc = sn + ". <" + task.task_name + ">" + "[";
-            sn++;
-            if (task.project_name) {
-              tc += task.project_name + ":";
-            }
-            if (task.product_name) {
-              tc += task.product_name;
-            }
-
-            tc += "]" + task.task_detail;
-            content.push(tc);
-          });
-          let key = this.count;
-          this.count++;
-          return { name, cost, tasks: content, department, key };
-        });
-      })
-      .catch((e)=> {
-        this.$message.error(e)
-      });
+    this.fetchDepartment();
+    this.fetchData(this.onDay);
   },
   data() {
     return {
@@ -172,17 +86,70 @@ export default {
     };
   },
   computed: {
-    department() {
-      return this.$store.state.user.department;
-    },
-    dayString() {
-      return this.onDay.format("yyyy-MM-DD");
-    },
     spinning() {
       return this.$store.state.report.spinning;
     },
+    department() {
+      return this.$store.state.user.department;
+    },
   },
-  methods: {},
+  methods: {
+    onDayChanged(day) {
+      console.log("day changed", day);
+      this.fetchData(day);
+    },
+    fetchDepartment() {
+      if (!this.department) {
+        this.$store.dispatch("user/info").finally(() => {
+          console.log("user info done");
+        });
+      }
+    },
+    fetchData(day) {
+      console.log("date", day);
+      this.$store
+        .dispatch("report/dmQuery", {
+          from: this.dayString(day),
+          to: this.nextDaystring(day),
+        })
+        .then((tasks) => {
+          let nameBased = this.$_.groupBy(tasks, "staff_name");
+          this.reports = Object.keys(nameBased).map((name) => {
+            let tasks = nameBased[name];
+            let department = tasks[0].department;
+            let cost = 0;
+            let content = [];
+            let sn = 1;
+            tasks.forEach((task) => {
+              cost += task.task_cost;
+              let tc = sn + ". <" + task.task_name + ">" + "[";
+              sn++;
+              if (task.project_name) {
+                tc += task.project_name + ":";
+              }
+              if (task.product_name) {
+                tc += task.product_name;
+              }
+
+              tc += "]" + task.task_detail;
+              content.push(tc);
+            });
+            let key = this.count;
+            this.count++;
+            return { name, cost, tasks: content, department, key };
+          });
+        })
+        .catch((e) => {
+          this.$message.error(e);
+        });
+    },
+    dayString(day) {
+      return day.format("yyyy-MM-DD");
+    },
+    nextDaystring(day) {
+      return moment(day).add(1, "day").format("yyyy-MM-DD");
+    },
+  },
 };
 </script>
 
