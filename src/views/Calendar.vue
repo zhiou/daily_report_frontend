@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-22 17:30:02
- * @LastEditTime: 2021-11-15 14:38:49
+ * @LastEditTime: 2021-11-15 15:20:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Home.vue
@@ -12,7 +12,7 @@
       <a-calendar
         class="calendar-frame"
         @select="onSelect"
-        v-model="value"
+        :default-value="value"
         @panelChange="onChange"
         :mode="mode"
       >
@@ -65,11 +65,12 @@ export default {
   },
   methods: {
     firstDayOfMonth(month) {
-      return month.startOf('month').format("yyyy-MM-DD")
+      return moment(month).startOf("month").format("yyyy-MM-DD");
     },
     fetchData(month) {
-      const startDate = this.firstDayOfMonth(month)
-      const endDate = this.firstDayOfMonth(month.add(1, 'month'))
+      const startDate = this.firstDayOfMonth(month);
+      // 这里必须用moment包裹一下,否则month的值会发生改变导致控件显示有问题
+      const endDate = this.firstDayOfMonth(moment(month).add(1, "month"));
       this.$store
         .dispatch("report/selfQuery", {
           from: startDate,
@@ -78,7 +79,6 @@ export default {
         .then((tasks) => {
           let taskNames = [];
           tasks.forEach((task) => {
-            //TODO: 只用date有问题, 目前是测试数据, 用实际数据后再改
             let day = moment(task.report_date).date();
             if (taskNames[day] == undefined) {
               taskNames[day] = new Set();
@@ -101,6 +101,7 @@ export default {
     },
     onSelect(date) {
       if (this.mode === "month") {
+        console.log('select day', date.format("yyyy-MM-DD"))
         this.$router.push("/report/" + date.format("yyyy-MM-DD"));
       } else {
         this.mode = "month";
@@ -109,7 +110,8 @@ export default {
     },
     onChange(date, mode) {
       this.mode = mode;
-      this.fetchData(date)
+      this.value = date
+      this.fetchData(date);
     },
   },
 };
