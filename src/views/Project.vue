@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-02 13:54:50
- * @LastEditTime: 2021-11-12 16:34:08
+ * @LastEditTime: 2021-11-15 18:21:18
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Project.vue
@@ -183,6 +183,10 @@ export default {
           .dispatch("project/create", {...project, manager_name})
           .then(() => {
             this.refreshProjects();
+          })
+          .catch((e) => {
+            console.error(e)
+            this.$message.error(e)
           });
       });
     },
