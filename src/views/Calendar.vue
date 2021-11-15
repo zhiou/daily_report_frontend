@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-22 17:30:02
- * @LastEditTime: 2021-11-12 16:31:46
+ * @LastEditTime: 2021-11-15 14:38:49
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Home.vue
@@ -61,28 +61,36 @@ export default {
     },
   },
   mounted() {
-    this.$store
-      .dispatch("report/selfQuery", {
-        from: this.value,
-        to: this.value,
-      })
-      .then((tasks) => {
-        let taskNames = [];
-        tasks.forEach((task) => {
-          //TODO: 只用date有问题, 目前是测试数据, 用实际数据后再改
-          let day = moment(task.report_date).date();
-          if (taskNames[day] == undefined) {
-            taskNames[day] = new Set();
-          }
-          taskNames[day].add({ type: "success", content: task.task_name });
-        });
-        this.taskNames = taskNames;
-      })
-      .catch((e) => {
-        this.$message.error(e)
-      });
+    this.fetchData(this.value);
   },
   methods: {
+    firstDayOfMonth(month) {
+      return month.startOf('month').format("yyyy-MM-DD")
+    },
+    fetchData(month) {
+      const startDate = this.firstDayOfMonth(month)
+      const endDate = this.firstDayOfMonth(month.add(1, 'month'))
+      this.$store
+        .dispatch("report/selfQuery", {
+          from: startDate,
+          to: endDate,
+        })
+        .then((tasks) => {
+          let taskNames = [];
+          tasks.forEach((task) => {
+            //TODO: 只用date有问题, 目前是测试数据, 用实际数据后再改
+            let day = moment(task.report_date).date();
+            if (taskNames[day] == undefined) {
+              taskNames[day] = new Set();
+            }
+            taskNames[day].add({ type: "success", content: task.task_name });
+          });
+          this.taskNames = taskNames;
+        })
+        .catch((e) => {
+          this.$message.error(e);
+        });
+    },
     getListData(value) {
       return this.taskNames[value.date()];
     },
@@ -101,6 +109,7 @@ export default {
     },
     onChange(date, mode) {
       this.mode = mode;
+      this.fetchData(date)
     },
   },
 };

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 16:14:42
- * @LastEditTime: 2021-11-12 17:08:17
+ * @LastEditTime: 2021-11-15 14:07:46
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/ProjectReport.vue
@@ -59,7 +59,7 @@
           <a-button
             :span="4"
             type="primary"
-            :loading="seaching"
+            :loading="searching"
             @click="onQueryLog"
           >
             查询

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-10-11 11:05:41
- * @LastEditTime: 2021-11-12 17:10:18
+ * @LastEditTime: 2021-11-15 14:44:20
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/api/report.js
@@ -21,7 +21,7 @@ export function update(report) {
     return request({
       url: '/report',
       method: 'get',
-      data: report
+      params: report
     })
   }
 
