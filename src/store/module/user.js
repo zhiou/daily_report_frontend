@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-09 14:58:52
- * @LastEditTime: 2021-11-15 16:50:10
+ * @LastEditTime: 2021-11-16 15:42:14
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/store/modules/account.js
@@ -15,6 +15,7 @@ const state = () => ({
   name: "",
   department: "",
   projects: [], // not empty if you are pm
+  roles: [],
 });
 
 const actions = {
@@ -25,6 +26,9 @@ const actions = {
           commit("SET_TOKEN", data["token"]);
           commit("SET_NAME", data["name"]);
           commit("SET_DEPARTMENT", data["department"]);
+          commit("SET_PROJECTS", data["projects"])
+          commit("SET_ROLES", data['roles'])
+          console.log('login resp', data)
           resolve();
         })
         .catch((error) => {
@@ -64,6 +68,7 @@ const actions = {
           commit("SET_NAME", data["name"]);
           commit("SET_DEPARTMENT", data["department"]);
           commit("SET_PROJECTS", data["projects"])
+          commit("SET_ROLES", data['roles'])
           resolve();
         })
         .catch((e) => {
@@ -86,7 +91,10 @@ const mutations = {
   },
   SET_PROJECTS: (state, projects) => {
     state.projects = projects
-  }
+  },
+  SET_ROLES: (state, roles) => {
+    state.roles = roles
+  },
 };
 
 export default {

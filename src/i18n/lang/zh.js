@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-05 15:23:46
- * @LastEditTime: 2021-11-04 10:24:33
+ * @LastEditTime: 2021-11-16 15:43:14
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/assets/lang/zh.js
@@ -61,7 +61,7 @@ module.exports = {
       pmo: "PMO",
       worktime: "工时统计",
       staff: "员工工时",
-      proj_stat: "项目工时统计",
+      proj_stats: "项目工时统计",
       proj: "项目信息",
       prod: "产品信息",
       data_import: "数据导入",
