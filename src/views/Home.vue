@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-27 15:54:31
- * @LastEditTime: 2021-11-12 15:25:22
+ * @LastEditTime: 2021-11-16 15:40:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/views/Home.vue
@@ -13,7 +13,7 @@
         <div class="logo" />
         <a-menu
           :default-selected-keys="['user']"
-          :default-open-keys="['log-mng', 'statistics', 'data_import']"
+          :default-open-keys="['report_mng', 'statistics', 'data_import']"
           v-model="selectedMenu"
           mode="inline"
           theme="dark"
@@ -79,7 +79,7 @@
 import PasswordDialog from "./components/PasswordDialog.vue";
 import UserSettings from "./components/UserSettings.vue";
 
-import moment from "moment";
+
 export default {
   components: { UserSettings, PasswordDialog },
   name: "Home",
@@ -92,67 +92,65 @@ export default {
 
       userSettingVisible: false,
       passwordDialogVisible: false,
+      menus: [
+  {
+    key: "log-mng",
+    title: this.$t("home.menu.log"),
+    type: "appstore",
+    items: [
+      {
+        key: "user",
+        title: this.$t("home.menu.user"),
+      },
+      {
+        key: "dm",
+        title: this.$t("home.menu.dm"),
+      },
+      {
+        key: "pm",
+        title: this.$t("home.menu.pm"),
+      },
+      {
+        key: "pmo",
+        title: this.$t("home.menu.pmo"),
+      },
+    ],
+  },
+  {
+    key: "statistics",
+    title: this.$t("home.menu.worktime"),
+    type: "setting",
+    items: [
+      {
+        key: "staff",
+        title: this.$t("home.menu.staff"),
+      },
+      {
+        key: "proj_stats",
+        title: this.$t("home.menu.proj_stat"),
+      },
+    ],
+  },
+  {
+    key: "data_import",
+    title: this.$t("home.menu.data_import"),
+    type: "setting",
+    items: [
+      {
+        key: "proj",
+        title: this.$t("home.menu.proj"),
+      },
+      {
+        key: "prod",
+        title: this.$t("home.menu.prod"),
+      },
+    ],
+  },
+],
     };
   },
   computed: {
-    menus: function () {
-      return [
-        {
-          key: "log-mng",
-          title: this.$t("home.menu.log"),
-          type: "appstore",
-          items: [
-            {
-              key: "user",
-              title: this.$t("home.menu.user"),
-            },
-            {
-              key: "dm",
-              title: this.$t("home.menu.dm"),
-            },
-            {
-              key: "pm",
-              title: this.$t("home.menu.pm"),
-            },
-            {
-              key: "pmo",
-              title: this.$t("home.menu.pmo"),
-            },
-          ],
-        },
-        {
-          key: "statistics",
-          title: this.$t("home.menu.worktime"),
-          type: "setting",
-          items: [
-            {
-              key: "staff",
-              title: this.$t("home.menu.staff"),
-            },
-            {
-              key: "proj_stats",
-              title: this.$t("home.menu.proj_stat"),
-            },
-          ],
-        },
-        {
-          key: "data_import",
-          title: this.$t("home.menu.data_import"),
-          type: "setting",
-          items: [
-            {
-              key: "proj",
-              title: this.$t("home.menu.proj"),
-            },
-            {
-              key: "prod",
-              title: this.$t("home.menu.prod"),
-            },
-          ],
-        },
-      ];
-    },
-    menuSelectableKeys: function () {
+    menuSelectableKeys() {
       return [
         "user",
         "dm",
@@ -165,13 +163,19 @@ export default {
         "prod",
       ];
     },
+    roles() {
+      return this.$store.state.user.roles;
+    }
   },
   mounted() {
-    this.getMenuName();
-    this.createBread();
-    if (this.$route.path === "/") {
-      this.$router.push("user");
-    }
+    this.$store.dispatch("user/info").then(() => {
+      this.menus = this.createMenus();
+      this.getMenuName();
+      this.createBread();
+      if (this.$route.path === "/") {
+        this.$router.push("user");
+      }
+    });
   },
   methods: {
     toggleCollapsed() {
@@ -212,6 +216,59 @@ export default {
           breadcrumbName: item.name,
         };
       });
+    },
+    createMenus() {
+      const roles = this.roles;
+      if (!roles) {
+        return;
+      }
+      const routes = this.$router.options.routes.find(
+        (route) => route.name === "Home"
+      ).children;
+      console.log("routes", routes);
+      let menus = [
+        {
+          key: "report_mng",
+          title: this.$t("home.menu.log"),
+          type: "appstore",
+          items: [],
+        },
+        {
+          key: "statistics",
+          title: this.$t("home.menu.worktime"),
+          type: "setting",
+          items: [],
+        },
+      ];
+      if (roles.indexOf("pmo") > -1) {
+        menus.push({
+          key: "data_import",
+          title: this.$t("home.menu.data_import"),
+          type: "setting",
+          items: [],
+        });
+      }
+      routes.forEach((route) => {
+        if (!route.meta) {
+          return;
+        }
+        const requireRole = route.meta.requireRole;
+        const belongMenu = route.meta.inMenu;
+        console.log("require role:", requireRole, "roles:", roles);
+        // 如果属于某个Menu且没有角色要求,或者满足角色要求就加入到menu
+        if (belongMenu && (!requireRole || roles.indexOf(requireRole) > -1)) {
+          let menu = menus.find((menu) => menu.key === belongMenu);
+          console.log("menu", menu);
+          if (menu) {
+            menu.items.push({
+              key: route.path,
+              title: this.$t("home.menu." + route.path),
+            });
+          }
+        }
+      });
+      console.log("menus", menus);
+      return menus;
     },
   },
 

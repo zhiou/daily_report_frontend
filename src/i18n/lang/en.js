@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-05 15:23:50
- * @LastEditTime: 2021-11-04 16:37:23
+ * @LastEditTime: 2021-11-16 15:43:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/assets/lang/en.js
@@ -60,7 +60,7 @@ module.exports = {
       pmo: "PMO",
       worktime: "Work Time",
       staff: "Staff",
-      proj_stat: "Project Statistics",
+      proj_stats: "Project Statistics",
       proj: "Project",
       prod: "Product",
       data_import: "Data Import",

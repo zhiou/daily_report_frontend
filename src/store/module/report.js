@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-10-11 10:15:57
- * @LastEditTime: 2021-11-12 17:09:23
+ * @LastEditTime: 2021-11-16 16:08:50
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/store/module/report.js
@@ -12,6 +12,7 @@ import {
   selfQuery,
   dmQuery,
   pmQuery,
+  pmPageQuery,
   pmoQuery,
   download,
 } from "../../api/report";
@@ -52,6 +53,21 @@ const actions = {
     return new Promise((resolve, reject) => {
       commit("SET_SPINNING", true);
       dmQuery(info)
+        .then((data) => {
+          resolve(data);
+        })
+        .catch((e) => {
+          reject(e);
+        })
+        .finally(() => {
+          commit("SET_SPINNING", false);
+        });
+    });
+  },
+  pmPageQuery({ commit }, info) {
+    return new Promise((resolve, reject) => {
+      commit("SET_SPINNING", true);
+      pmPageQuery(info)
         .then((data) => {
           resolve(data);
         })

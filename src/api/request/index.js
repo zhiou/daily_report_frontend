@@ -1,7 +1,7 @@
 /*
  * @Author: zhiou
  * @Date: 2021-09-26 10:33:57
- * @LastEditTime: 2021-11-15 14:45:55
+ * @LastEditTime: 2021-11-16 15:49:21
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/request/index.js
@@ -59,7 +59,7 @@ service.interceptors.response.use(
 let onTokenInvalid = function() {
   removeToken(); // 防止每次都进了home再跳转
   router.replace({
-    name: "/Login",
+    name: "Login",
   });
   message.error({
     content: i18n.t("error.tips.token.invalid"),

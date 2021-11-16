@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-02 13:54:56
- * @LastEditTime: 2021-11-12 16:33:52
+ * @LastEditTime: 2021-11-15 18:22:24
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Product.vue
@@ -175,16 +175,22 @@ export default {
           .dispatch("product/create", product)
           .then(() => {
             this.refreshProducts();
+          })
+          .catch((error) => {
+            console.error(error);
+            this.$message.error(error, 3);
           });
       });
     },
     onDelete(key) {
-      this.$store.dispatch("product/remove", {numbers:[key]})
-      .then(()=>{
-        this.refreshProducts();
-      }).catch((e)=>{
-        console.log(e);
-      })
+      this.$store
+        .dispatch("product/remove", { numbers: [key] })
+        .then(() => {
+          this.refreshProducts();
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
 
     onSave() {
@@ -195,7 +201,7 @@ export default {
     refreshProducts() {
       this.products = this.$store.state.product.all.map((product) => {
         return { ...product, key: product.number };
-     });
+      });
     },
     refreshOrigin() {
       this.origin = this.$store.state.product.all.map((product) => {
@@ -208,7 +214,7 @@ export default {
       });
       this.products = this.$store.state.product.all.map((product) => {
         return { ...product, key: product.number };
-     });
+      });
     },
   },
 };

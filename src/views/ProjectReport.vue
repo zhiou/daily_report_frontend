@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 16:14:42
- * @LastEditTime: 2021-11-15 17:22:07
+ * @LastEditTime: 2021-11-15 17:53:06
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/ProjectReport.vue
@@ -38,7 +38,7 @@
         >
           <template slot="details" slot-scope="tasks">
             <ul>
-              <li v-for="(task, index) in tasks" :key="index" >
+              <li v-for="(task, index) in tasks" :key="index">
                 {{ task }}
               </li>
             </ul>
@@ -116,8 +116,10 @@ export default {
       );
     },
     fetchProjects() {
-      if (!this.projects) {
-        this.$store.dispatch("user/info");
+      if (this.projects.length == 0) {
+        this.$store.dispatch("user/info").finally(() => {
+          console.log("user info fechted");
+        });
       }
     },
     fetchData(projectNumber) {

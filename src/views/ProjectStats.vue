@@ -1,13 +1,32 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-04 10:56:50
- * @LastEditTime: 2021-11-12 16:36:11
+ * @LastEditTime: 2021-11-16 16:08:09
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Personal.vue
 -->
 <template>
   <div id="project-stats" style="width: 100%; height: 100%; margin: 16px 16px">
+    <a-row :gutter="16">
+      <a-col :span="4">
+        <!-- <a-input :value="projectName" addonBefore="Project" disabled /> -->
+        <a-select
+          show-search
+          placeholder="选择一个你负责的项目"
+          option-filter-prop="children"
+          style="width: 200px"
+          :filter-option="filterOption"
+          @change="handleChange"
+        >
+          <a-select-option v-for="project in projects" :key="project.number">
+            {{ project.name }}
+          </a-select-option>
+        </a-select>
+      </a-col>
+
+      <a-col :span="20"> </a-col>
+    </a-row>
     <div id="work-time-line" class="charts" />
     <div id="member-distribute-pie" class="charts" />
   </div>
@@ -25,9 +44,12 @@ export default {
     };
   },
   mounted() {
-    this.fetchProjectReports();
+    this.fetchProjects();
   },
   computed: {
+    projects() {
+      return this.$store.state.user.projects;
+    },
     lineData() {
       let xAxis = this.$_.map(this.reports, "report_date").sort();
       let grouped = this.$_.groupBy(this.reports, "staff_name");
@@ -70,13 +92,20 @@ export default {
     },
   },
   methods: {
-    fetchProjectReports() {
+    handleChange(projectNumber) {
+      this.fetchData(projectNumber);
+    },
+    fetchProjects() {
+      if (this.projects.length == 0) {
+        this.$store.dispatch("user/info").finally(() => {
+          console.log("user info fechted");
+        });
+      }
+    },
+    fetchData(projectNumber) {
       this.$store
-        .dispatch("report/pmoQuery", {
-          type: 2,
-          condition: "11223344",
-          from: moment().format(),
-          to: moment().format(),
+        .dispatch("report/pmQuery", {
+          project_number: projectNumber
         })
         .then((data) => {
           this.reports = data;
@@ -85,6 +114,13 @@ export default {
         .catch((error) => {
           this.$message.error(error, 3);
         });
+    },
+    filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text
+          .toLowerCase()
+          .indexOf(input.toLowerCase()) >= 0
+      );
     },
     render() {
       if (this.lineChart) {
