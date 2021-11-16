@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-04 10:56:50
- * @LastEditTime: 2021-11-12 16:36:02
+ * @LastEditTime: 2021-11-16 16:10:49
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Personal.vue
@@ -105,8 +105,8 @@ export default {
     fetchReport() {
       this.$store
         .dispatch("report/selfQuery", {
-          from: this.dateRange[0],
-          end: this.dateRange[1],
+          from: this.dateRange[0].format('yyyy-MM-DD'),
+          to: this.dateRange[1].format('yyyy-MM-DD'),
         })
         .then((data) => {
           this.reports = data;

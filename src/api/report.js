@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-10-11 11:05:41
- * @LastEditTime: 2021-11-15 16:28:19
+ * @LastEditTime: 2021-11-16 16:09:12
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/api/report.js
@@ -33,9 +33,17 @@ export function update(report) {
     })
   }
 
-  export function pmQuery(report) {
+  export function pmPageQuery(report) {
     return request({
       url: '/report/pm/page',
+      method: 'get',
+      params: report
+    })
+  }
+
+  export function pmQuery(report) {
+    return request({
+      url: '/report/pm',
       method: 'get',
       params: report
     })
