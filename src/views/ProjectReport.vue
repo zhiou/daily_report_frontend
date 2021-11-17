@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 16:14:42
- * @LastEditTime: 2021-11-15 17:53:06
+ * @LastEditTime: 2021-11-17 14:18:36
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/ProjectReport.vue
@@ -124,7 +124,7 @@ export default {
     },
     fetchData(projectNumber) {
       this.$store
-        .dispatch("report/pmQuery", {
+        .dispatch("report/pmPageQuery", {
           project_number: projectNumber,
           page_index: this.pagination.current,
           page_size: this.pagination.pageSize,
