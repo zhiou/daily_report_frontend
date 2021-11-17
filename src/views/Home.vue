@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-27 15:54:31
- * @LastEditTime: 2021-11-16 15:40:02
+ * @LastEditTime: 2021-11-17 17:02:50
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/views/Home.vue
@@ -79,7 +79,6 @@
 import PasswordDialog from "./components/PasswordDialog.vue";
 import UserSettings from "./components/UserSettings.vue";
 
-
 export default {
   components: { UserSettings, PasswordDialog },
   name: "Home",
@@ -93,60 +92,60 @@ export default {
       userSettingVisible: false,
       passwordDialogVisible: false,
       menus: [
-  {
-    key: "log-mng",
-    title: this.$t("home.menu.log"),
-    type: "appstore",
-    items: [
-      {
-        key: "user",
-        title: this.$t("home.menu.user"),
-      },
-      {
-        key: "dm",
-        title: this.$t("home.menu.dm"),
-      },
-      {
-        key: "pm",
-        title: this.$t("home.menu.pm"),
-      },
-      {
-        key: "pmo",
-        title: this.$t("home.menu.pmo"),
-      },
-    ],
-  },
-  {
-    key: "statistics",
-    title: this.$t("home.menu.worktime"),
-    type: "setting",
-    items: [
-      {
-        key: "staff",
-        title: this.$t("home.menu.staff"),
-      },
-      {
-        key: "proj_stats",
-        title: this.$t("home.menu.proj_stat"),
-      },
-    ],
-  },
-  {
-    key: "data_import",
-    title: this.$t("home.menu.data_import"),
-    type: "setting",
-    items: [
-      {
-        key: "proj",
-        title: this.$t("home.menu.proj"),
-      },
-      {
-        key: "prod",
-        title: this.$t("home.menu.prod"),
-      },
-    ],
-  },
-],
+        {
+          key: "report_mng",
+          title: this.$t("home.menu.log"),
+          type: "appstore",
+          items: [
+            {
+              key: "user",
+              title: this.$t("home.menu.user"),
+            },
+            {
+              key: "dm",
+              title: this.$t("home.menu.dm"),
+            },
+            {
+              key: "pm",
+              title: this.$t("home.menu.pm"),
+            },
+            {
+              key: "pmo",
+              title: this.$t("home.menu.pmo"),
+            },
+          ],
+        },
+        {
+          key: "statistics",
+          title: this.$t("home.menu.worktime"),
+          type: "setting",
+          items: [
+            {
+              key: "staff",
+              title: this.$t("home.menu.staff"),
+            },
+            {
+              key: "proj_stats",
+              title: this.$t("home.menu.proj_stats"),
+            },
+          ],
+        },
+        {
+          key: "data_import",
+          title: this.$t("home.menu.data_import"),
+          type: "setting",
+          items: [
+            {
+              key: "proj",
+              title: this.$t("home.menu.proj"),
+            },
+            {
+              key: "prod",
+              title: this.$t("home.menu.prod"),
+            },
+          ],
+        },
+      ],
     };
   },
   computed: {
@@ -165,7 +164,7 @@ export default {
     },
     roles() {
       return this.$store.state.user.roles;
-    }
+    },
   },
   mounted() {
     this.$store.dispatch("user/info").then(() => {

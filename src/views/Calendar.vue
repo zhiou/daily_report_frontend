@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-22 17:30:02
- * @LastEditTime: 2021-11-15 15:20:23
+ * @LastEditTime: 2021-11-17 17:37:14
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Home.vue
@@ -17,7 +17,7 @@
         :mode="mode"
       >
         <ul slot="dateCellRender" slot-scope="value" class="events">
-          <li v-for="(item, index) in getListData(value)" :key="item.content">
+          <li v-for="(item, index) in getListData(value)" :key="index">
             <a-badge
               v-if="index < 2"
               :status="item.type"
