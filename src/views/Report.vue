@@ -3,7 +3,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 15:34:38
- * @LastEditTime: 2021-11-15 15:00:31
+ * @LastEditTime: 2021-11-18 19:15:27
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Report.vue
@@ -254,7 +254,7 @@ export default {
     update(status) {
       this.$store
         .dispatch("report/update", {
-          ...this.tasks,
+          tasks: this.tasks,
           on_day: this.dayString,
           author: this.author,
           status,

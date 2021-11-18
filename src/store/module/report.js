@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-10-11 10:15:57
- * @LastEditTime: 2021-11-16 16:08:50
+ * @LastEditTime: 2021-11-18 19:26:32
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/store/module/report.js
@@ -26,7 +26,6 @@ const actions = {
     return new Promise((resolve, reject) => {
       update(report)
         .then(() => {
-          commit("SET_CURRENT", report);
           resolve();
         })
         .catch((error) => {
