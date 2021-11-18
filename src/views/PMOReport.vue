@@ -33,15 +33,9 @@
               option-filter-prop="children"
               :filter-option="filterOption"
               style="width: 150px"
-              @change="
-                onProductorProjectorEmployerChanged(
-                  record.key,
-                  'product',
-                  $event
-                )
-              "
+              @change="onProductorProjectorEmployerChanged($event)"
             >
-              <a-select-option v-for="item in multiItems" :key="item.number">
+              <a-select-option v-for="item in multiItems" :key="item.key">
                 {{ item.name }}
               </a-select-option>
             </a-select>
@@ -51,7 +45,7 @@
             <a-range-picker
               v-model="resetdate"
               showTime
-              format="YYYY/MM/DD"
+              format="YYYY-MM-DD"
               :placeholder="['开始时间', '结束时间']"
               @change="onChange"
             />
@@ -148,52 +142,42 @@ let queryitems = [
   { number: "2", name: "员工" },
 ];
 
-let products = [
-  { number: "01234", name: "自定义" },
-  { number: "12345", name: "OTP" },
-  { number: "67890", name: "KEY线" },
-];
-
-let projects = [
-  { number: "00000000", name: "未立项" },
-  { number: "11223344", name: "中国人民银行" },
-  { number: "22334455", name: "贵州农信银" },
-  { number: "33445566", name: "贵州安元通" },
-  { number: "44556677", name: "深圳农商行" },
-  { number: "55667788", name: "河北银行" },
-  { number: "66778899", name: "天威诚信信创" },
-  { number: "77889900", name: "江苏智慧CA" },
-  { number: "88990011", name: "福建凯特" },
-  { number: "99001122", name: "奔凯" },
-];
-
-let employers = [
-  { number: "ES001", name: "开心" },
-  { number: "ES002", name: "莫莫" },
-  { number: "ES003", name: "小小" },
-  { number: "ES004", name: "乐乐" },
-  { number: "ES005", name: "芒果" },
-  { number: "ES006", name: "饺子" },
-  { number: "ES007", name: "辣条" },
-  { number: "ES008", name: "小奶皇" },
-  { number: "ES009", name: "车厘子" },
-  { number: "ES010", name: "小海绵" },
-];
-
 export default {
   name: "PMOReport",
   components: {
     EditableCell,
     EditableNumberCell,
   },
+  beforeCreate() {//todo, 这里需要加判断，如果数据已经存在，则不需要再去获取了
+      this.$store
+      .dispatch("product/list")
+      .then(() => {
+        this.$store.
+        dispatch("project/list").then(() => {
+          this.$store.dispatch("user/employerlist")
+          .then(() => {
+          })
+          .catch((error) => {
+            this.$message.error(error, 3);
+          })
+        })
+        .catch((error) => {
+        this.$message.error(error, 3);
+      });
+      })
+      .catch((error) => {
+        this.$message.error(error, 3);
+      });
+  },
+  /*
   mounted() {
     //TODO: 参数不对,要改
     this.$store
       .dispatch("report/pmoQuery", {
         type: 0,
         condition: "ES0092",
-        from: moment(),
-        to: moment(),
+        from: "2021-10-26",//moment()
+        to: "2021-10-26",//moment()
       })
       .then((tasks) => {
         this.projectName = tasks[0].project_name;
@@ -225,7 +209,7 @@ export default {
       .catch((error) => {
         this.$message.error(error, 3);
       });
-  },
+  },*/
   data() {
     return {
       count: 0,
@@ -233,9 +217,10 @@ export default {
       multiItems: [],
       columns,
       queryitems,
-      projects,
-      products,
-      employers,
+      typeid:0,
+      conditionid:"001",
+      fromtime:"",
+      totime:"",
       clearflag: "",
       resetdate: ["", ""],
       searching: false,
@@ -246,39 +231,59 @@ export default {
     spinning() {
       return this.$store.state.report.spinning;
     },
+    refreshProducts() {
+      return this.$store.state.product.all.map((product) => {
+        return { ...product, key: product.number };
+      });
+    },
+    refreshProjects() {
+     return this.$store.state.project.all.map((project) => {
+        return { ...project, key: project.number };
+      });
+    },
+    refreshEmployers() {
+      return this.$store.state.user.workerlist.map((worker) => {
+        return { ...worker, key: worker.work_code };
+      });
+    },
   },
   methods: {
     onQueryItemChanged(number) {
       if (0 == number) {
-        this.multiItems = products;
+        this.multiItems = this.refreshProducts;
+        this.typeid = 3;
       } else if (1 == number) {
-        this.multiItems = projects;
+        this.multiItems = this.refreshProjects;
+        this.typeid = 2;
       } else {
-        this.multiItems = employers;
+        this.multiItems = this.refreshEmployers;
+        this.typeid = 0;
       }
       this.clearflag = "";
       this.resetdate = ["", ""];
     },
-    onProductorProjectorEmployerChanged(key, dataIndex, number) {
-      const tasks = [...this.tasks];
-      const target = tasks.find((item) => item.key === key);
-      if (target) {
-        target[dataIndex] = number;
-        this.tasks = tasks;
-      }
+    onProductorProjectorEmployerChanged(number) {
+      this.conditionid = number;
+//      const tasks = [...this.tasks];
+//      const target = tasks.find((item) => item.key === key);
+//      if (target) {
+//        target[dataIndex] = number;
+//        this.tasks = tasks;
+//      }
     },
     onChange(dates, dateStrings) {
-      // console.log('From: ', dates[0], ', to: ', dates[1]);
-      // console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
+      console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
+      this.fromtime = dateStrings[0];
+      this.totime = dateStrings[1];
     },
     onQueryLog() {
       this.searching = true;
       this.$store
         .dispatch("report/pmoQuery", {
-          type: 0,
-          condition: "ES0092",
-          from: "2021-10-26",
-          to: "2021-10-27",
+          type: this.typeid,
+          condition: this.conditionid,
+          from: this.fromtime,
+          to: this.totime,
         })
         .then((tasks) => {
           this.projectName = tasks[0].project_name;

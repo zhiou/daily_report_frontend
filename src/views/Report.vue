@@ -60,7 +60,7 @@
               @change="onProductChanged(record.key, 'product_number', $event)"
             >
               <a-select-option
-                v-for="product in products"
+                v-for="product in refreshProducts"
                 :key="product.number"
               >
                 {{ product.name }}
@@ -77,7 +77,7 @@
               @change="onProjectChanged(record.key, 'project_number', $event)"
             >
               <a-select-option
-                v-for="project in projects"
+                v-for="project in refreshProjects"
                 :key="project.number"
               >
                 {{ project.name }}
@@ -176,25 +176,6 @@ const columns = [
   },
 ];
 
-let projects = [
-  { number: "00000000", name: "未立项" },
-  { number: "11223344", name: "中国人民银行" },
-  { number: "22334455", name: "贵州农信银" },
-  { number: "33445566", name: "贵州安元通" },
-  { number: "44556677", name: "深圳农商行" },
-  { number: "55667788", name: "河北银行" },
-  { number: "66778899", name: "天威诚信信创" },
-  { number: "77889900", name: "江苏智慧CA" },
-  { number: "88990011", name: "福建凯特" },
-  { number: "99001122", name: "奔凯" },
-];
-
-let products = [
-  { number: "0", name: "自定义" },
-  { number: "12345", name: "OTP" },
-  { number: "67890", name: "KEY线" },
-];
-
 export default {
   name: "Report",
   props: ["date"],
@@ -202,6 +183,21 @@ export default {
     EditableCell,
     EditableNumberCell,
     EditableAreaCell,
+  },
+  beforeCreate() {//todo, 这里需要加判断，如果数据已经存在，则不需要再去获取了
+      this.$store
+      .dispatch("product/list")
+      .then(() => {
+        this.$store.
+        dispatch("project/list").then(() => {
+        })
+        .catch((error) => {
+        this.$message.error(error, 3);
+      });
+      })
+      .catch((error) => {
+        this.$message.error(error, 3);
+      });
   },
   mounted() {
     this.$store
@@ -226,8 +222,6 @@ export default {
       tasks: [],
       columns,
       onDay: this.date ? moment(this.date) : moment(),
-      projects,
-      products,
     };
   },
   computed: {
@@ -245,6 +239,16 @@ export default {
     spinning() {
       return this.$store.state.report.spinning;
     },
+    refreshProducts() {
+      return this.$store.state.product.all.map((product) => {
+        return { ...product, key: product.number };
+      });
+    },
+    refreshProjects() {
+     return this.$store.state.project.all.map((project) => {
+        return { ...project, key: project.number };
+      });
+    },
   },
   methods: {
     update(status) {
@@ -261,7 +265,6 @@ export default {
     },
     handleCreateTask() {
       const { count, tasks } = this;
-
       let newTask = { ...this.$_.last(tasks), key: count };
       this.count = count + 1;
       this.tasks = [...tasks, newTask];

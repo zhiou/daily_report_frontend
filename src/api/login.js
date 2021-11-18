@@ -45,3 +45,10 @@ export function info() {
     method: 'get',
   })
 }
+
+export function employerlist() {
+  return request({
+    url: '/user',
+    method: 'get',
+})
+}
