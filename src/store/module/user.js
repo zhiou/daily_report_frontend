@@ -7,7 +7,7 @@
  * @FilePath: /soft-otp-admin/src/store/modules/account.js
  */
 import { getToken, setToken } from "../../api/request/token";
-import { login, logout, modify, info } from "../../api/login";
+import { login, logout, modify, info, employerlist } from "../../api/login";
 
 const state = () => ({
   all: [],
@@ -16,6 +16,7 @@ const state = () => ({
   department: "",
   projects: [], // not empty if you are pm
   roles: [],
+  workerlist: [],
 });
 
 const actions = {
@@ -76,6 +77,18 @@ const actions = {
         });
     });
   },
+  employerlist({ commit }) {
+    return new Promise((resolve, reject) => {
+      employerlist()
+        .then((data) => {
+          commit("SET_WORKERLIST", data)
+          resolve();
+        })
+        .catch((e) => {
+          reject(e);
+        });
+    });
+  },
 };
 
 const mutations = {
@@ -94,6 +107,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_WORKERLIST: (state, workerlist) => {
+    state.workerlist = workerlist
   },
 };
 
