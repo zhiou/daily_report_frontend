@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-22 17:11:13
- * @LastEditTime: 2021-11-15 15:46:46
+ * @LastEditTime: 2021-11-18 17:10:01
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/main.js
@@ -15,6 +15,7 @@ import "ant-design-vue/dist/antd.css";
 import moment from "moment";
 import i18n from "./i18n";
 import lodash from "lodash";
+import excel from '@d2-projects/vue-table-export';
 
 const echarts = require("echarts")
 
@@ -35,6 +36,7 @@ Object.defineProperty(Vue.prototype, "$_", { value: lodash });
 Vue.prototype.$echarts = echarts;
 
 Vue.use(Antd);
+Vue.use(excel);
 
 Vue.directive("title", function(el) {
     document.title = el.dataset.title;
