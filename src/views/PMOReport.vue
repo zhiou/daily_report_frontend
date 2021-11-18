@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 16:14:42
- * @LastEditTime: 2021-11-15 14:07:46
+ * @LastEditTime: 2021-11-18 19:01:19
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/ProjectReport.vue
@@ -61,6 +61,7 @@
           <a-button
             :span="4"
             type="primary"
+            :disabled="tasks.length == 0"
             :loading="downloading"
             @click="onDownload"
           >
@@ -142,28 +143,73 @@ let queryitems = [
   { number: "2", name: "员工" },
 ];
 
+let excel_columns = [
+  {
+    label: "产品线",
+    prop: "product_line",
+  },
+  {
+    label: "产品",
+    prop: "product_name",
+  },
+  {
+    label: "部门",
+    prop: "department",
+  },
+  {
+    label: "员工姓名",
+    prop: "staff_name",
+  },
+  {
+    label: "工时",
+    prop: "task_cost",
+  },
+  {
+    label: "项目",
+    prop: "project_name",
+  },
+  {
+    label: "报告日期",
+    prop: "report_date",
+  },
+  {
+    label: "任务名",
+    prop: "task_name",
+  },
+  {
+    label: "任务详情",
+    prop: "task_detail",
+  },
+  {
+    label: "提交日期",
+    prop: "commit_date",
+  },
+];
+
 export default {
   name: "PMOReport",
   components: {
     EditableCell,
     EditableNumberCell,
   },
-  beforeCreate() {//todo, 这里需要加判断，如果数据已经存在，则不需要再去获取了
-      this.$store
+  beforeCreate() {
+    //todo, 这里需要加判断，如果数据已经存在，则不需要再去获取了
+    this.$store
       .dispatch("product/list")
       .then(() => {
-        this.$store.
-        dispatch("project/list").then(() => {
-          this.$store.dispatch("user/employerlist")
+        this.$store
+          .dispatch("project/list")
           .then(() => {
+            this.$store
+              .dispatch("user/employerlist")
+              .then(() => {})
+              .catch((error) => {
+                this.$message.error(error, 3);
+              });
           })
           .catch((error) => {
             this.$message.error(error, 3);
-          })
-        })
-        .catch((error) => {
-        this.$message.error(error, 3);
-      });
+          });
       })
       .catch((error) => {
         this.$message.error(error, 3);
@@ -213,18 +259,19 @@ export default {
   data() {
     return {
       count: 0,
-      reports: [],
       multiItems: [],
       columns,
       queryitems,
-      typeid:0,
-      conditionid:"001",
-      fromtime:"",
-      totime:"",
+      typeid: 0,
+      conditionid: "001",
+      fromtime: "",
+      totime: "",
       clearflag: "",
       resetdate: ["", ""],
       searching: false,
       downloading: false,
+      tasks: [],
+      excel_columns,
     };
   },
   computed: {
@@ -237,13 +284,37 @@ export default {
       });
     },
     refreshProjects() {
-     return this.$store.state.project.all.map((project) => {
+      return this.$store.state.project.all.map((project) => {
         return { ...project, key: project.number };
       });
     },
     refreshEmployers() {
       return this.$store.state.user.workerlist.map((worker) => {
         return { ...worker, key: worker.work_code };
+      });
+    },
+    reports() {
+      let nameBased = this.$_.groupBy(this.tasks, "staff_name");
+      return Object.keys(nameBased).map((name) => {
+        let tasks = nameBased[name];
+        let department = tasks[0].department;
+        let cost = 0;
+        let content = [];
+        let sn = 1;
+        tasks.forEach((task) => {
+          cost += task.task_cost;
+          let tc = sn + ". <" + task.task_name + ">";
+          sn++;
+          if (task.product_name) {
+            tc += "[" + task.product_name + "]";
+          }
+
+          tc += task.task_detail;
+          content.push(tc);
+        });
+        let key = this.count;
+        this.count++;
+        return { name, cost, tasks: content, department, key };
       });
     },
   },
@@ -264,15 +335,9 @@ export default {
     },
     onProductorProjectorEmployerChanged(number) {
       this.conditionid = number;
-//      const tasks = [...this.tasks];
-//      const target = tasks.find((item) => item.key === key);
-//      if (target) {
-//        target[dataIndex] = number;
-//        this.tasks = tasks;
-//      }
     },
     onChange(dates, dateStrings) {
-      console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
+      console.log("From: ", dateStrings[0], ", to: ", dateStrings[1]);
       this.fromtime = dateStrings[0];
       this.totime = dateStrings[1];
     },
@@ -287,30 +352,7 @@ export default {
         })
         .then((tasks) => {
           this.projectName = tasks[0].project_name;
-
-          let nameBased = this.$_.groupBy(tasks, "staff_name");
-
-          this.reports = Object.keys(nameBased).map((name) => {
-            let tasks = nameBased[name];
-            let department = tasks[0].department;
-            let cost = 0;
-            let content = [];
-            let sn = 1;
-            tasks.forEach((task) => {
-              cost += task.task_cost;
-              let tc = sn + ". <" + task.task_name + ">";
-              sn++;
-              if (task.product_name) {
-                tc += "[" + task.product_name + "]";
-              }
-
-              tc += task.task_detail;
-              content.push(tc);
-            });
-            let key = this.count;
-            this.count++;
-            return { name, cost, tasks: content, department, key };
-          });
+          this.tasks = tasks;
         })
         .catch((e) => {
           console.log(e);
@@ -322,20 +364,13 @@ export default {
     },
     onDownload() {
       this.downloading = true;
-      this.$store
-        .dispatch("report/download", {
-          type: 1,
-          condition: "106",
-          from: "2021-10-26",
-          to: "2021-10-27",
-        })
-        .catch((e) => {
-          console.log(e);
-          this.$message.error(e);
-        })
-        .finally(() => {
-          this.downloading = false;
-        });
+      this.$export.excel({
+        columns: this.excel_columns,
+        data: this.tasks,
+      })
+      .finally(() => {
+        this.downloading = false;
+      });
     },
     filterOption(input, option) {
       return (
