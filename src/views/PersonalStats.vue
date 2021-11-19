@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-04 10:56:50
- * @LastEditTime: 2021-11-16 16:10:49
+ * @LastEditTime: 2021-11-19 14:36:47
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Personal.vue
@@ -118,11 +118,10 @@ export default {
     },
     lastMonth() {
       let startDate = moment()
-        .month(moment().month() - 1)
         .startOf("month");
       let endDate = moment()
-        .month(moment().month() - 1)
-        .endOf("month");
+        .add(1, 'day')
+        console.log('start date', startDate, endDate, moment().month())
       return [startDate, endDate];
     },
     drawLine() {

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 16:14:42
- * @LastEditTime: 2021-11-17 14:18:36
+ * @LastEditTime: 2021-11-19 14:42:03
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/ProjectReport.vue
@@ -148,7 +148,7 @@ export default {
                 tc += "[" + task.product_name + "]";
               }
 
-              tc += task.task_detail;
+              tc += task.task_detail || '';
               content.push(tc);
             });
             let key = this.count;
