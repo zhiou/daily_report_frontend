@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 17:06:32
- * @LastEditTime: 2021-09-28 14:54:40
+ * @LastEditTime: 2021-11-19 12:25:57
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/components/TaskForm.vue
@@ -27,7 +27,7 @@
         <a-form-item label="Task Name">
           <a-input
             v-decorator="[
-              'name',
+              'task_name',
               {
                 rules: [
                   { required: true, message: 'Please input the name of task!' },
@@ -40,7 +40,7 @@
           <a-input
             type="textarea"
             v-decorator="[
-              'details',
+              'task_detail',
               {
                 rules: [
                   {
@@ -57,7 +57,7 @@
             :min="0.5"
             :max="12"
             v-decorator="[
-              'cost',
+              'task_cost',
               {
                 rules: [
                   { required: true, message: 'Please input the cost of task!' },
@@ -67,22 +67,56 @@
           />
         </a-form-item>
         <a-form-item label="Project">
-          <a-select
-            v-decorator="['project']"
-            style="width: 120px"
-            @change="onProjectSelected"
-          >
-            <a-select-option v-for="(project, index) in projects" :key="index">
-              {{ project.name }}
-            </a-select-option>
-          </a-select>
+            <a-select
+              show-search
+              option-filter-prop="children"
+              :filter-option="filterOption"
+              style="width: 150px"
+              v-decorator="[
+              'project_number',
+              {
+                rules: [
+                  {
+                    required: false,
+                    message: 'Please select a relative project!',
+                  },
+                ],
+              },
+            ]"
+            >
+              <a-select-option
+                v-for="project in projects"
+                :key="project.number"
+              >
+                {{ project.name }}
+              </a-select-option>
+            </a-select>
         </a-form-item>
         <a-form-item label="Product">
-          <a-select style="width: 120px" v-decorator="['product']">
-            <a-select-option v-for="(product, index) in products" :key="index">
-              {{ product.name }}
-            </a-select-option>
-          </a-select>
+             <a-select
+              show-search
+              option-filter-prop="children"
+              :filter-option="filterOption"
+              style="width: 150px"
+              v-decorator="[
+              'product_number',
+              {
+                rules: [
+                  {
+                    required: false,
+                    message: 'Please select a relative product!',
+                  },
+                ],
+              },
+            ]"
+            >
+              <a-select-option
+                v-for="product in products"
+                :key="product.number"
+              >
+                {{ product.name }}
+              </a-select-option>
+            </a-select>
         </a-form-item>
       </a-form>
     </a-modal>
@@ -90,54 +124,38 @@
 </template>
 
 <script>
-let projects = [
-  { number: "0", name: "未立项" },
-  {
-    number: "项目1编号",
-    name: "项目1",
-  },
-  {
-    number: "项目2编号",
-    name: "项目2",
-  },
-];
-
-let productTable = {
-  0: [{ number: "0", name: "自定义" }],
-  项目1编号: [
-    { number: "0", name: "自定义" },
-    { number: "产品1编号", name: "产品1" },
-  ],
-  项目2编号: [
-    { number: "0", name: "自定义" },
-    { number: "产品2编号", name: "产品2" },
-  ],
-};
 
 export default {
   name: "TaskModalForm",
   props: ["visible"],
   beforeCreate() {
     this.form = this.$form.createForm(this);
-    this.form.getFieldDecorator("project", {
-      initialValue: [0],
-      preserve: true,
-    });
-    this.form.getFieldDecorator("product", {
-      initialValue: [0],
-      preserve: true,
-    });
   },
   components: {},
   data() {
     return {
-      projects,
-      products: productTable[projects[0].number],
+      
     };
   },
+  computed: {
+    products() {
+      return this.$store.state.product.all.map((product) => {
+        return { ...product, key: product.number };
+      });
+    },
+    projects() {
+      return this.$store.state.project.all.map((project) => {
+        return { ...project, key: project.number };
+      });
+    },
+  },
   methods: {
-    onProjectSelected(index) {
-      this.products = productTable[projects[index].number];
+    filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text
+          .toLowerCase()
+          .indexOf(input.toLowerCase()) >= 0
+      );
     },
   },
 };

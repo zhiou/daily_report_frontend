@@ -3,7 +3,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 15:34:38
- * @LastEditTime: 2021-11-19 10:33:57
+ * @LastEditTime: 2021-11-19 12:36:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Report.vue
@@ -122,6 +122,12 @@
         </a-button>
       </a-spin>
     </div>
+    <task-modal-form
+      ref="taskForm"
+      :visible="visible"
+      @create="onCreate"
+      @cancel="() => (visible = false)"
+    />
   </div>
 </template>
 
@@ -130,6 +136,7 @@
 import EditableCell from "./components/EditableAreaCell.vue";
 import EditableNumberCell from "./components/EditableNumberCell.vue";
 import EditableAreaCell from "./components/EditableAreaCell.vue";
+import TaskModalForm from "./components/TaskModalForm.vue";
 import moment from "moment";
 
 const columns = [
@@ -183,22 +190,15 @@ export default {
     EditableCell,
     EditableNumberCell,
     EditableAreaCell,
+    TaskModalForm,
   },
   beforeCreate() {
-    //todo, 这里需要加判断，如果数据已经存在，则不需要再去获取了
-    this.$store
-      .dispatch("product/list")
-      .then(() => {
-        this.$store
-          .dispatch("project/list")
-          .then(() => {})
-          .catch((error) => {
-            this.$message.error(error, 3);
-          });
-      })
-      .catch((error) => {
-        this.$message.error(error, 3);
-      });
+    this.$store.dispatch("product/list").catch((error) => {
+      this.$message.error(error, 3);
+    });
+    this.$store.dispatch("project/list").catch((error) => {
+      this.$message.error(error, 3);
+    });
   },
   mounted() {
     this.$store
@@ -223,6 +223,7 @@ export default {
       tasks: [],
       columns,
       onDay: this.date ? moment(this.date) : moment(),
+      visible: false,
     };
   },
   computed: {
@@ -271,10 +272,7 @@ export default {
         });
     },
     handleCreateTask() {
-      const { count, tasks } = this;
-      let newTask = { ...this.$_.last(tasks), key: count };
-      this.count = count + 1;
-      this.tasks = [...tasks, newTask];
+      this.visible = true;
     },
     onCellChange(key, dataIndex, value) {
       const tasks = [...this.tasks];
@@ -283,6 +281,21 @@ export default {
         target[dataIndex] = value;
         this.tasks = tasks;
       }
+    },
+    onCreate() {
+      const modalForm = this.$refs.taskForm.form;
+      modalForm.validateFields((err, task) => {
+        if (err) {
+          return;
+        }
+        modalForm.resetFields();
+        this.visible = false;
+        const { count } = this;
+        let product_line = this.productLineOf(task.product_number)
+        let newTask = { ...task, key: count, product_line };
+        this.count = count + 1;
+        this.tasks = [...this.tasks, newTask];
+      });
     },
     onDelete(key) {
       const tasks = [...this.tasks];
@@ -311,6 +324,13 @@ export default {
           .indexOf(input.toLowerCase()) >= 0
       );
     },
+    productLineOf(product) {
+      const finded = this.refreshProducts.find((prod) => {
+        console.log('prod.number === product', prod.number, product)
+        return prod.number === product
+      })
+      return finded ? finded.in_line : ''
+    }
   },
 };
 </script>
