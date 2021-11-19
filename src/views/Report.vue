@@ -3,7 +3,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 15:34:38
- * @LastEditTime: 2021-11-18 19:15:27
+ * @LastEditTime: 2021-11-19 10:33:57
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Report.vue
@@ -184,16 +184,17 @@ export default {
     EditableNumberCell,
     EditableAreaCell,
   },
-  beforeCreate() {//todo, 这里需要加判断，如果数据已经存在，则不需要再去获取了
-      this.$store
+  beforeCreate() {
+    //todo, 这里需要加判断，如果数据已经存在，则不需要再去获取了
+    this.$store
       .dispatch("product/list")
       .then(() => {
-        this.$store.
-        dispatch("project/list").then(() => {
-        })
-        .catch((error) => {
-        this.$message.error(error, 3);
-      });
+        this.$store
+          .dispatch("project/list")
+          .then(() => {})
+          .catch((error) => {
+            this.$message.error(error, 3);
+          });
       })
       .catch((error) => {
         this.$message.error(error, 3);
@@ -202,8 +203,8 @@ export default {
   mounted() {
     this.$store
       .dispatch("report/selfQuery", {
-        from: this.onDay.format('yyyy-MM-DD'),
-        to: this.onDay.add(1, "day").format('yyyy-MM-DD'),
+        from: this.today,
+        to: this.tomorrow,
       })
       .then((tasks) => {
         this.tasks = tasks.map((task) => {
@@ -233,8 +234,11 @@ export default {
     author() {
       return this.$store.state.user.name ? this.$store.state.user.name : "周煌";
     },
-    dayString() {
+    today() {
       return this.onDay.format("yyyy-MM-DD");
+    },
+    tomorrow() {
+      return moment(this.onDay).add(1, "day").format("yyyy-MM-DD");
     },
     spinning() {
       return this.$store.state.report.spinning;
@@ -245,7 +249,7 @@ export default {
       });
     },
     refreshProjects() {
-     return this.$store.state.project.all.map((project) => {
+      return this.$store.state.project.all.map((project) => {
         return { ...project, key: project.number };
       });
     },
@@ -255,12 +259,15 @@ export default {
       this.$store
         .dispatch("report/update", {
           tasks: this.tasks,
-          on_day: this.dayString,
+          on_day: this.today,
           author: this.author,
           status,
         })
         .then(() => {
           this.$message.success("工作日志已" + (status == 0 ? "保存" : "提交"));
+        })
+        .catch((error) => {
+          this.$message.error(error, 2);
         });
     },
     handleCreateTask() {
