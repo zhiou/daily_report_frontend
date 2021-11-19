@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-05 15:23:50
- * @LastEditTime: 2021-11-19 15:19:52
+ * @LastEditTime: 2021-11-19 15:37:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/assets/lang/en.js
@@ -19,6 +19,7 @@ module.exports = {
     edit: "Edit",
     commit: "Commit",
     modify: "Modify",
+    export: "Export",
   },
   column: {
     state: "state",
@@ -87,7 +88,10 @@ module.exports = {
       prod: 'Product',
       name: "Task Name",
       cost: "Task Cost",
-      detail: "Task Detail"
+      detail: "Task Detail",
+      user: 'Username',
+      depart: 'Department',
+      tasks: 'Task Content',
     }
   },
   task: {

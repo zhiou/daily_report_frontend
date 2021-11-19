@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-05 15:23:46
- * @LastEditTime: 2021-11-19 15:20:47
+ * @LastEditTime: 2021-11-19 15:36:59
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/assets/lang/zh.js
@@ -19,6 +19,7 @@ module.exports = {
     edit: "编辑",
     commit: "提交",
     modify: "修改",
+    export: "导出",
   },
   column: {
     state: "状态",
@@ -88,7 +89,10 @@ module.exports = {
       prod: '产品',
       name: "任务名",
       cost: "任务耗时",
-      detail: "任务详情"
+      detail: "任务详情",
+      user: '姓名',
+      depart: '部门',
+      tasks: '任务内容',
     }
   },
   task: {

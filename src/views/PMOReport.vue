@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 16:14:42
- * @LastEditTime: 2021-11-18 19:01:19
+ * @LastEditTime: 2021-11-19 15:39:05
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/ProjectReport.vue
@@ -65,7 +65,7 @@
             :loading="downloading"
             @click="onDownload"
           >
-            Download
+            {{ $t('button.export') }}
           </a-button>
         </a-space>
 
@@ -105,32 +105,32 @@
 // @ is an alias to /src
 import EditableCell from "./components/EditableAreaCell.vue";
 import EditableNumberCell from "./components/EditableNumberCell.vue";
-import moment from "moment";
+import i18n from "../i18n";
 
 const columns = [
   {
-    title: "Name",
+    title: i18n.t("report.column.user"),
     dataIndex: "name",
     key: "name",
     scopedSlots: { customRender: "name" },
     width: 120,
   },
   {
-    title: "Cost",
+    title: i18n.t("report.column.cost"),
     dataIndex: "cost",
     key: "cost",
     scopedSlots: { customRender: "cost" },
     width: 100,
   },
   {
-    title: "Department",
+    title: i18n.t("report.column.depart"),
     dataIndex: "department",
     key: "department",
     scopedSlots: { customRender: "department" },
     width: 140,
   },
   {
-    title: "Tasks",
+    title: i18n.t("report.column.tasks"),
     dataIndex: "tasks",
     key: "tasks",
     scopedSlots: { customRender: "details" },
@@ -309,7 +309,7 @@ export default {
             tc += "[" + task.product_name + "]";
           }
 
-          tc += task.task_detail;
+          tc += task.task_detail || '';
           content.push(tc);
         });
         let key = this.count;
