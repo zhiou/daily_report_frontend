@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 16:14:42
- * @LastEditTime: 2021-11-19 15:34:04
+ * @LastEditTime: 2021-11-19 15:55:15
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/ProjectReport.vue
@@ -37,7 +37,7 @@
           :pagination="pagination"
         >
           <template slot="details" slot-scope="tasks">
-            <ul>
+            <ul style="list-style-type: decimal">
               <li v-for="(task, index) in tasks" :key="index">
                 {{ task }}
               </li>
@@ -138,16 +138,19 @@ export default {
             let department = tasks[0].department;
             let cost = 0;
             let content = [];
-            let sn = 1;
             tasks.forEach((task) => {
               cost += task.task_cost;
-              let tc = sn + ". <" + task.task_name + ">";
-              sn++;
+              let tc = '';
               if (task.product_name) {
                 tc += "[" + task.product_name + "]";
               }
-
-              tc += task.task_detail || '';
+              if (task.project_name) {
+                tc += '{' + task.project_name + '}'
+              }
+              tc += task.task_name
+              if (task.task_detail && task.task_detail.length) {
+                tc += ':' + task.task_detail || '';
+              }
               content.push(tc);
             });
             let key = this.count;
