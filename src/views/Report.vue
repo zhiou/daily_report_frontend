@@ -3,7 +3,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 15:34:38
- * @LastEditTime: 2021-11-19 12:36:08
+ * @LastEditTime: 2021-11-19 13:36:01
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Report.vue
@@ -144,37 +144,31 @@ const columns = [
     title: "Product Line",
     dataIndex: "product_line",
     key: "product_line",
-    scopedSlots: { customRender: "product_line" },
   },
   {
     title: "Project",
-    dataIndex: "project_number",
+    dataIndex: "project_name",
     key: "project",
-    scopedSlots: { customRender: "project-selector" },
   },
   {
     title: "Product",
-    dataIndex: "product_number",
+    dataIndex: "product_name",
     key: "product",
-    scopedSlots: { customRender: "product-selector" },
   },
   {
     title: "Name",
     dataIndex: "task_name",
     key: "name",
-    scopedSlots: { customRender: "name" },
   },
   {
     title: "Cost",
     dataIndex: "task_cost",
     key: "cost",
-    scopedSlots: { customRender: "cost" },
   },
   {
     title: "Details",
     dataIndex: "task_detail",
     key: "details",
-    scopedSlots: { customRender: "details" },
   },
   {
     title: "",
@@ -291,8 +285,15 @@ export default {
         modalForm.resetFields();
         this.visible = false;
         const { count } = this;
-        let product_line = this.productLineOf(task.product_number)
-        let newTask = { ...task, key: count, product_line };
+        let prod = this.getProductFrom(task.product_number);
+        let proj = this.getProjectFrom(task.project_number);
+        let newTask = {
+          ...task,
+          key: count,
+          product_line: prod.in_line,
+          product_name: prod.name,
+          project_name: proj.name,
+        };
         this.count = count + 1;
         this.tasks = [...this.tasks, newTask];
       });
@@ -324,13 +325,18 @@ export default {
           .indexOf(input.toLowerCase()) >= 0
       );
     },
-    productLineOf(product) {
-      const finded = this.refreshProducts.find((prod) => {
-        console.log('prod.number === product', prod.number, product)
-        return prod.number === product
-      })
-      return finded ? finded.in_line : ''
-    }
+    getProductFrom(number) {
+      return this.refreshProducts.find((prod) => {
+        console.log("prod.number === product", prod.number, number);
+        return prod.number === number;
+      });
+    },
+    getProjectFrom(number) {
+      return this.refreshProjects.find((proj) => {
+        console.log("proj.number === project", proj.number, number);
+        return proj.number === number;
+      });
+    },
   },
 };
 </script>
