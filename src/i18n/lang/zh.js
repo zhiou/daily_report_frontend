@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-05 15:23:46
- * @LastEditTime: 2021-11-16 15:43:14
+ * @LastEditTime: 2021-11-19 15:20:47
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/assets/lang/zh.js
@@ -81,6 +81,37 @@ module.exports = {
     button: {
       submit: "提交",
       save: "保存",
+    },
+    column: {
+      line: '产品线',
+      proj: '项目',
+      prod: '产品',
+      name: "任务名",
+      cost: "任务耗时",
+      detail: "任务详情"
+    }
+  },
+  task: {
+    title: {
+      create: '新建任务'
+    },
+    tips: {
+      name: '请填写任务名',
+      detail: '请填写任务详情',
+      cost: '请填写任务耗时',
+      proj: '请选择相关项目',
+      prod: '请选择相关产品',
+    },
+    button: {
+      create: '确定',
+      cancel: '取消',
+    },
+    label: {
+      name: '任务名',
+      detail: '任务详情',
+      cost: '任务耗时',
+      proj: '项目',
+      prod: '产品',
     }
   },
   operation: {

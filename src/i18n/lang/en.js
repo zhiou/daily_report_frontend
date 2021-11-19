@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-05 15:23:50
- * @LastEditTime: 2021-11-16 15:43:02
+ * @LastEditTime: 2021-11-19 15:19:52
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/assets/lang/en.js
@@ -80,6 +80,37 @@ module.exports = {
     button: {
       submit: "Submit",
       save: "Save",
+    },
+    column: {
+      line: 'Product Line',
+      proj: 'Project',
+      prod: 'Product',
+      name: "Task Name",
+      cost: "Task Cost",
+      detail: "Task Detail"
+    }
+  },
+  task: {
+    title: {
+      create: 'Create a Task',
+    },
+    tips: {
+      name: 'A task name is required',
+      detail: 'The task details are required',
+      cost: 'The task cost is required',
+      proj: 'A project maybe related',
+      prod: 'A product maybe related',
+    },
+    button: {
+      create: 'Create',
+      cancel: 'Cancel',
+    },
+    label: {
+      name: 'Task Name',
+      detail: 'Task Details',
+      cost: 'Task Cost',
+      proj: 'Project',
+      prod: 'Product',
     }
   },
   operation: {

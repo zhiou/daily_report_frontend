@@ -3,7 +3,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 15:34:38
- * @LastEditTime: 2021-11-19 13:36:01
+ * @LastEditTime: 2021-11-19 15:28:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Report.vue
@@ -13,7 +13,10 @@
     <div class="report-frame">
       <a-row :gutter="16">
         <a-col :span="4">
-          <a-date-picker :allowClear="false" v-model="onDay"
+          <a-date-picker
+            :allowClear="false"
+            v-model="onDay"
+            @change="onDateChanged"
         /></a-col>
         <a-col :span="4">
           <a-input :default-value="author" addonBefore="Name" disabled />
@@ -138,35 +141,36 @@ import EditableNumberCell from "./components/EditableNumberCell.vue";
 import EditableAreaCell from "./components/EditableAreaCell.vue";
 import TaskModalForm from "./components/TaskModalForm.vue";
 import moment from "moment";
+import i18n from "../i18n";
 
 const columns = [
   {
-    title: "Product Line",
+    title: i18n.t("report.column.line"),
     dataIndex: "product_line",
     key: "product_line",
   },
   {
-    title: "Project",
+    title: i18n.t("report.column.proj"),
     dataIndex: "project_name",
     key: "project",
   },
   {
-    title: "Product",
+    title: i18n.t("report.column.prod"),
     dataIndex: "product_name",
     key: "product",
   },
   {
-    title: "Name",
+    title: i18n.t("report.column.name"),
     dataIndex: "task_name",
     key: "name",
   },
   {
-    title: "Cost",
+    title: i18n.t("report.column.cost"),
     dataIndex: "task_cost",
     key: "cost",
   },
   {
-    title: "Details",
+    title: i18n.t("report.column.detail"),
     dataIndex: "task_detail",
     key: "details",
   },
@@ -195,21 +199,7 @@ export default {
     });
   },
   mounted() {
-    this.$store
-      .dispatch("report/selfQuery", {
-        from: this.today,
-        to: this.tomorrow,
-      })
-      .then((tasks) => {
-        this.tasks = tasks.map((task) => {
-          let key = this.count;
-          this.count = key + 1;
-          return { ...task, key: key };
-        });
-      })
-      .catch((error) => {
-        this.$message.error(error, 3);
-      });
+    this.fetchData(this.onDay);
   },
   data() {
     return {
@@ -229,12 +219,6 @@ export default {
     author() {
       return this.$store.state.user.name ? this.$store.state.user.name : "周煌";
     },
-    today() {
-      return this.onDay.format("yyyy-MM-DD");
-    },
-    tomorrow() {
-      return moment(this.onDay).add(1, "day").format("yyyy-MM-DD");
-    },
     spinning() {
       return this.$store.state.report.spinning;
     },
@@ -250,11 +234,31 @@ export default {
     },
   },
   methods: {
+    fetchData(date) {
+      this.$store
+        .dispatch("report/selfQuery", {
+          from: date.format("yyyy-MM-DD"),
+          to: moment(date).add(1, "day").format("yyyy-MM-DD"),
+        })
+        .then((tasks) => {
+          this.tasks = tasks.map((task) => {
+            let key = this.count;
+            this.count = key + 1;
+            return { ...task, key: key };
+          });
+        })
+        .catch((error) => {
+          this.$message.error(error, 3);
+        });
+    },
+    onDateChanged(date) {
+      this.fetchData(date)
+    },
     update(status) {
       this.$store
         .dispatch("report/update", {
           tasks: this.tasks,
-          on_day: this.today,
+          on_day: this.onDay.format("yyyy-MM-DD"),
           author: this.author,
           status,
         })
@@ -327,13 +331,11 @@ export default {
     },
     getProductFrom(number) {
       return this.refreshProducts.find((prod) => {
-        console.log("prod.number === product", prod.number, number);
         return prod.number === number;
       });
     },
     getProjectFrom(number) {
       return this.refreshProjects.find((proj) => {
-        console.log("proj.number === project", proj.number, number);
         return proj.number === number;
       });
     },

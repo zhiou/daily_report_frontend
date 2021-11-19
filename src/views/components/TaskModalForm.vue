@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 17:06:32
- * @LastEditTime: 2021-11-19 12:25:57
+ * @LastEditTime: 2021-11-19 15:09:25
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/components/TaskForm.vue
@@ -10,8 +10,9 @@
   <div id="task-modal-form">
     <a-modal
       :visible="visible"
-      title="Create a new task"
-      okText="Create"
+      :title="$t('task.title.create')"
+      :okText="$t('task.button.create')"
+      :cancelText="$t('task.button.cancel')"
       @cancel="
         () => {
           $emit('cancel');
@@ -24,19 +25,19 @@
       "
     >
       <a-form layout="vertical" :form="form">
-        <a-form-item label="Task Name">
+        <a-form-item :label="$t('task.label.name')">
           <a-input
             v-decorator="[
               'task_name',
               {
                 rules: [
-                  { required: true, message: 'Please input the name of task!' },
+                  { required: true, message: $t('task.tips.name') },
                 ],
               },
             ]"
           />
         </a-form-item>
-        <a-form-item label="Details">
+        <a-form-item :label="$t('task.label.detail')">
           <a-input
             type="textarea"
             v-decorator="[
@@ -45,14 +46,14 @@
                 rules: [
                   {
                     required: true,
-                    message: 'Please input the details of task!',
+                    message: $t('task.tips.detail'),
                   },
                 ],
               },
             ]"
           />
         </a-form-item>
-        <a-form-item label="Cost">
+        <a-form-item :label="$t('task.label.cost')">
           <a-input-number
             :min="0.5"
             :max="12"
@@ -60,13 +61,13 @@
               'task_cost',
               {
                 rules: [
-                  { required: true, message: 'Please input the cost of task!' },
+                  { required: true, message: $t('task.tips.cost') },
                 ],
               },
             ]"
           />
         </a-form-item>
-        <a-form-item label="Project">
+        <a-form-item :label="$t('task.label.proj')">
             <a-select
               show-search
               option-filter-prop="children"
@@ -78,7 +79,7 @@
                 rules: [
                   {
                     required: false,
-                    message: 'Please select a relative project!',
+                    message: $t('task.tips.proj'),
                   },
                 ],
               },
@@ -92,7 +93,7 @@
               </a-select-option>
             </a-select>
         </a-form-item>
-        <a-form-item label="Product">
+        <a-form-item :label="$t('task.label.prod')">
              <a-select
               show-search
               option-filter-prop="children"
@@ -104,7 +105,7 @@
                 rules: [
                   {
                     required: false,
-                    message: 'Please select a relative product!',
+                    message: $t('task.tips.prod'),
                   },
                 ],
               },
