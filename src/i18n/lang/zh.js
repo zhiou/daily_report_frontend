@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-05 15:23:46
- * @LastEditTime: 2021-11-19 15:36:59
+ * @LastEditTime: 2021-11-20 10:40:32
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/assets/lang/zh.js
@@ -70,13 +70,13 @@ module.exports = {
   },
   project: {
     button: {
-      save: "保存修改"
-    }
+      save: "保存修改",
+    },
   },
   product: {
     button: {
-      save: "保存修改"
-    }
+      save: "保存修改",
+    },
   },
   report: {
     button: {
@@ -84,39 +84,40 @@ module.exports = {
       save: "保存",
     },
     column: {
-      line: '产品线',
-      proj: '项目',
-      prod: '产品',
+      line: "产品线",
+      proj: "项目",
+      prod: "产品",
       name: "任务名",
       cost: "任务耗时",
       detail: "任务详情",
-      user: '姓名',
-      depart: '部门',
-      tasks: '任务内容',
-    }
+      user: "姓名",
+      depart: "部门",
+      oday: "报告日期",
+      cday: "提交日期",
+    },
   },
   task: {
     title: {
-      create: '新建任务'
+      create: "新建任务",
     },
     tips: {
-      name: '请填写任务名',
-      detail: '请填写任务详情',
-      cost: '请填写任务耗时',
-      proj: '请选择相关项目',
-      prod: '请选择相关产品',
+      name: "请填写任务名",
+      detail: "请填写任务详情",
+      cost: "请填写任务耗时",
+      proj: "请选择相关项目",
+      prod: "请选择相关产品",
     },
     button: {
-      create: '确定',
-      cancel: '取消',
+      create: "确定",
+      cancel: "取消",
     },
     label: {
-      name: '任务名',
-      detail: '任务详情',
-      cost: '任务耗时',
-      proj: '项目',
-      prod: '产品',
-    }
+      name: "任务名",
+      detail: "任务详情",
+      cost: "任务耗时",
+      proj: "项目",
+      prod: "产品",
+    },
   },
   operation: {
     message: {
@@ -148,7 +149,7 @@ module.exports = {
       },
       message: {
         success: "解锁成功",
-      }
+      },
     },
     authenticate: {
       title: "认证",
@@ -169,7 +170,7 @@ module.exports = {
       },
       message: {
         success: "认证成功",
-      }
+      },
     },
     synchronize: {
       title: "同步",
@@ -187,28 +188,28 @@ module.exports = {
       },
       message: {
         success: "同步完成",
-      }
-    }
+      },
+    },
   },
   error: {
     tips: {
       login: {
-        success: '登录成功',
-        failed: '登录失败',
+        success: "登录成功",
+        failed: "登录失败",
       },
       auth: {
-        timeout: '认证超时',
+        timeout: "认证超时",
       },
       register: {
-        success: '激活链接已发送到注册邮箱, 请访问链接以激活账号',
+        success: "激活链接已发送到注册邮箱, 请访问链接以激活账号",
       },
       token: {
-        invalid: '登录凭证已经失效, 即将跳转到登录页面',
+        invalid: "登录凭证已经失效, 即将跳转到登录页面",
       },
       connect: {
-        timeout: '连接超时',
-      }
-    }
+        timeout: "连接超时",
+      },
+    },
   },
   settings: {
     info: {
@@ -219,13 +220,13 @@ module.exports = {
         mobile: "手机号",
         mail: "邮箱",
         desc: "个人简介",
-      }
+      },
     },
     password: {
       menu: "修改密码",
       title: "修改密码",
       label: {
-        origin: "原密码", 
+        origin: "原密码",
         newp: "新密码",
         confirm: "确认密码",
       },
@@ -237,7 +238,7 @@ module.exports = {
       tips: {
         diff: "原密码和新密码不能相同",
         same: "确认密码和新密码不一致",
-      }
+      },
     },
   },
   login: {
@@ -250,15 +251,15 @@ module.exports = {
       remember: "记住我",
     },
     button: {
-      login: "登录"
+      login: "登录",
     },
     link: {
-      register: "注册!"
+      register: "注册!",
     },
     tips: {
       password: "请输入密码!",
       username: "请输入注册时绑定的邮箱!",
-    }
+    },
   },
   register: {
     title: "注册账号",
@@ -280,6 +281,6 @@ module.exports = {
       confirm: "请输入确认密码!",
       nickname: "请输入昵称!",
       mobile: "请输入电话!",
-    }
-  }
+    },
+  },
 };

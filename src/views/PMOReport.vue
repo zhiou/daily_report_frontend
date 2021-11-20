@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 16:14:42
- * @LastEditTime: 2021-11-19 15:39:05
+ * @LastEditTime: 2021-11-20 10:42:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/ProjectReport.vue
@@ -65,7 +65,7 @@
             :loading="downloading"
             @click="onDownload"
           >
-            {{ $t('button.export') }}
+            {{ $t("button.export") }}
           </a-button>
         </a-space>
 
@@ -74,27 +74,11 @@
       <a-spin :spinning="spinning">
         <a-table
           :columns="columns"
-          :data-source="reports"
+          :data-source="tasks"
           style="margin: 16px"
           :defaultExpandedRowKeys="[0]"
           :pagination="false"
         >
-          <template slot="name" slot-scope="text">
-            <editable-cell :text="text" />
-          </template>
-          <template slot="cost" slot-scope="number">
-            <editable-number-cell :number="number" />
-          </template>
-          <template slot="department" slot-scope="department">
-            <editable-cell :text="department" />
-          </template>
-          <template slot="details" slot-scope="tasks">
-            <editable-cell
-              v-for="(task, index) in tasks"
-              :key="index"
-              :text="task"
-            />
-          </template>
         </a-table>
       </a-spin>
     </div>
@@ -107,35 +91,35 @@ import EditableCell from "./components/EditableAreaCell.vue";
 import EditableNumberCell from "./components/EditableNumberCell.vue";
 import i18n from "../i18n";
 
-const columns = [
-  {
-    title: i18n.t("report.column.user"),
-    dataIndex: "name",
-    key: "name",
-    scopedSlots: { customRender: "name" },
-    width: 120,
-  },
-  {
-    title: i18n.t("report.column.cost"),
-    dataIndex: "cost",
-    key: "cost",
-    scopedSlots: { customRender: "cost" },
-    width: 100,
-  },
-  {
-    title: i18n.t("report.column.depart"),
-    dataIndex: "department",
-    key: "department",
-    scopedSlots: { customRender: "department" },
-    width: 140,
-  },
-  {
-    title: i18n.t("report.column.tasks"),
-    dataIndex: "tasks",
-    key: "tasks",
-    scopedSlots: { customRender: "details" },
-  },
-];
+// const columns = [
+//   {
+//     title: i18n.t("report.column.user"),
+//     dataIndex: "name",
+//     key: "name",
+//     scopedSlots: { customRender: "name" },
+//     width: 120,
+//   },
+//   {
+//     title: i18n.t("report.column.cost"),
+//     dataIndex: "cost",
+//     key: "cost",
+//     scopedSlots: { customRender: "cost" },
+//     width: 100,
+//   },
+//   {
+//     title: i18n.t("report.column.depart"),
+//     dataIndex: "department",
+//     key: "department",
+//     scopedSlots: { customRender: "department" },
+//     width: 140,
+//   },
+//   {
+//     title: i18n.t("report.column.tasks"),
+//     dataIndex: "tasks",
+//     key: "tasks",
+//     scopedSlots: { customRender: "details" },
+//   },
+// ];
 
 let queryitems = [
   { number: "0", name: "产品" },
@@ -143,124 +127,99 @@ let queryitems = [
   { number: "2", name: "员工" },
 ];
 
-let excel_columns = [
+let columns = [
   {
     label: "产品线",
     prop: "product_line",
+               title: i18n.t("report.column.line"),
+    dataIndex: "product_line",
+    key: "product_line",
   },
   {
     label: "产品",
     prop: "product_name",
+           title: i18n.t("report.column.prod"),
+    dataIndex: "product_name",
+    key: "product_name",
   },
   {
     label: "部门",
     prop: "department",
+       title: i18n.t("report.column.depart"),
+    dataIndex: "department",
+    key: "department",
   },
   {
     label: "员工姓名",
     prop: "staff_name",
+    title: i18n.t("report.column.user"),
+    dataIndex: "staff_name",
+    key: "staff_name",
   },
   {
     label: "工时",
     prop: "task_cost",
+    title: i18n.t("report.column.cost"),
+    dataIndex: "task_cost",
+    key: "task_cost",
   },
   {
     label: "项目",
     prop: "project_name",
+    title: i18n.t("report.column.proj"),
+    dataIndex: "project_name",
+    key: "project_name",
   },
   {
     label: "报告日期",
     prop: "report_date",
+    title: i18n.t("report.column.oday"),
+    dataIndex: "report_date",
+    key: "report_date",
   },
   {
     label: "任务名",
     prop: "task_name",
+    title: i18n.t("report.column.name"),
+    dataIndex: "task_name",
+    key: "task_name",
   },
   {
     label: "任务详情",
     prop: "task_detail",
+    title: i18n.t("report.column.detail"),
+    dataIndex: "task_detail",
+    key: "task_detail",
   },
   {
     label: "提交日期",
     prop: "commit_date",
+    title: i18n.t("report.column.cday"),
+    dataIndex: "commit_date",
+    key: "commit_date",
   },
 ];
 
 export default {
   name: "PMOReport",
   components: {
-    EditableCell,
-    EditableNumberCell,
   },
   beforeCreate() {
     //todo, 这里需要加判断，如果数据已经存在，则不需要再去获取了
-    this.$store
-      .dispatch("product/list")
-      .then(() => {
-        this.$store
-          .dispatch("project/list")
-          .then(() => {
-            this.$store
-              .dispatch("user/employerlist")
-              .then(() => {})
-              .catch((error) => {
-                this.$message.error(error, 3);
-              });
-          })
-          .catch((error) => {
-            this.$message.error(error, 3);
-          });
-      })
-      .catch((error) => {
-        this.$message.error(error, 3);
-      });
+    this.$store.dispatch("product/list").catch((error) => {
+      this.$message.error(error, 3);
+    });
+    this.$store.dispatch("project/list").catch((error) => {
+      this.$message.error(error, 3);
+    });
+    this.$store.dispatch("user/employerlist").catch((error) => {
+      this.$message.error(error, 3);
+    });
   },
-  /*
-  mounted() {
-    //TODO: 参数不对,要改
-    this.$store
-      .dispatch("report/pmoQuery", {
-        type: 0,
-        condition: "ES0092",
-        from: "2021-10-26",//moment()
-        to: "2021-10-26",//moment()
-      })
-      .then((tasks) => {
-        this.projectName = tasks[0].project_name;
-
-        let nameBased = this.$_.groupBy(tasks, "staff_name");
-
-        this.reports = Object.keys(nameBased).map((name) => {
-          let tasks = nameBased[name];
-          let department = tasks[0].department;
-          let cost = 0;
-          let content = [];
-          let sn = 1;
-          tasks.forEach((task) => {
-            cost += task.task_cost;
-            let tc = sn + ". <" + task.task_name + ">";
-            sn++;
-            if (task.product_name) {
-              tc += "[" + task.product_name + "]";
-            }
-
-            tc += task.task_detail;
-            content.push(tc);
-          });
-          let key = this.count;
-          this.count++;
-          return { name, cost, tasks: content, department, key };
-        });
-      })
-      .catch((error) => {
-        this.$message.error(error, 3);
-      });
-  },*/
   data() {
     return {
       count: 0,
       multiItems: [],
-      columns,
       queryitems,
       typeid: 0,
       conditionid: "001",
@@ -271,7 +230,7 @@ export default {
       searching: false,
       downloading: false,
       tasks: [],
-      excel_columns,
+      columns,
     };
   },
   computed: {
@@ -293,30 +252,30 @@ export default {
         return { ...worker, key: worker.work_code };
       });
     },
-    reports() {
-      let nameBased = this.$_.groupBy(this.tasks, "staff_name");
-      return Object.keys(nameBased).map((name) => {
-        let tasks = nameBased[name];
-        let department = tasks[0].department;
-        let cost = 0;
-        let content = [];
-        let sn = 1;
-        tasks.forEach((task) => {
-          cost += task.task_cost;
-          let tc = sn + ". <" + task.task_name + ">";
-          sn++;
-          if (task.product_name) {
-            tc += "[" + task.product_name + "]";
-          }
+    // reports() {
+    //   let nameBased = this.$_.groupBy(this.tasks, "staff_name");
+    //   return Object.keys(nameBased).map((name) => {
+    //     let tasks = nameBased[name];
+    //     let department = tasks[0].department;
+    //     let cost = 0;
+    //     let content = [];
+    //     let sn = 1;
+    //     tasks.forEach((task) => {
+    //       cost += task.task_cost;
+    //       let tc = sn + ". <" + task.task_name + ">";
+    //       sn++;
+    //       if (task.product_name) {
+    //         tc += "[" + task.product_name + "]";
+    //       }
 
-          tc += task.task_detail || '';
-          content.push(tc);
-        });
-        let key = this.count;
-        this.count++;
-        return { name, cost, tasks: content, department, key };
-      });
-    },
+    //       tc += task.task_detail || "";
+    //       content.push(tc);
+    //     });
+    //     let key = this.count;
+    //     this.count++;
+    //     return { name, cost, tasks: content, department, key };
+    //   });
+    // },
   },
   methods: {
     onQueryItemChanged(number) {
@@ -364,13 +323,14 @@ export default {
     },
     onDownload() {
       this.downloading = true;
-      this.$export.excel({
-        columns: this.excel_columns,
-        data: this.tasks,
-      })
-      .finally(() => {
-        this.downloading = false;
-      });
+      this.$export
+        .excel({
+          columns: this.columns,
+          data: this.tasks,
+        })
+        .finally(() => {
+          this.downloading = false;
+        });
     },
     filterOption(input, option) {
       return (
