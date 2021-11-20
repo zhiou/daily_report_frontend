@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 16:14:42
- * @LastEditTime: 2021-11-20 10:42:17
+ * @LastEditTime: 2021-11-20 11:05:26
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/ProjectReport.vue
@@ -61,7 +61,7 @@
           <a-button
             :span="4"
             type="primary"
-            :disabled="tasks.length == 0"
+            :disabled="!tasks || tasks.length == 0"
             :loading="downloading"
             @click="onDownload"
           >
@@ -162,6 +162,7 @@ let columns = [
     title: i18n.t("report.column.cost"),
     dataIndex: "task_cost",
     key: "task_cost",
+    width: 20
   },
   {
     label: "项目",
@@ -190,6 +191,7 @@ let columns = [
     title: i18n.t("report.column.detail"),
     dataIndex: "task_detail",
     key: "task_detail",
+    width: 200,
   },
   {
     label: "提交日期",
@@ -310,7 +312,6 @@ export default {
           to: this.totime,
         })
         .then((tasks) => {
-          this.projectName = tasks[0].project_name;
           this.tasks = tasks;
         })
         .catch((e) => {
