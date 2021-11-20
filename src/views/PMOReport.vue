@@ -254,30 +254,6 @@ export default {
         return { ...worker, key: worker.work_code };
       });
     },
-    // reports() {
-    //   let nameBased = this.$_.groupBy(this.tasks, "staff_name");
-    //   return Object.keys(nameBased).map((name) => {
-    //     let tasks = nameBased[name];
-    //     let department = tasks[0].department;
-    //     let cost = 0;
-    //     let content = [];
-    //     let sn = 1;
-    //     tasks.forEach((task) => {
-    //       cost += task.task_cost;
-    //       let tc = sn + ". <" + task.task_name + ">";
-    //       sn++;
-    //       if (task.product_name) {
-    //         tc += "[" + task.product_name + "]";
-    //       }
-
-    //       tc += task.task_detail || "";
-    //       content.push(tc);
-    //     });
-    //     let key = this.count;
-    //     this.count++;
-    //     return { name, cost, tasks: content, department, key };
-    //   });
-    // },
   },
   methods: {
     onQueryItemChanged(number) {
