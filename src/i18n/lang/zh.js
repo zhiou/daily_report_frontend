@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-05 15:23:46
- * @LastEditTime: 2021-11-22 15:04:41
+ * @LastEditTime: 2021-11-22 15:08:03
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/assets/lang/zh.js
@@ -144,6 +144,7 @@ module.exports = {
     button: {
       create: "确定",
       cancel: "取消",
+      add: "新建任务",
     },
     label: {
       name: "任务名",

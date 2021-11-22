@@ -3,7 +3,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 15:34:38
- * @LastEditTime: 2021-11-22 14:08:15
+ * @LastEditTime: 2021-11-22 15:07:31
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Report.vue
@@ -120,7 +120,7 @@
           style="width: 40%; margin-top: 8px; margin-left: 30%"
           @click="handleCreateTask"
         >
-          <a-icon type="plus" /> Add Task
+          <a-icon type="plus" /> {{ $t('task.button.add') }}
         </a-button>
       </a-spin>
     </div>
