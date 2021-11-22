@@ -1,13 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2021-06-09 14:58:52
- * @LastEditTime: 2021-11-16 15:42:14
+ * @LastEditTime: 2021-11-22 15:21:58
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/store/modules/account.js
  */
 import { getToken, setToken } from "../../api/request/token";
-import { login, logout, modify, info, employerlist } from "../../api/login";
+import { login, logout, modify, info, list } from "../../api/login";
 
 const state = () => ({
   all: [],
@@ -16,7 +16,6 @@ const state = () => ({
   department: "",
   projects: [], // not empty if you are pm
   roles: [],
-  workerlist: [],
 });
 
 const actions = {
@@ -77,11 +76,11 @@ const actions = {
         });
     });
   },
-  employerlist({ commit }) {
+  list({ commit }) {
     return new Promise((resolve, reject) => {
-      employerlist()
+      list()
         .then((data) => {
-          commit("SET_WORKERLIST", data)
+          commit("SET_ALL", data)
           resolve();
         })
         .catch((e) => {
@@ -108,8 +107,8 @@ const mutations = {
   SET_ROLES: (state, roles) => {
     state.roles = roles
   },
-  SET_WORKERLIST: (state, workerlist) => {
-    state.workerlist = workerlist
+  SET_ALL: (state, all) => {
+    state.all = all
   },
 };
 

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-03 14:07:43
- * @LastEditTime: 2021-11-03 14:18:32
+ * @LastEditTime: 2021-11-22 17:42:14
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/components/EditableTagCell.vue
@@ -12,6 +12,7 @@
       <a-input
         :value="value"
         :allowClear="false"
+        ref="input"
         @change="handleChange"
         @pressEnter="check"
         @blur="check"
@@ -45,6 +46,10 @@ export default {
     },
     edit() {
       this.editable = true;
+      this.$nextTick(() => {
+        console.log(this.$refs, this.$refs.input);
+        this.$refs.input.focus();
+      });
     },
   },
 };

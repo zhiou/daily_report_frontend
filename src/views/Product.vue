@@ -1,20 +1,13 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-02 13:54:56
- * @LastEditTime: 2021-11-22 15:06:27
+ * @LastEditTime: 2021-11-22 16:25:55
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Product.vue
 -->
 <template>
   <div id="product" v-title data-title="产品信息">
-    <a-row :gutter="16">
-      <a-col :span="2" :offset="22">
-        <a-button :disabled="notChanged" type="primary" @click="onSave">
-          {{ $t("product.button.save") }}
-        </a-button>
-      </a-col>
-    </a-row>
     <a-spin :spinning="spinning">
       <a-table
         :columns="columns"
@@ -63,7 +56,7 @@
         style="width: 40%; margin-top: 8px; margin-left: 30%"
         @click="() => (visible = true)"
       >
-        <a-icon type="plus" /> {{ $t('product.button.add') }} 
+        <a-icon type="plus" /> {{ $t("product.button.add") }}
       </a-button>
     </a-spin>
     <product-modal-form
@@ -131,26 +124,23 @@ export default {
       visible: false,
       columns,
       productState,
-      origin: [],
-      products: [],
     };
   },
   mounted() {
     this.$store
       .dispatch("product/list")
-      .then(() => {
-        this.refreshAll();
-      })
       .catch((error) => {
         this.$message.error(error, 3);
       });
   },
   computed: {
-    notChanged() {
-      return this.$_.isEqual(this.products, this.origin);
-    },
     spinning() {
       return this.$store.state.product.spinning;
+    },
+    products() {
+      return this.$store.state.product.all.map((product) => {
+        return { ...product, key: product.number };
+      });
     },
   },
   methods: {
@@ -159,7 +149,10 @@ export default {
       const target = products.find((item) => item.key === key);
       if (target && target[dataIndex] !== value) {
         target[dataIndex] = value;
-        this.products = products;
+        this.$store.dispatch("product/update", target).catch((error) => {
+          console.error(error);
+          this.$message.error(error, 3);
+        });
       }
     },
     onCreate() {
@@ -171,49 +164,22 @@ export default {
         modalForm.resetFields();
         this.visible = false;
 
-        this.$store
-          .dispatch("product/create", product)
-          .then(() => {
-            this.refreshProducts();
-          })
-          .catch((error) => {
-            console.error(error);
-            this.$message.error(error, 3);
-          });
+        this.$store.dispatch("product/create", product).catch((error) => {
+          console.error(error);
+          this.$message.error(error, 3);
+        });
       });
     },
     onDelete(key) {
-      this.$store
-        .dispatch("product/remove", { numbers: [key] })
-        .then(() => {
-          this.refreshProducts();
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      this.$store.dispatch("product/remove", { numbers: [key] }).catch((e) => {
+        console.log(e);
+        this.$message.error(e, 3);
+      });
     },
-
     onSave() {
-      this.$store.dispatch("product/update", this.products).finally(() => {
-        this.refreshOrigin();
-      });
-    },
-    refreshProducts() {
-      this.products = this.$store.state.product.all.map((product) => {
-        return { ...product, key: product.number };
-      });
-    },
-    refreshOrigin() {
-      this.origin = this.$store.state.product.all.map((product) => {
-        return { ...product, key: product.number };
-      });
-    },
-    refreshAll() {
-      this.origin = this.$store.state.product.all.map((product) => {
-        return { ...product, key: product.number };
-      });
-      this.products = this.$store.state.product.all.map((product) => {
-        return { ...product, key: product.number };
+      this.$store.dispatch("product/update", this.products).catch((e) => {
+        console.log(e);
+        this.$message.error(e, 3);
       });
     },
   },

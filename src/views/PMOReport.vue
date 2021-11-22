@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 16:14:42
- * @LastEditTime: 2021-11-22 10:27:47
+ * @LastEditTime: 2021-11-22 15:29:21
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/ProjectReport.vue
@@ -87,39 +87,7 @@
 
 <script>
 // @ is an alias to /src
-import EditableCell from "./components/EditableAreaCell.vue";
-import EditableNumberCell from "./components/EditableNumberCell.vue";
 import i18n from "../i18n";
-
-// const columns = [
-//   {
-//     title: i18n.t("report.column.user"),
-//     dataIndex: "name",
-//     key: "name",
-//     scopedSlots: { customRender: "name" },
-//     width: 120,
-//   },
-//   {
-//     title: i18n.t("report.column.cost"),
-//     dataIndex: "cost",
-//     key: "cost",
-//     scopedSlots: { customRender: "cost" },
-//     width: 100,
-//   },
-//   {
-//     title: i18n.t("report.column.depart"),
-//     dataIndex: "department",
-//     key: "department",
-//     scopedSlots: { customRender: "department" },
-//     width: 140,
-//   },
-//   {
-//     title: i18n.t("report.column.tasks"),
-//     dataIndex: "tasks",
-//     key: "tasks",
-//     scopedSlots: { customRender: "details" },
-//   },
-// ];
 
 let queryitems = [
   { number: "0", name: "产品" },
@@ -213,7 +181,7 @@ export default {
     this.$store.dispatch("project/list").catch((error) => {
       this.$message.error(error, 3);
     });
-    this.$store.dispatch("user/employerlist").catch((error) => {
+    this.$store.dispatch("user/list").catch((error) => {
       this.$message.error(error, 3);
     });
   },
@@ -249,7 +217,7 @@ export default {
       });
     },
     refreshEmployers() {
-      return this.$store.state.user.workerlist.map((worker) => {
+      return this.$store.state.user.all.map((worker) => {
         return { ...worker, key: worker.work_code };
       });
     },

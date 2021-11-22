@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-02 15:28:21
- * @LastEditTime: 2021-11-03 18:13:57
+ * @LastEditTime: 2021-11-22 16:29:22
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/api/project.js
@@ -15,10 +15,11 @@ export function list() {
   });
 }
 
-export function update() {
+export function update(product) {
   return request({
     url: "/product",
     method: "put",
+    data: product,
   });
 }
 
