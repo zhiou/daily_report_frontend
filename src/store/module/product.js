@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-02 15:43:20
- * @LastEditTime: 2021-11-12 16:53:03
+ * @LastEditTime: 2021-11-22 16:06:30
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/store/module/project.js
@@ -31,11 +31,11 @@ const actions = {
         });
     });
   },
-  update({ commit }, products) {
+  update({ commit }, product) {
     return new Promise((resolve, reject) => {
-      update(products)
+      update(product)
         .then(() => {
-          commit("SET_PRODUCTS", products);
+          commit("UPDATE_PRODUCT", product);
           resolve();
         })
         .catch((error) => {
@@ -71,7 +71,15 @@ const actions = {
 
 const mutations = {
   SET_PRODUCTS: (state, products) => {
-    state.all = products;
+    state.all = products
+  },
+  UPDATE_PRODUCT: (state, target) => {
+    let products = state.all
+    let index = products.findIndex((product) => product.number === target.number)
+    if (index > -1) {
+      products[index] = target
+    }
+    state.all = products
   },
   ADD_PRODUCT: (state, product) => {
     state.all = [...state.all, product];

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 17:06:32
- * @LastEditTime: 2021-11-22 14:52:30
+ * @LastEditTime: 2021-11-22 15:31:05
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/components/TaskForm.vue
@@ -57,6 +57,9 @@
         </a-form-item>
         <a-form-item :label="$t('project.form.manager')">
           <a-select
+            show-search
+            option-filter-prop="children"
+            :filter-option="filterOption"
             style="width: 120px"
             v-decorator="[
               'manager_number',
@@ -77,7 +80,7 @@
         </a-form-item>
         <a-form-item :label="$t('project.form.status')">
           <a-select
-           style="width: 120px"
+            style="width: 120px"
             v-decorator="[
               'status',
               {
@@ -116,10 +119,6 @@
 </template>
 
 <script>
-let staffs = [{ name: "周煌", number: "ES0092" },
-{ name: "刘纳", number: "ES0150" },
-{ name: "刘淼淼", number: "ES0256" },
-];
 const options = ["激活", "结项", "暂停", "取消"];
 export default {
   name: "ProjectModalForm",
@@ -131,12 +130,27 @@ export default {
       preserve: true,
     });
   },
+  computed: {
+    staffs() {
+      return this.$store.state.user.all.map((worker) => {
+        return { ...worker, key: worker.work_code, number: worker.work_code };
+      });
+    },
+  },
   components: {},
   data() {
     return {
-      staffs,
       options,
     };
+  },
+  methods: {
+    filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text
+          .toLowerCase()
+          .indexOf(input.toLowerCase()) >= 0
+      );
+    },
   },
 };
 </script>

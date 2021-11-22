@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-27 16:43:11
- * @LastEditTime: 2021-11-15 15:54:24
+ * @LastEditTime: 2021-11-22 15:23:00
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/api/login.js
@@ -46,7 +46,7 @@ export function info() {
   })
 }
 
-export function employerlist() {
+export function list() {
   return request({
     url: '/user',
     method: 'get',
