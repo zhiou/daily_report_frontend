@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 17:06:32
- * @LastEditTime: 2021-11-03 18:42:17
+ * @LastEditTime: 2021-11-22 14:54:06
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/components/TaskForm.vue
@@ -10,8 +10,9 @@
   <div id="product-modal-form">
     <a-modal
       :visible="visible"
-      title="Create a new Product"
-      okText="Create"
+      :title="$t('product.title')"
+      :okText="$t('product.button.create')"
+      :cancelText="$t('product.button.cancel')"
       @cancel="
         () => {
           $emit('cancel');
@@ -24,7 +25,7 @@
       "
     >
       <a-form layout="vertical" :form="form">
-        <a-form-item label="Product Number">
+        <a-form-item :label="$t('product.form.number')">
           <a-input
             v-decorator="[
               'number',
@@ -32,14 +33,14 @@
                 rules: [
                   {
                     required: true,
-                    message: 'Please input the number of product!',
+                    message: $t('product.tips.number'),
                   },
                 ],
               },
             ]"
           />
         </a-form-item>
-        <a-form-item label="Product Name">
+        <a-form-item :label="$t('product.form.name')">
           <a-input
             v-decorator="[
               'name',
@@ -47,7 +48,7 @@
                 rules: [
                   {
                     required: true,
-                    message: 'Please input the name of product!',
+                    message: $t('product.tips.name'),
                   },
                 ],
               },
@@ -55,7 +56,7 @@
           />
         </a-form-item>
 
-        <a-form-item label="Status">
+        <a-form-item :label="$t('product.form.status')">
           <a-select
            style="width: 120px"
             v-decorator="[
@@ -64,7 +65,7 @@
                 rules: [
                   {
                     required: true,
-                    message: 'Please select status of product!',
+                    message: $t('product.tips.status'),
                   },
                 ],
               },
@@ -75,7 +76,7 @@
             </a-select-option>
           </a-select>
         </a-form-item>
-        <a-form-item label="Product Line">
+        <a-form-item :label="$t('product.form.line')">
           <a-input
             v-decorator="[
               'in_line',
@@ -83,14 +84,13 @@
                 rules: [
                   {
                     required: false,
-                    message: 'Please input the product line!',
                   },
                 ],
               },
             ]"
           />
         </a-form-item>
-        <a-form-item label="Remark">
+        <a-form-item :label="$t('product.form.remark')">
           <a-input
             type="textarea"
             v-decorator="[
@@ -99,7 +99,6 @@
                 rules: [
                   {
                     required: false,
-                    message: 'Please input the remark of product!',
                   },
                 ],
               },

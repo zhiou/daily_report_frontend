@@ -3,7 +3,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 15:34:38
- * @LastEditTime: 2021-11-19 15:28:41
+ * @LastEditTime: 2021-11-22 14:08:15
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Report.vue
@@ -88,11 +88,10 @@
             </a-select>
           </span>
 
-          <template slot="name" slot-scope="text, record">
-            <editable-cell
-              :text="text"
-              @change="onCellChange(record.key, 'task_name', $event)"
-            />
+          <template slot="text" slot-scope="text">
+            <span>
+              {{ text || "其他" }}
+            </span>
           </template>
           <template slot="cost" slot-scope="number, record">
             <editable-number-cell
@@ -148,16 +147,19 @@ const columns = [
     title: i18n.t("report.column.line"),
     dataIndex: "product_line",
     key: "product_line",
+    scopedSlots: { customRender: "text" },
   },
   {
     title: i18n.t("report.column.proj"),
     dataIndex: "project_name",
     key: "project",
+    scopedSlots: { customRender: "text" },
   },
   {
     title: i18n.t("report.column.prod"),
     dataIndex: "product_name",
     key: "product",
+    scopedSlots: { customRender: "text" },
   },
   {
     title: i18n.t("report.column.name"),
@@ -252,7 +254,7 @@ export default {
         });
     },
     onDateChanged(date) {
-      this.fetchData(date)
+      this.fetchData(date);
     },
     update(status) {
       this.$store
@@ -294,9 +296,9 @@ export default {
         let newTask = {
           ...task,
           key: count,
-          product_line: prod.in_line,
-          product_name: prod.name,
-          project_name: proj.name,
+          product_line: prod ? prod.in_line : "其他",
+          product_name: prod ? prod.name : "其他",
+          project_name: proj ? prod.name : "其他",
         };
         this.count = count + 1;
         this.tasks = [...this.tasks, newTask];

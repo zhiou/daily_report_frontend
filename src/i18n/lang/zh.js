@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-05 15:23:46
- * @LastEditTime: 2021-11-20 10:40:32
+ * @LastEditTime: 2021-11-22 15:04:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/assets/lang/zh.js
@@ -69,14 +69,48 @@ module.exports = {
     },
   },
   project: {
+    title: '创建项目信息',
     button: {
       save: "保存修改",
+      create: '创建',
+      cancel: '取消',
+      add: '新建项目',
     },
+    form: {
+      number: '项目编号',
+      name: '项目名',
+      manager: '项目经理',
+      status: '项目状态',
+      remark: '备注',
+    },
+    tips: {
+      number: '请输入项目编号',
+      name: '请输入项目名',
+      manager: '请选择项目经理',
+      status: '请设置项目状态',
+    }
   },
   product: {
+    title: '创建产品信息',
     button: {
       save: "保存修改",
+      create: '创建',
+      cancel: '取消',
+      add: '新建产品',
     },
+    form: {
+      number: '产品编号',
+      name: '产品名',
+      line: '产品线',
+      status: '产品状态',
+      remark: '备注',
+    },
+    tips: {
+      number: '请输入产品编号',
+      name: '请输入产品名',
+      manager: '请输入产品线名',
+      status: '请设置项目状态',
+    }
   },
   report: {
     button: {

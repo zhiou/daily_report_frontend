@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-22 17:30:02
- * @LastEditTime: 2021-11-16 15:17:30
+ * @LastEditTime: 2021-11-22 15:00:25
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/router/index.js
@@ -34,6 +34,10 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
+    meta: {
+      breadcrumb: '首页',
+      requireAuth: true,
+    },
     children: [
       {
         path: "user",
@@ -42,6 +46,7 @@ const routes = [
         meta: {
           requireAuth: true,
           inMenu: 'report_mng',
+          breadcrumb: '个人日志'
         },
       },
       {
@@ -51,6 +56,7 @@ const routes = [
         props: true,
         meta: {
           requireAuth: true,
+          breadcrumb: '创建日志'
         },
       },
       {
@@ -61,6 +67,7 @@ const routes = [
           requireAuth: true,
           requireRole: 'dm',
           inMenu: 'report_mng',
+          breadcrumb: '部门日志'
         },
       },
       {
@@ -71,6 +78,7 @@ const routes = [
           requireAuth: true,
           requireRole: 'pm',
           inMenu: 'report_mng',
+          breadcrumb: '项目日志'
         },
       },
       {
@@ -81,6 +89,7 @@ const routes = [
           requireAuth: true,
           requireRole: 'pmo',
           inMenu: 'report_mng',
+          breadcrumb: 'PMO'
         },
       },
       {
@@ -90,6 +99,7 @@ const routes = [
         meta: {
           requireAuth: true,
           inMenu: 'statistics',
+          breadcrumb: '个人统计'
         },
       },
       {
@@ -100,6 +110,7 @@ const routes = [
           requireAuth: true,
           requireRole: 'pm',
           inMenu: 'statistics',
+          breadcrumb: '项目统计'
         },
       },
       {
@@ -110,6 +121,7 @@ const routes = [
           requireAuth: true,
           requireRole: 'pmo',
           inMenu: 'data_import',
+          breadcrumb: '项目信息'
         },
       },
       {
@@ -120,12 +132,10 @@ const routes = [
           requireAuth: true,
           requireRole: 'pmo',
           inMenu: 'data_import',
+          breadcrumb: '产品信息'
         },
       },
     ],
-    meta: {
-      requireAuth: true,
-    },
   },
   {
     path: "/about",

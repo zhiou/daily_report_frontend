@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-02 13:54:56
- * @LastEditTime: 2021-11-15 18:22:24
+ * @LastEditTime: 2021-11-22 15:06:27
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Product.vue
@@ -63,7 +63,7 @@
         style="width: 40%; margin-top: 8px; margin-left: 30%"
         @click="() => (visible = true)"
       >
-        <a-icon type="plus" /> Add Product
+        <a-icon type="plus" /> {{ $t('product.button.add') }} 
       </a-button>
     </a-spin>
     <product-modal-form

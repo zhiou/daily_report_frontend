@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-05 15:23:50
- * @LastEditTime: 2021-11-20 10:43:13
+ * @LastEditTime: 2021-11-22 15:05:30
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/assets/lang/en.js
@@ -69,12 +69,32 @@ module.exports = {
   },
   project: {
     button: {
-      save: "Save"
+      save: "Save",
+      create: 'Create',
+      cancel: 'Cancel',
+      add: 'Add Project',
+    },
+    form: {
+      number: 'Project Number',
+      name: 'Project Name',
+      manager: 'Project Manager',
+      status: 'Status',
+      remark: 'Remark',
     }
   },
   product: {
     button: {
-      save: "Save"
+      save: "Save",
+      create: 'Create',
+      cancel: 'Cancel',
+      add: 'Add Product',
+    },
+    form: {
+      number: 'Product Number',
+      name: 'Product Name',
+      line: 'Product Line',
+      status: 'Status',
+      remark: 'Remark',
     }
   },
   report: {

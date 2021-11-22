@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 17:06:32
- * @LastEditTime: 2021-11-03 18:41:20
+ * @LastEditTime: 2021-11-22 14:52:30
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/components/TaskForm.vue
@@ -10,8 +10,9 @@
   <div id="project-modal-form">
     <a-modal
       :visible="visible"
-      title="Create a new Project"
-      okText="Create"
+      :title="$t('project.title')"
+      :okText="$t('project.button.create')"
+      :cancelText="$t('project.button.cancel')"
       @cancel="
         () => {
           $emit('cancel');
@@ -24,7 +25,7 @@
       "
     >
       <a-form layout="vertical" :form="form">
-        <a-form-item label="Project Number">
+        <a-form-item :label="$t('project.form.number')">
           <a-input
             v-decorator="[
               'number',
@@ -32,14 +33,14 @@
                 rules: [
                   {
                     required: true,
-                    message: 'Please input the number of project!',
+                    message: $t('project.tips.number'),
                   },
                 ],
               },
             ]"
           />
         </a-form-item>
-        <a-form-item label="Project Name">
+        <a-form-item :label="$t('project.form.name')">
           <a-input
             v-decorator="[
               'name',
@@ -47,14 +48,14 @@
                 rules: [
                   {
                     required: true,
-                    message: 'Please input the name of project!',
+                    message: $t('project.tips.name'),
                   },
                 ],
               },
             ]"
           />
         </a-form-item>
-        <a-form-item label="Project Manager">
+        <a-form-item :label="$t('project.form.manager')">
           <a-select
             style="width: 120px"
             v-decorator="[
@@ -63,7 +64,7 @@
                 rules: [
                   {
                     required: true,
-                    message: 'Please select manager of project!',
+                    message: $t('project.tips.manager'),
                   },
                 ],
               },
@@ -74,7 +75,7 @@
             </a-select-option>
           </a-select>
         </a-form-item>
-        <a-form-item label="Status">
+        <a-form-item :label="$t('project.form.status')">
           <a-select
            style="width: 120px"
             v-decorator="[
@@ -83,7 +84,7 @@
                 rules: [
                   {
                     required: true,
-                    message: 'Please select status of project!',
+                    message: $t('project.tips.status'),
                   },
                 ],
               },
@@ -94,7 +95,7 @@
             </a-select-option>
           </a-select>
         </a-form-item>
-        <a-form-item label="Remark">
+        <a-form-item :label="$t('project.form.remark')">
           <a-input
             type="textarea"
             v-decorator="[
@@ -103,7 +104,6 @@
                 rules: [
                   {
                     required: false,
-                    message: 'Please input the remark of task!',
                   },
                 ],
               },

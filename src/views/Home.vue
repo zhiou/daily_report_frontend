@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-27 15:54:31
- * @LastEditTime: 2021-11-17 17:02:50
+ * @LastEditTime: 2021-11-22 14:56:28
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/views/Home.vue
@@ -212,7 +212,7 @@ export default {
       this.routes = this.$route.matched.map((item) => {
         return {
           path: item.path,
-          breadcrumbName: item.name,
+          breadcrumbName: item.meta.breadcrumb,
         };
       });
     },

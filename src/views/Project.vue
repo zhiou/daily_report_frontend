@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-02 13:54:50
- * @LastEditTime: 2021-11-15 18:21:18
+ * @LastEditTime: 2021-11-22 15:06:19
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Project.vue
@@ -16,56 +16,56 @@
       </a-col>
     </a-row>
     <a-spin :spinning="spinning">
-    <a-table
-      :columns="columns"
-      :data-source="projects"
-      style="margin: 16px"
-      :defaultExpandedRowKeys="[0]"
-      :pagination="false"
-    >
-      <template slot="name" slot-scope="text, record">
-        <editable-cell
-          :text="text"
-          @change="onCellChange(record.key, 'name', $event)"
-        />
-      </template>
-      <template slot="manager_name" slot-scope="text, record">
-        <editable-cell
-          :text="text"
-          @change="onCellChange(record.key, 'manager_name', $event)"
-        />
-      </template>
-      <template slot="remark" slot-scope="text, record">
-        <editable-cell
-          :text="text"
-          @change="onCellChange(record.key, 'remark', $event)"
-        />
-      </template>
-      <template slot="state" slot-scope="tag, record">
-        <editable-tag-cell
-          :tag="tag"
-          :options="projectState"
-          @change="onCellChange(record.key, 'status', $event)"
-        />
-      </template>
-      <template slot="operation" slot-scope="text, record">
-        <a-button
-          type="danger"
-          shape="circle"
-          icon="delete"
-          v-if="projects.length"
-          @click="() => onDelete(record.key)"
-        />
-      </template>
-    </a-table>
-    <a-button
-      type="dashed"
-      style="width: 40%; margin-top: 8px; margin-left: 30%"
-      @click="() => (visible = true)"
-    >
-      <a-icon type="plus" /> Add Project
-    </a-button>
-       </a-spin>
+      <a-table
+        :columns="columns"
+        :data-source="projects"
+        style="margin: 16px"
+        :defaultExpandedRowKeys="[0]"
+        :pagination="false"
+      >
+        <template slot="name" slot-scope="text, record">
+          <editable-cell
+            :text="text"
+            @change="onCellChange(record.key, 'name', $event)"
+          />
+        </template>
+        <template slot="manager_name" slot-scope="text, record">
+          <editable-cell
+            :text="text"
+            @change="onCellChange(record.key, 'manager_name', $event)"
+          />
+        </template>
+        <template slot="remark" slot-scope="text, record">
+          <editable-cell
+            :text="text"
+            @change="onCellChange(record.key, 'remark', $event)"
+          />
+        </template>
+        <template slot="state" slot-scope="tag, record">
+          <editable-tag-cell
+            :tag="tag"
+            :options="projectState"
+            @change="onCellChange(record.key, 'status', $event)"
+          />
+        </template>
+        <template slot="operation" slot-scope="text, record">
+          <a-button
+            type="danger"
+            shape="circle"
+            icon="delete"
+            v-if="projects.length"
+            @click="() => onDelete(record.key)"
+          />
+        </template>
+      </a-table>
+      <a-button
+        type="dashed"
+        style="width: 40%; margin-top: 8px; margin-left: 30%"
+        @click="() => (visible = true)"
+      >
+        <a-icon type="plus" /> {{$t('project.button.add')}}
+      </a-button>
+    </a-spin>
 
     <project-modal-form
       ref="projectForm"
@@ -119,9 +119,10 @@ const columns = [
   },
 ];
 
-let staffs = [{ name: "周煌", number: "ES0092" },
-{ name: "刘纳", number: "ES0150" },
-{ name: "刘淼淼", number: "ES0256" },
+let staffs = [
+  { name: "周煌", number: "ES0092" },
+  { name: "刘纳", number: "ES0150" },
+  { name: "刘淼淼", number: "ES0256" },
 ];
 
 export default {
@@ -177,26 +178,28 @@ export default {
         this.visible = false;
 
         const manager_name = staffs.find((staff) => {
-          return staff.number === project.manager_number
-        }).name
+          return staff.number === project.manager_number;
+        }).name;
         this.$store
-          .dispatch("project/create", {...project, manager_name})
+          .dispatch("project/create", { ...project, manager_name })
           .then(() => {
             this.refreshProjects();
           })
           .catch((e) => {
-            console.error(e)
-            this.$message.error(e)
+            console.error(e);
+            this.$message.error(e);
           });
       });
     },
     onDelete(key) {
-      this.$store.dispatch("project/remove", {numbers:[key]})
-      .then(()=>{
+      this.$store
+        .dispatch("project/remove", { numbers: [key] })
+        .then(() => {
           this.refreshProjects();
-      }).catch((e)=>{
-        console.log(e);
-      })
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
     onSave() {
       this.$store.dispatch("project/update", this.projects).finally(() => {

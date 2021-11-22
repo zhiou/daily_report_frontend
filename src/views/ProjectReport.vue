@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 16:14:42
- * @LastEditTime: 2021-11-19 15:55:15
+ * @LastEditTime: 2021-11-22 10:40:47
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/ProjectReport.vue
@@ -74,7 +74,7 @@ const columns = [
     width: 140,
   },
   {
-    title: i18n.t("report.column.tasks"),
+    title: i18n.t("report.column.detail"),
     dataIndex: "tasks",
     key: "tasks",
     scopedSlots: { customRender: "details" },

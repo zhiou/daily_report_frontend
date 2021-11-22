@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-04 10:56:50
- * @LastEditTime: 2021-11-19 14:36:47
+ * @LastEditTime: 2021-11-22 14:19:28
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Personal.vue
@@ -72,7 +72,7 @@ export default {
         return total;
       });
       this.$_.forIn(grouped, (value, key) => {
-        axis.push({ value: value, name: key });
+        axis.push({ value: value, name: key === 'null' ? '其他' : key });
       });
       return axis;
     },

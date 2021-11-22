@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-13 16:14:42
- * @LastEditTime: 2021-11-20 11:05:26
+ * @LastEditTime: 2021-11-22 10:27:47
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/ProjectReport.vue
@@ -131,21 +131,21 @@ let columns = [
   {
     label: "产品线",
     prop: "product_line",
-               title: i18n.t("report.column.line"),
+    title: i18n.t("report.column.line"),
     dataIndex: "product_line",
     key: "product_line",
   },
   {
     label: "产品",
     prop: "product_name",
-           title: i18n.t("report.column.prod"),
+    title: i18n.t("report.column.prod"),
     dataIndex: "product_name",
     key: "product_name",
   },
   {
     label: "部门",
     prop: "department",
-       title: i18n.t("report.column.depart"),
+    title: i18n.t("report.column.depart"),
     dataIndex: "department",
     key: "department",
   },
@@ -162,7 +162,7 @@ let columns = [
     title: i18n.t("report.column.cost"),
     dataIndex: "task_cost",
     key: "task_cost",
-    width: 20
+    width: 20,
   },
   {
     label: "项目",
@@ -204,8 +204,7 @@ let columns = [
 
 export default {
   name: "PMOReport",
-  components: {
-  },
+  components: {},
   beforeCreate() {
     //todo, 这里需要加判断，如果数据已经存在，则不需要再去获取了
     this.$store.dispatch("product/list").catch((error) => {
