@@ -1,6 +1,6 @@
 apiVersion: v2
 name: dashboard
-description: A Helm chart for Excelsecu IoT Dashboard
+description: A Helm chart for DailyReport Dashboard
 
 # A chart can be either an 'application' or a 'library' chart.
 #
