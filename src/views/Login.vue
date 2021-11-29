@@ -61,7 +61,12 @@
           </a-checkbox> -->
           <!-- <a class="login-form-forgot" href=""> Forgot password </a>
            -->
-          <a-button type="primary" html-type="submit" class="login-form-button">
+          <a-button
+            type="primary"
+            html-type="submit"
+            class="login-form-button"
+            :loading="loading"
+          >
             {{ $t("login.button.login") }}
           </a-button>
           <!-- Or -->
@@ -76,18 +81,21 @@
 </template>
 
 <script>
-
 export default {
   name: "Login",
   beforeCreate() {
     this.form = this.$form.createForm(this);
   },
- 
+  data() {
+    return {
+      loading: false,
+    };
+  },
   methods: {
     handleSubmit(e) {
       e.preventDefault();
       let that = this;
-
+      this.loading = true;
       this.form.validateFields((err, values) => {
         if (!err) {
           that.$store
@@ -96,16 +104,19 @@ export default {
               password: values["password"],
             })
             .then(() => {
-                that.$message.success(this.$t("error.tips.login.success"), 3);
-                let redirect_name = that.$route.query.redirect;
-                if (redirect_name) {
-                  that.$router.push({ name: redirect_name });
-                } else {
-                  that.$router.push("/");
-                }
+              that.$message.success(this.$t("error.tips.login.success"), 3);
+              let redirect_name = that.$route.query.redirect;
+              if (redirect_name) {
+                that.$router.push({ name: redirect_name });
+              } else {
+                that.$router.push("/");
+              }
             })
             .catch((error) => {
               that.$message.error(error, 3);
+            })
+            .finally(() => {
+              this.loading = false;
             });
         }
       });
