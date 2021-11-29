@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-05 15:23:46
- * @LastEditTime: 2021-11-22 15:08:03
+ * @LastEditTime: 2021-11-24 11:27:06
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/assets/lang/zh.js
@@ -279,7 +279,7 @@ module.exports = {
   login: {
     title: "工作日志系统",
     placeholder: {
-      username: "邮箱",
+      username: "工号",
       password: "密码",
     },
     label: {
@@ -292,8 +292,8 @@ module.exports = {
       register: "注册!",
     },
     tips: {
-      password: "请输入密码!",
-      username: "请输入注册时绑定的邮箱!",
+      password: "请输入OA密码!",
+      username: "请输入OA工号!",
     },
   },
   register: {
