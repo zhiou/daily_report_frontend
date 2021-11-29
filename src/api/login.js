@@ -16,6 +16,7 @@ export function login(account, password) {
   return request({
     url: '/user/login',
     method: 'post',
+    timeout: 15 * 1000,
     data
   })
 }
