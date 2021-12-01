@@ -20,6 +20,7 @@ import Product from "../views/Product.vue";
 import PersonalStats from "../views/PersonalStats.vue";
 import ProjectStats from "../views/ProjectStats.vue";
 import PMOReport from "../views/PMOReport.vue";
+import UserRole from "../views/UserRole";
 
 Vue.use(VueRouter);
 
@@ -120,7 +121,7 @@ const routes = [
         meta: {
           requireAuth: true,
           requireRole: 'pmo',
-          inMenu: 'data_import',
+          inMenu: 'settings',
           breadcrumb: '项目信息'
         },
       },
@@ -131,8 +132,19 @@ const routes = [
         meta: {
           requireAuth: true,
           requireRole: 'pmo',
-          inMenu: 'data_import',
+          inMenu: 'settings',
           breadcrumb: '产品信息'
+        },
+      },
+      {
+        path: "user_role",
+        name: "UserRole",
+        component: UserRole,
+        meta: {
+          requireAuth: true,
+          requireRole: 'admin',
+          inMenu: 'settings',
+          breadcrumb: '用户角色'
         },
       },
     ],

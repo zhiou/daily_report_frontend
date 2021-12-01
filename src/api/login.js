@@ -53,3 +53,19 @@ export function list() {
     method: 'get',
 })
 }
+
+export function add_role(data) {
+  return request({
+    url: '/user/role',
+    method: 'post',
+    data
+  })
+}
+
+export function del_role(data) {
+  return request({
+    url: '/user/role',
+    method: 'delete',
+    data
+  })
+}

@@ -65,7 +65,8 @@ module.exports = {
       proj_stats: "项目工时统计",
       proj: "项目信息",
       prod: "产品信息",
-      data_import: "数据导入",
+      user_role: '用户角色',
+      settings: "系统配置",
     },
   },
   project: {
@@ -110,6 +111,16 @@ module.exports = {
       name: '请输入产品名',
       manager: '请输入产品线名',
       status: '请设置项目状态',
+    }
+  },
+  user_role: {
+    column: {
+      number: '员工编号',
+      name: '员工姓名',
+      depart: '部门',
+      is_pmo: 'PMO',
+      is_pm: "项目经理",
+      is_dm: "部门经理",
     }
   },
   report: {
