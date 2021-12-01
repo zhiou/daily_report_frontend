@@ -3,7 +3,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 15:34:38
- * @LastEditTime: 2021-12-01 15:49:50
+ * @LastEditTime: 2021-12-01 16:24:13
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Report.vue
@@ -19,11 +19,11 @@
             @change="onDateChanged"
         /></a-col>
         <a-col :span="4">
-          <a-input :default-value="author" addonBefore="Name" disabled />
+          <a-input :value="author" addonBefore="Name" disabled />
         </a-col>
         <a-col :span="6">
           <a-input
-            :default-value="department"
+            :value="department"
             addonBefore="Department"
             disabled
           />
@@ -201,6 +201,7 @@ export default {
     });
   },
   mounted() {
+    this.fetchUserInfo()
     this.fetchData(this.onDay);
   },
   data() {
@@ -215,11 +216,9 @@ export default {
   computed: {
     department() {
       return this.$store.state.user.department
-        ? this.$store.state.user.department
-        : "研发X部";
     },
     author() {
-      return this.$store.state.user.name ? this.$store.state.user.name : "周煌";
+      return this.$store.state.user.name;
     },
     spinning() {
       return this.$store.state.report.spinning;
@@ -236,6 +235,11 @@ export default {
     },
   },
   methods: {
+    fetchUserInfo() {
+       this.$store.dispatch("user/info").finally(() => {
+          console.log("user info done");
+        });
+    },
     fetchData(date) {
       this.$store
         .dispatch("report/selfQuery", {
