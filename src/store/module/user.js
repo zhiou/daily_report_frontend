@@ -6,115 +6,137 @@
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/store/modules/account.js
  */
-import { getToken, setToken } from "../../api/request/token";
-import { login, logout, modify, info, list } from "../../api/login";
+import {getToken, setToken} from "../../api/request/token";
+import {login, logout, modify, info, list, add_role, del_role} from "../../api/login";
 
 const state = () => ({
-  all: [],
-  token: getToken(),
-  name: "",
-  department: "",
-  projects: [], // not empty if you are pm
-  roles: [],
+    all: [],
+    token: getToken(),
+    name: "",
+    department: "",
+    projects: [], // not empty if you are pm
+    roles: [],
 });
 
 const actions = {
-  login({ commit }, user) {
-    return new Promise((resolve, reject) => {
-      login(user.account, user.password)
-        .then((data) => {
-          commit("SET_TOKEN", data["token"]);
-          commit("SET_NAME", data["name"]);
-          commit("SET_DEPARTMENT", data["department"]);
-          commit("SET_PROJECTS", data["projects"])
-          commit("SET_ROLES", data['roles'])
-          console.log('login resp', data)
-          resolve();
-        })
-        .catch((error) => {
-          reject(error);
+    login({commit}, user) {
+        return new Promise((resolve, reject) => {
+            login(user.account, user.password)
+                .then((data) => {
+                    commit("SET_TOKEN", data["token"]);
+                    commit("SET_NAME", data["name"]);
+                    commit("SET_DEPARTMENT", data["department"]);
+                    commit("SET_PROJECTS", data["projects"])
+                    commit("SET_ROLES", data['roles'])
+                    console.log('login resp', data)
+                    resolve();
+                })
+                .catch((error) => {
+                    reject(error);
+                });
         });
-    });
-  },
-  // 退出
-  logout({ commit }) {
-    return new Promise((resolve, reject) => {
-      logout()
-        .then(() => {
-          commit("SET_TOKEN", "");
-          resolve();
-        })
-        .catch((error) => {
-          reject(error);
+    },
+    // 退出
+    logout({commit}) {
+        return new Promise((resolve, reject) => {
+            logout()
+                .then(() => {
+                    commit("SET_TOKEN", "");
+                    resolve();
+                })
+                .catch((error) => {
+                    reject(error);
+                });
         });
-    });
-  },
-  update({ commit }, password) {
-    return new Promise((resolve, reject) => {
-      modify(password.origin, password.newone)
-        .then((data) => {
-          commit("SET_TOKEN", data["token"]);
-          resolve();
-        })
-        .catch((e) => {
-          reject(e);
+    },
+    update({commit}, password) {
+        return new Promise((resolve, reject) => {
+            modify(password.origin, password.newone)
+                .then((data) => {
+                    commit("SET_TOKEN", data["token"]);
+                    resolve();
+                })
+                .catch((e) => {
+                    reject(e);
+                });
         });
-    });
-  },
-  info({ commit }) {
-    return new Promise((resolve, reject) => {
-      info()
-        .then((data) => {
-          commit("SET_NAME", data["name"]);
-          commit("SET_DEPARTMENT", data["department"]);
-          commit("SET_PROJECTS", data["projects"])
-          commit("SET_ROLES", data['roles'])
-          resolve();
-        })
-        .catch((e) => {
-          reject(e);
+    },
+    info({commit}) {
+        return new Promise((resolve, reject) => {
+            info()
+                .then((data) => {
+                    commit("SET_NAME", data["name"]);
+                    commit("SET_DEPARTMENT", data["department"]);
+                    commit("SET_PROJECTS", data["projects"])
+                    commit("SET_ROLES", data['roles'])
+                    resolve();
+                })
+                .catch((e) => {
+                    reject(e);
+                });
         });
-    });
-  },
-  list({ commit }) {
-    return new Promise((resolve, reject) => {
-      list()
-        .then((data) => {
-          commit("SET_ALL", data)
-          resolve();
-        })
-        .catch((e) => {
-          reject(e);
+    },
+    list({commit}) {
+        return new Promise((resolve, reject) => {
+            list()
+                .then((data) => {
+                    commit("SET_ALL", data)
+                    resolve();
+                })
+                .catch((e) => {
+                    reject(e);
+                });
         });
-    });
-  },
+    },
+    add_role({commit}, data) {
+        return new Promise((resolve, reject) => {
+            add_role(data)
+                .then(() => {
+                    resolve()
+                })
+                .catch((e) => {
+                    reject(e);
+                });
+        })
+    },
+    del_role({commit}, data) {
+        return new Promise((resolve, reject) => {
+            del_role(data)
+                .then(() => {
+                    resolve()
+                })
+                .catch((e) => {
+                    reject(e);
+                });
+        })
+    }
 };
 
 const mutations = {
-  SET_TOKEN: (state, token) => {
-    state.token = token;
-    setToken(token);
-  },
-  SET_NAME: (state, name) => {
-    state.name = name;
-  },
-  SET_DEPARTMENT: (state, department) => {
-    state.department = department;
-  },
-  SET_PROJECTS: (state, projects) => {
-    state.projects = projects
-  },
-  SET_ROLES: (state, roles) => {
-    state.roles = roles
-  },
-  SET_ALL: (state, all) => {
-    state.all = all
-  },
+    SET_TOKEN: (state, token) => {
+        state.token = token;
+        setToken(token);
+    },
+    SET_NAME: (state, name) => {
+        state.name = name;
+    },
+    SET_DEPARTMENT: (state, department) => {
+        state.department = department;
+    },
+    SET_PROJECTS: (state, projects) => {
+        state.projects = projects
+    },
+    SET_ROLES: (state, roles) => {
+        state.roles = roles
+    },
+    SET_ALL: (state, all) => {
+        state.all = all
+    },
 };
 
 export default {
-  namespaced: true,
-  state,
-  actions,
-  mutations,
+    namespaced: true,
+    state,
+    actions,
+    mutations,
 };

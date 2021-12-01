@@ -64,7 +64,8 @@ module.exports = {
       proj_stats: "Project Statistics",
       proj: "Project",
       prod: "Product",
-      data_import: "Data Import",
+      user_role: 'User Role',
+      settings: "Settings",
     },
   },
   project: {
@@ -95,6 +96,16 @@ module.exports = {
       line: 'Product Line',
       status: 'Status',
       remark: 'Remark',
+    }
+  },
+  user_role: {
+    column: {
+      number: 'WorkCode',
+      name: 'Username',
+      depart: 'Department',
+      is_pmo: 'PMO',
+      is_pm: "Project Manager",
+      is_dm: "Department Manager",
     }
   },
   report: {

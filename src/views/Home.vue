@@ -10,19 +10,19 @@
   <div id="home">
     <a-layout id="home-layout">
       <a-layout-sider v-model="collapsed" :trigger="null" collapsible>
-        <div class="logo" />
+        <div class="logo"/>
         <a-menu
-          :default-selected-keys="['user']"
-          :default-open-keys="['report_mng', 'statistics', 'data_import']"
-          v-model="selectedMenu"
-          mode="inline"
-          theme="dark"
-          :inline-collapsed="collapsed"
-          @click="onMenuChanged"
+            :default-selected-keys="['user']"
+            :default-open-keys="['report_mng', 'statistics', 'settings']"
+            v-model="selectedMenu"
+            mode="inline"
+            theme="dark"
+            :inline-collapsed="collapsed"
+            @click="onMenuChanged"
         >
           <a-sub-menu v-for="menu in menus" :key="menu.key">
             <span slot="title"
-              ><a-icon :type="menu.type" /><span>{{ menu.title }}</span></span
+            ><a-icon :type="menu.type"/><span>{{ menu.title }}</span></span
             >
             <a-menu-item v-for="item in menu.items" :key="item.key">
               {{ item.title }}
@@ -33,14 +33,14 @@
       <a-layout>
         <a-layout-header style="background: #fff; padding: 0">
           <a-icon
-            class="trigger"
-            :type="collapsed ? 'menu-unfold' : 'menu-fold'"
-            @click="toggleCollapsed"
+              class="trigger"
+              :type="collapsed ? 'menu-unfold' : 'menu-fold'"
+              @click="toggleCollapsed"
           />
           <div class="icons-list">
             <a-space size="middle">
               <a-dropdown>
-                <a-icon type="user" />
+                <a-icon type="user"/>
                 <a-menu slot="overlay" @click="onUserMenu">
                   <a-menu-item key="info">
                     {{ this.$t("settings.info.menu") }}
@@ -50,7 +50,7 @@
                   </a-menu-item>
                 </a-menu>
               </a-dropdown>
-              <a-icon type="logout" @click="onLogout" />
+              <a-icon type="logout" @click="onLogout"/>
             </a-space>
           </div>
         </a-layout-header>
@@ -66,12 +66,12 @@
           </template>
         </a-breadcrumb>
         <a-layout-content class="content">
-          <router-view />
+          <router-view/>
         </a-layout-content>
       </a-layout>
     </a-layout>
-    <user-settings v-model="userSettingVisible" />
-    <password-dialog v-model="passwordDialogVisible" />
+    <user-settings v-model="userSettingVisible"/>
+    <password-dialog v-model="passwordDialogVisible"/>
   </div>
 </template>
 
@@ -80,7 +80,7 @@ import PasswordDialog from "./components/PasswordDialog.vue";
 import UserSettings from "./components/UserSettings.vue";
 
 export default {
-  components: { UserSettings, PasswordDialog },
+  components: {UserSettings, PasswordDialog},
   name: "Home",
   data: function () {
     return {
@@ -131,8 +131,8 @@ export default {
           ],
         },
         {
-          key: "data_import",
-          title: this.$t("home.menu.data_import"),
+          key: "settings",
+          title: this.$t("home.menu.settings"),
           type: "setting",
           items: [
             {
@@ -142,6 +142,10 @@ export default {
             {
               key: "prod",
               title: this.$t("home.menu.prod"),
+            },
+            {
+              key: "user_role",
+              title: this.$t("home.menu.user_role"),
             },
           ],
         },
@@ -160,6 +164,7 @@ export default {
         "pm",
         "proj",
         "prod",
+        "user_role"
       ];
     },
     roles() {
@@ -180,7 +185,7 @@ export default {
     toggleCollapsed() {
       this.collapsed = !this.collapsed;
     },
-    onUserMenu({ key }) {
+    onUserMenu({key}) {
       if (key === "info") {
         this.userSettingVisible = true;
       } else if (key === "password") {
@@ -190,8 +195,8 @@ export default {
     onLogout(e) {
       e.preventDefault();
       this.$store
-        .dispatch("user/logout")
-        .finally(() => this.$router.push("/login"));
+          .dispatch("user/logout")
+          .finally(() => this.$router.push("/login"));
     },
     onMenuChanged(e) {
       this.$router.push("/" + e.key);
@@ -222,7 +227,7 @@ export default {
         return;
       }
       const routes = this.$router.options.routes.find(
-        (route) => route.name === "Home"
+          (route) => route.name === "Home"
       ).children;
       console.log("routes", routes);
       let menus = [
@@ -241,8 +246,8 @@ export default {
       ];
       if (roles.indexOf("pmo") > -1) {
         menus.push({
-          key: "data_import",
-          title: this.$t("home.menu.data_import"),
+          key: "settings",
+          title: this.$t("home.menu.settings"),
           type: "setting",
           items: [],
         });
