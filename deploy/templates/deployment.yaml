@@ -37,27 +37,16 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
-          volumeMounts:
-            - mountPath: /etc/nginx/conf.d/default.conf
-              name: nginx-conf
-              subPath: default.conf
           livenessProbe:
             httpGet:
-              path: /health
+              path: /
               port: http
           readinessProbe:
             httpGet:
-              path: /health
+              path: /
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-      volumes:
-        - name: nginx-conf
-          configMap:
-            name: dashboard-config
-            items:
-              - key: default.conf
-                path: default.conf
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
