@@ -3,7 +3,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 15:34:38
- * @LastEditTime: 2021-11-22 15:07:31
+ * @LastEditTime: 2021-12-01 15:49:50
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Report.vue
@@ -254,6 +254,7 @@ export default {
         });
     },
     onDateChanged(date) {
+      this.$router.replace(date.format('yyyy-MM-DD'))
       this.fetchData(date);
     },
     update(status) {

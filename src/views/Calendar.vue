@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-22 17:30:02
- * @LastEditTime: 2021-11-17 17:37:14
+ * @LastEditTime: 2021-12-01 15:54:01
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Home.vue
@@ -79,7 +79,7 @@ export default {
         .then((tasks) => {
           let taskNames = [];
           tasks.forEach((task) => {
-            let day = moment(task.report_date).date();
+            let day = moment(task.report_date).format('yyyy-MM-DD');
             if (taskNames[day] == undefined) {
               taskNames[day] = new Set();
             }
@@ -92,12 +92,10 @@ export default {
         });
     },
     getListData(value) {
-      return this.taskNames[value.date()];
+      return this.taskNames[value.format('yyyy-MM-DD')];
     },
     getMonthData(value) {
-      if (value.month() === 8) {
-        return 1394;
-      }
+ 
     },
     onSelect(date) {
       if (this.mode === "month") {
