@@ -113,7 +113,12 @@ export default {
               }
             })
             .catch((error) => {
-              that.$message.error(error, 3);
+              if (typeof error === 'string') {
+                that.$message.error(error, 3)
+              } else {
+                that.$message.error(this.$t('error.tips.login.failed'), 3);
+              }
+
             })
             .finally(() => {
               this.loading = false;
