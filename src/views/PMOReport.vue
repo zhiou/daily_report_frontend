@@ -290,7 +290,7 @@ export default {
 <style lang="css" scoped>
 .report-frame {
   background-color: white;
-  margin: 30px 30px;
+  margin: 8px 8px;
 }
 
 .dynamic-delete-button {

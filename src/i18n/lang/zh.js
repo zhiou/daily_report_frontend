@@ -133,7 +133,7 @@ module.exports = {
       proj: "项目",
       prod: "产品",
       name: "任务名",
-      cost: "任务耗时",
+      cost: "工时",
       detail: "任务详情",
       user: "姓名",
       depart: "部门",

@@ -10,20 +10,20 @@
   <div class="calendar">
     <a-spin :spinning="spinning">
       <a-calendar
-        class="calendar-frame"
-        @select="onSelect"
-        :default-value="value"
-        @panelChange="onChange"
-        :mode="mode"
+          class="calendar-frame"
+          @select="onSelect"
+          :default-value="value"
+          @panelChange="onChange"
+          :mode="mode"
       >
         <ul slot="dateCellRender" slot-scope="value" class="events">
           <li v-for="(item, index) in getListData(value)" :key="index">
             <a-badge
-              v-if="index < 2"
-              :status="item.type"
-              :text="item.content"
+                v-if="index < 2"
+                :status="item.type"
+                :text="item.content"
             />
-            <a-badge v-if="index == 3" :status="item.type" :text="other" />
+            <a-badge v-if="index == 3" :status="item.type" :text="other"/>
           </li>
         </ul>
         <template slot="monthCellRender" slot-scope="value">
@@ -58,7 +58,7 @@ export default {
     },
     spinning() {
       return this.$store.state.report.spinning;
-    },
+    }
   },
   mounted() {
     this.fetchData(this.value);
@@ -72,30 +72,30 @@ export default {
       // 这里必须用moment包裹一下,否则month的值会发生改变导致控件显示有问题
       const endDate = this.firstDayOfMonth(moment(month).add(1, "month"));
       this.$store
-        .dispatch("report/selfQuery", {
-          from: startDate,
-          to: endDate,
-        })
-        .then((tasks) => {
-          let taskNames = [];
-          tasks.forEach((task) => {
-            let day = moment(task.report_date).format('yyyy-MM-DD');
-            if (taskNames[day] == undefined) {
-              taskNames[day] = new Set();
-            }
-            taskNames[day].add({ type: "success", content: task.task_name });
+          .dispatch("report/selfQuery", {
+            from: startDate,
+            to: endDate,
+          })
+          .then((tasks) => {
+            let taskNames = [];
+            tasks.forEach((task) => {
+              let day = moment(task.report_date).format('yyyy-MM-DD');
+              if (taskNames[day] == undefined) {
+                taskNames[day] = new Set();
+              }
+              taskNames[day].add({type: "success", content: task.task_name});
+            });
+            this.taskNames = taskNames;
+          })
+          .catch((e) => {
+            this.$message.error(e);
           });
-          this.taskNames = taskNames;
-        })
-        .catch((e) => {
-          this.$message.error(e);
-        });
     },
     getListData(value) {
       return this.taskNames[value.format('yyyy-MM-DD')];
     },
     getMonthData(value) {
- 
+
     },
     onSelect(date) {
       if (this.mode === "month") {
@@ -128,6 +128,7 @@ export default {
   margin: 0;
   padding: 0;
 }
+
 .events .ant-badge-status {
   overflow: hidden;
   white-space: nowrap;
@@ -135,10 +136,12 @@ export default {
   text-overflow: ellipsis;
   font-size: 12px;
 }
+
 .notes-month {
   text-align: center;
   font-size: 28px;
 }
+
 .notes-month section {
   font-size: 28px;
 }

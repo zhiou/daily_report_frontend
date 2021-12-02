@@ -13,14 +13,32 @@
         <a-col :span="6">
           <a-input v-model="department" addonBefore="Department" disabled />
         </a-col>
-        <a-col :span="4">
-          <a-date-picker
-            :allowClear="false"
-            :default-value="onDay"
-            @change="onDayChanged"
-        /></a-col>
+        <a-col :span="8">
+          <a-space>
+            <a-radio-group v-model="mode" @change="onModeChange">
+              <a-radio value="week">
+                周
+              </a-radio>
+              <a-radio value="day">
+                日
+              </a-radio>
+            </a-radio-group>
+            <a-date-picker
+                v-if="mode==='day'"
+                :allowClear="false"
+                v-model="onDay"
+                @change="onDayChanged"
+            />
+            <a-week-picker
+                v-else
+                :allow-clear="false"
+                v-model="onDay"
+                @change="onDayChanged"
+            />
+          </a-space>
+        </a-col>
 
-        <a-col :span="16"> </a-col>
+        <a-col :span="12"> </a-col>
       </a-row>
       <a-spin :spinning="spinning">
         <a-table
@@ -31,9 +49,11 @@
           :pagination="false"
         >
           <template slot="details" slot-scope="tasks">
-            <ul>
+            <ul style="list-style-type: decimal;">
               <li v-for="(task, index) in tasks" :key="index">
-                {{ task }}
+                <b>{{ task.tc }}</b>
+                <br />
+                <p style="text-indent: 0.5em;">{{ task.td }}</p>
               </li>
             </ul>
           </template>
@@ -48,22 +68,23 @@
 import EditableCell from "./components/EditableAreaCell.vue";
 import EditableNumberCell from "./components/EditableNumberCell.vue";
 import moment from "moment";
+import i18n from '../i18n'
 
 const columns = [
   {
-    title: "Name",
+    title: i18n.t("report.column.user"),
     dataIndex: "name",
     key: "name",
     width: 120,
   },
   {
-    title: "Cost",
+    title: i18n.t("report.column.cost"),
     dataIndex: "cost",
     key: "cost",
     width: 100,
   },
   {
-    title: "Tasks",
+    title: i18n.t("report.column.detail"),
     dataIndex: "tasks",
     key: "tasks",
     scopedSlots: { customRender: "details" },
@@ -83,6 +104,7 @@ export default {
       reports: [],
       columns,
       onDay: moment(),
+      mode: 'day'
     };
   },
   computed: {
@@ -94,9 +116,33 @@ export default {
     },
   },
   methods: {
-    onDayChanged(day) {
-      console.log("day changed", day);
-      this.fetchData(day);
+    onModeChange(e) {
+      let mode = e.target.value
+      let date = this.onDay
+      let start, end
+      console.log('mode changed', mode, date)
+      if (mode === 'day') {
+        start = date
+        end = moment(date).add(1, "day")
+      }
+      else if (mode === 'week') {
+        start = moment(date).startOf('week')
+        end = moment(date).endOf('week')
+      }
+      this.fetchData(start, end);
+    },
+    onDayChanged(date) {
+      console.log("day changed", date);
+      let start, end
+      if (this.mode === 'day') {
+        start = date
+        end = moment(date).add(1, "day")
+      }
+      else if (this.mode === 'week') {
+        start = moment(date).startOf('week')
+        end = moment(date).endOf('week')
+      }
+      this.fetchData(start, end);
     },
     fetchDepartment() {
       if (!this.department) {
@@ -105,12 +151,11 @@ export default {
         });
       }
     },
-    fetchData(day) {
-      console.log("date", day);
+    fetchData(start, end) {
       this.$store
         .dispatch("report/dmQuery", {
-          from: this.dayString(day),
-          to: this.nextDaystring(day),
+          from: this.dayString(start),
+          to: this.dayString(end),
         })
         .then((tasks) => {
           let nameBased = this.$_.groupBy(tasks, "staff_name");
@@ -119,11 +164,10 @@ export default {
             let department = tasks[0].department;
             let cost = 0;
             let content = [];
-            let sn = 1;
             tasks.forEach((task) => {
               cost += task.task_cost;
-              let tc = sn + ". <" + task.task_name + ">" + "[";
-              sn++;
+              let tc =  '<' + task.task_name + '>' + "[";
+
               if (task.project_name) {
                 tc += task.project_name + ":";
               }
@@ -131,8 +175,9 @@ export default {
                 tc += task.product_name;
               }
 
-              tc += "]" + task.task_detail;
-              content.push(tc);
+              tc += "]" + "(" + task.task_cost + "h)"
+              let td = task.task_detail
+              content.push({tc, td});
             });
             let key = this.count;
             this.count++;
@@ -146,9 +191,6 @@ export default {
     dayString(day) {
       return day.format("yyyy-MM-DD");
     },
-    nextDaystring(day) {
-      return moment(day).add(1, "day").format("yyyy-MM-DD");
-    },
   },
 };
 </script>
@@ -156,7 +198,7 @@ export default {
 <style lang="css" scoped>
 .report-frame {
   background-color: white;
-  margin: 30px 30px;
+  margin: 8px 8px;
 }
 
 .dynamic-delete-button {

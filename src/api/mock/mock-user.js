@@ -17,7 +17,7 @@ export const mockUser = {
             "data|1-20": [
                 {
                     "work_code|1": "@string",
-                    "roles|1-2": ['admin', 'pmo'],
+                    "roles|1": [['admin'], ['pm'], ['pmo'], ['dm']],
                     "name|1": "@cname",
                     "department|1": ["研发一部", "研发二部", "研发X部"],
                 },
@@ -34,7 +34,7 @@ export const mockUser = {
             "data|1": [
                 {
                     "account|1": "@string",
-                    "roles|1-4": ['admin', 'pmo', 'pm', 'dm'],
+                    "roles|1+": ['admin', 'pmo', 'pm', 'dm'],
                     "name|1": "@cname",
                     "department|1": ["研发一部", "研发二部", "研发X部"],
                     "projects|0-4": [

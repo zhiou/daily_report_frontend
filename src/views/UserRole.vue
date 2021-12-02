@@ -45,8 +45,8 @@ const columns = [
   },
   {
     title: i18n.t("user_role.column.is_pmo"),
-    dataIndex: "roles",
-    key: "roles",
+    dataIndex: "is_pmo",
+    key: "is_pmo",
     scopedSlots: {customRender: "check_box_pmo"},
   },
   {
@@ -76,10 +76,12 @@ export default {
   computed: {
     userRoles() {
       return this.$store.state.user.all.map((user) => {
-        let is_pmo = this.$_.includes(user.roles, 'pmo')
-        let is_dm = this.$_.includes(user.roles, 'dm')
-        let is_pm = this.$_.includes(user.roles, 'pm')
-        console.log('user', user)
+        let is_pmo, is_dm, is_pm = false
+        if (user.roles) {
+          is_pmo = user.roles.indexOf('pmo') > -1
+          is_dm = user.roles.indexOf('dm') > -1
+          is_pm = user.roles.indexOf('pm') > -1
+        }
         return {...user, key: user.work_code, is_pmo, is_dm, is_pm}
       })
     },
