@@ -14,8 +14,8 @@
     var  dates = [];
     for(;i<len;i++){
       dates.push(format(new Date(min).getTime()+1000*60*60*24*i));
-    } 
-    return  dates; 
+    }
+    return  dates;
   }
 
   function format(date) {
@@ -33,7 +33,7 @@ export const mockReport = {
     template: {},
   },
   selfQuery: {
-    api: /\/report$/,
+    api: /\/report\?/,
     method: "get",
     enabled: true,
     template: {
@@ -111,7 +111,7 @@ export const mockReport = {
     },
   },
   pmQuery: {
-    api: /\/report\/pm/,
+    api: /\/report\/pm\?/,
     method: "get",
     enabled: true,
     template: {
@@ -135,5 +135,38 @@ export const mockReport = {
         },
       ],
     },
-  }
+  },
+    pmPageQuery: {
+        api: /\/report\/pm\/page/,
+        method: "get",
+        enabled: true,
+        template: {
+            "message|1": "@csentence",
+            "code|1": [0],
+            "data|1": [
+                {
+                    "total|1": [100],
+                    "current|1": [1, 3, 5, 6, 9],
+                    "size|1": [10],
+                    "records|10":[
+                        {
+                            "product_line|1":["KEY线", "OTP", "FIDO", "自定义"],
+                            "product_number|1":["0", "12345" ,"67890"],
+                            "product_name|1":["产品1", "产品2", "产品3"],
+                            "department|1":["研发一部", "研发二部", "研发三部", "研发六部", "研发六部", "研发九部", "研发十部", "研发十二部", "研发X部"],
+                            "work_code|1":["ES0092", "ES0011", "ES0028"],
+                            "staff_name|1":"@cname",
+                            "task_cost|1":"@integer(1, 12)",
+                            "project_number|1":["11223344"],
+                            "project_name|1":["贵州农信银"],
+                            "report_date|1":"@datetime",
+                            "task_name|1":["任务1", "任务2", "任务3", "任务4", "任务5"],
+                            "task_detail|1":"@cparagraph(1,5)",
+                            "commit_data|1":"@datetime",
+                        },
+                    ]
+                }
+            ],
+        },
+    }
 };

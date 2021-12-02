@@ -35,11 +35,14 @@
           style="margin: 16px"
           :defaultExpandedRowKeys="[0]"
           :pagination="pagination"
+          @change="onTableChange"
         >
           <template slot="details" slot-scope="tasks">
-            <ul style="list-style-type: decimal">
+            <ul style="list-style-type: decimal;">
               <li v-for="(task, index) in tasks" :key="index">
-                {{ task }}
+                <b>{{ task.tc }}</b>
+                <br />
+                <p style="text-indent: 0.5em;">{{ task.td }}</p>
               </li>
             </ul>
           </template>
@@ -92,6 +95,7 @@ export default {
       reports: [],
       columns,
       onDay: moment(),
+      projectNumber: null,
       pagination: { current: 1, pageSize: 10 },
     };
   },
@@ -105,7 +109,8 @@ export default {
   },
   methods: {
     handleChange(projectNumber) {
-      this.fetchData(projectNumber);
+      this.projectNumber = projectNumber
+      this.fetchData();
     },
     filterOption(input, option) {
       return (
@@ -121,16 +126,20 @@ export default {
         });
       }
     },
-    fetchData(projectNumber) {
+    onTableChange(pagination) {
+      this.pagination = pagination
+      this.fetchData()
+    },
+    fetchData() {
       this.$store
         .dispatch("report/pmPageQuery", {
-          project_number: projectNumber,
+          project_number: this.projectNumber,
           page_index: this.pagination.current,
           page_size: this.pagination.pageSize,
         })
         .then((paged) => {
           let tasks = paged.records;
-
+          this.pagination = {...this.pagination, total: paged.total}
           let nameBased = this.$_.groupBy(tasks, "staff_name");
 
           this.reports = Object.keys(nameBased).map((name) => {
@@ -140,18 +149,16 @@ export default {
             let content = [];
             tasks.forEach((task) => {
               cost += task.task_cost;
-              let tc = '';
+              let tc =  '<' + task.task_name + '>' ;
+
               if (task.product_name) {
-                tc += "[" + task.product_name + "]";
+                tc += "[" + task.product_name +  "]";
               }
-              if (task.project_name) {
-                tc += '{' + task.project_name + '}'
-              }
-              tc += task.task_name
-              if (task.task_detail && task.task_detail.length) {
-                tc += ':' + task.task_detail || '';
-              }
-              content.push(tc);
+
+              tc += "(" + task.task_cost + "h)"
+
+              let td = task.task_detail
+              content.push({tc, td});
             });
             let key = this.count;
             this.count++;
@@ -169,7 +176,7 @@ export default {
 <style lang="css" scoped>
 .report-frame {
   background-color: white;
-  margin: 30px 30px;
+  margin: 8px 8px;
 }
 
 .dynamic-delete-button {

@@ -39,17 +39,6 @@
           />
           <div class="icons-list">
             <a-space size="middle">
-              <a-dropdown>
-                <a-icon type="user"/>
-                <a-menu slot="overlay" @click="onUserMenu">
-                  <a-menu-item key="info">
-                    {{ this.$t("settings.info.menu") }}
-                  </a-menu-item>
-                  <a-menu-item key="password">
-                    {{ this.$t("settings.password.menu") }}
-                  </a-menu-item>
-                </a-menu>
-              </a-dropdown>
               <a-icon type="logout" @click="onLogout"/>
             </a-space>
           </div>
@@ -244,7 +233,7 @@ export default {
           items: [],
         },
       ];
-      if (roles.indexOf("pmo") > -1) {
+      if (roles.indexOf("pmo") > -1 || roles.indexOf("admin") > -1) {
         menus.push({
           key: "settings",
           title: this.$t("home.menu.settings"),
@@ -325,8 +314,8 @@ export default {
 }
 
 #home-layout .content {
-  margin: 0px 12px;
-  padding: 12px;
+  margin: 0 0;
+  padding: 0;
   /* background: #fff; */
   min-height: 280px;
   text-align: left;
