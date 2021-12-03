@@ -3,7 +3,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-26 15:34:38
- * @LastEditTime: 2021-12-01 16:24:13
+ * @LastEditTime: 2021-12-03 17:37:11
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daily-report-frontend/src/views/Report.vue
@@ -221,6 +221,8 @@ const weak_column = [
     key: "date",
     scopedSlots: {customRender: "day"},
     width: 120,
+    sorter: (a, b) => (a.date > b.date),
+    sortDirections: ['descend'],
   },
   {
     title: i18n.t("report.column.cost"),
@@ -312,7 +314,7 @@ export default {
     reports() {
       let dateBased = this.$_.groupBy(this.tasks, "report_date");
       let count = 1
-      return Object.keys(dateBased).map((date) => {
+      return Object.keys(dateBased).sort().map((date) => {
         let tasks = dateBased[date];
         let cost = 0;
         let content = [];
