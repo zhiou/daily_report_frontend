@@ -114,6 +114,7 @@ module.exports = {
       save: "Save",
     },
     column: {
+      day: "Day",
       line: 'Product Line',
       proj: 'Project',
       prod: 'Product',

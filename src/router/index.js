@@ -51,7 +51,7 @@ const routes = [
         },
       },
       {
-        path: "report/:date",
+        path: "report",
         name: "Report",
         component: Report,
         props: true,
@@ -70,6 +70,16 @@ const routes = [
           inMenu: 'report_mng',
           breadcrumb: '部门日志'
         },
+      },
+      {
+        path: "members",
+        name: "MemberReport",
+        component: Report,
+        meta: {
+          requireAuth: true,
+          requireRole: 'dm',
+          breadcrumb: '成员日志'
+        }
       },
       {
         path: "pm",

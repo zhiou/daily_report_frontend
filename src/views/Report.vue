@@ -12,9 +12,9 @@
   <div id="report" v-title data-title="工作日志-创建">
     <div class="report-frame">
       <a-row :gutter="16" style="margin: 8px">
-        <a-col :span="8">
+        <a-col :span="18">
           <a-space>
-            <a-radio-group v-model="mode" @change="onModeChange">
+            <a-radio-group v-model="mode" @change="e => onModeChange(e.target.value)">
               <a-radio value="week">
                  周
               </a-radio>
@@ -34,21 +34,18 @@
               v-model="onDay"
               @change="onDateChanged"
             />
+            <a-input :value="author" addonBefore="Name" disabled/>
+            <a-input
+                :value="department"
+                addonBefore="Department"
+                disabled
+            />
           </a-space>
-
-        </a-col>
-        <a-col :span="4">
-          <a-input :value="author" addonBefore="Name" disabled/>
-        </a-col>
-        <a-col :span="6" >
-          <a-input
-              :value="department"
-              addonBefore="Department"
-              disabled
-          />
         </a-col>
         <a-col :span="2" :offset="4">
-          <a-button :loading="saving" type="primary" @click="(e) => update(1)">
+          <a-button
+              v-show="editable"
+              :loading="saving" type="primary" @click="(e) => update(1)">
             {{ $t("report.button.submit") }}
           </a-button>
         </a-col>
@@ -56,7 +53,7 @@
       <a-spin :spinning="spinning">
         <a-table
             :columns="columns"
-            :data-source="tasks"
+            :data-source="datasource"
             style="margin: 16px"
             :defaultExpandedRowKeys="[0]"
             :pagination="false"
@@ -101,7 +98,22 @@
               </a-select-option>
             </a-select>
           </span>
-
+          <template slot="day" slot-scope="date">
+            <span>
+              <b>{{ week(date) }}</b>
+              <br />
+              <i style="font-size: small">{{ date }}</i>
+            </span>
+          </template>
+          <template slot="report" slot-scope="tasks">
+            <ul style="list-style-type: decimal;">
+              <li v-for="(task, index) in tasks" :key="index">
+                <b>{{ task.tc }}</b>
+                <br />
+                <p style="text-indent: 0.5em;">{{ task.td }}</p>
+              </li>
+            </ul>
+          </template>
           <template slot="text" slot-scope="text">
             <span>
               {{ text || "其他" }}
@@ -124,12 +136,13 @@
                 type="danger"
                 shape="circle"
                 icon="delete"
-                v-if="tasks.length"
+                v-show="editable && tasks.length"
                 @click="() => onDelete(record.key)"
             />
           </template>
         </a-table>
         <a-button
+            v-show="editable && mode === 'day'"
             type="dashed"
             style="width: 40%; margin-top: 8px; margin-left: 30%"
             @click="handleCreateTask"
@@ -157,7 +170,7 @@ import TaskModalForm from "./components/TaskModalForm.vue";
 import moment from "moment";
 import i18n from "../i18n";
 
-const columns = [
+const day_columns = [
   {
     title: i18n.t("report.column.line"),
     dataIndex: "product_line",
@@ -201,9 +214,31 @@ const columns = [
   },
 ];
 
+const weak_column = [
+  {
+    title: i18n.t("report.column.day"),
+    dataIndex: "date",
+    key: "date",
+    scopedSlots: {customRender: "day"},
+    width: 120,
+  },
+  {
+    title: i18n.t("report.column.cost"),
+    dataIndex: "cost",
+    key: "cost",
+    scopedSlots: {customRender: "text"},
+    width: 100,
+  },
+  {
+    title: i18n.t("report.column.detail"),
+    dataIndex: "tasks",
+    key: "tasks",
+    scopedSlots: {customRender: "report"},
+  },
+];
+
 export default {
   name: "Report",
-  props: ["date"],
   components: {
     EditableCell,
     EditableNumberCell,
@@ -219,26 +254,44 @@ export default {
     });
   },
   mounted() {
+    if (this.defaultMode) {
+      this.mode = this.defaultMode
+    }
+    if (this.date) {
+      this.onDay = this.date
+    }
+
     this.fetchUserInfo()
-    this.fetchData(this.onDay);
+    this.onModeChange(this.mode)
   },
   data() {
     return {
       count: 0,
       tasks: [],
-      columns,
-      onDay: this.date ? moment(this.date) : moment(),
+      onDay: moment(),
       visible: false,
       saving: false,
       mode: 'day'
     };
   },
   computed: {
+    date() {
+      return this.$route.params.date
+    },
+    defaultMode() {
+      return this.$route.params.mode
+    },
+    columns() {
+      return this.mode === 'day' ? day_columns : weak_column;
+    },
     department() {
       return this.$store.state.user.department
     },
     author() {
-      return this.$store.state.user.name;
+      return this.$route.params.name ?? this.$store.state.user.name
+    },
+    editable() {
+      return this.author === this.$store.state.user.name
     },
     spinning() {
       return this.$store.state.report.spinning;
@@ -253,20 +306,44 @@ export default {
         return {...project, key: project.number};
       });
     },
+    datasource() {
+      return this.mode === 'day' ? this.tasks : this.reports
+    },
+    reports() {
+      let dateBased = this.$_.groupBy(this.tasks, "report_date");
+      let count = 1
+      return Object.keys(dateBased).map((date) => {
+        let tasks = dateBased[date];
+        let cost = 0;
+        let content = [];
+        tasks.forEach((task) => {
+          cost += task.task_cost;
+          let tc =  '<' + task.task_name + '>' ;
+
+          if (task.product_name) {
+            tc += "[" + task.product_name +  "]";
+          }
+
+          tc += "(" + task.task_cost + "h)"
+
+          let td = task.task_detail
+          content.push({tc, td});
+        });
+        let key = count;
+        count++;
+        return { date, cost, tasks: content,  key };
+      });
+    }
   },
   methods: {
-    onModeChange(e) {
-      let mode = e.target.value
+    onModeChange(mode) {
       let date = this.onDay
       let start, end
-      console.log('mode changed', mode, date)
       if (mode === 'day') {
-        this.$router.replace(date.format('yyyy-MM-DD'))
         start = date
         end = moment(date).add(1, "day")
       }
       else if (mode === 'week') {
-        this.$router.replace(date.format('yyyy-WW'))
         start = moment(date).startOf('week')
         end = moment(date).endOf('week')
       }
@@ -297,12 +374,10 @@ export default {
     onDateChanged(date) {
       let start, end
       if (this.mode === 'day') {
-        this.$router.replace(date.format('yyyy-MM-DD'))
         start = date
         end = moment(date).add(1, "day")
       }
       else if (this.mode === 'week') {
-        this.$router.replace(date.format('yyyy-WW'))
         start = moment(date).startOf('week')
         end = moment(date).endOf('week')
       }
@@ -389,15 +464,14 @@ export default {
       );
     },
     getProductFrom(number) {
-      return this.refreshProducts.find((prod) => {
-        return prod.number === number;
-      });
+      return this.refreshProducts.find((prod) => prod.number === number);
     },
     getProjectFrom(number) {
-      return this.refreshProjects.find((proj) => {
-        return proj.number === number;
-      });
+      return this.refreshProjects.find((proj) =>  proj.number === number);
     },
+    week(date) {
+      return moment(date).format('dddd')
+    }
   },
 };
 </script>
