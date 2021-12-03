@@ -129,6 +129,7 @@ module.exports = {
       save: "保存",
     },
     column: {
+      day: "日期",
       line: "产品线",
       proj: "项目",
       prod: "产品",

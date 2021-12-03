@@ -100,7 +100,13 @@ export default {
     onSelect(date) {
       if (this.mode === "month") {
         console.log('select day', date.format("yyyy-MM-DD"))
-        this.$router.push("/report/" + date.format("yyyy-MM-DD"));
+        this.$router.push({
+          name: "Report", params: {
+            name: this.author,
+            mode: 'day',
+            date: date
+          }
+        });
       } else {
         this.mode = "month";
         this.value = date;

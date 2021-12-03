@@ -11,11 +11,11 @@
     <div class="report-frame">
       <a-row :gutter="16">
         <a-col :span="6">
-          <a-input v-model="department" addonBefore="Department" disabled />
+          <a-input v-model="department" addonBefore="Department" disabled/>
         </a-col>
         <a-col :span="8">
           <a-space>
-            <a-radio-group v-model="mode" @change="onModeChange">
+            <a-radio-group v-model="mode" @change="e => onModeChange(e.target.value)">
               <a-radio value="week">
                 周
               </a-radio>
@@ -38,21 +38,24 @@
           </a-space>
         </a-col>
 
-        <a-col :span="12"> </a-col>
+        <a-col :span="12"></a-col>
       </a-row>
       <a-spin :spinning="spinning">
         <a-table
-          :columns="columns"
-          :data-source="reports"
-          style="margin: 16px"
-          :defaultExpandedRowKeys="[0]"
-          :pagination="false"
+            :columns="columns"
+            :data-source="reports"
+            style="margin: 16px"
+            :defaultExpandedRowKeys="[0]"
+            :pagination="false"
         >
+          <template slot="link" slot-scope="text">
+            <a-button type="link" @click="(e) => onNameClicked(text)">{{ text }}</a-button>
+          </template>
           <template slot="details" slot-scope="tasks">
             <ul style="list-style-type: decimal;">
               <li v-for="(task, index) in tasks" :key="index">
                 <b>{{ task.tc }}</b>
-                <br />
+                <br/>
                 <p style="text-indent: 0.5em;">{{ task.td }}</p>
               </li>
             </ul>
@@ -76,6 +79,7 @@ const columns = [
     dataIndex: "name",
     key: "name",
     width: 120,
+    scopedSlots: {customRender: "link"},
   },
   {
     title: i18n.t("report.column.cost"),
@@ -87,7 +91,7 @@ const columns = [
     title: i18n.t("report.column.detail"),
     dataIndex: "tasks",
     key: "tasks",
-    scopedSlots: { customRender: "details" },
+    scopedSlots: {customRender: "details"},
   },
 ];
 
@@ -96,7 +100,7 @@ export default {
   components: {},
   mounted() {
     this.fetchDepartment();
-    this.fetchData(this.onDay);
+    this.onModeChange(this.mode)
   },
   data() {
     return {
@@ -116,16 +120,23 @@ export default {
     },
   },
   methods: {
-    onModeChange(e) {
-      let mode = e.target.value
+    onNameClicked(name) {
+      this.$router.push({
+        name: 'MemberReport', params: {
+          name,
+          mode: this.mode,
+          date: this.onDay
+        }
+      })
+    },
+    onModeChange(mode) {
       let date = this.onDay
       let start, end
       console.log('mode changed', mode, date)
       if (mode === 'day') {
         start = date
         end = moment(date).add(1, "day")
-      }
-      else if (mode === 'week') {
+      } else if (mode === 'week') {
         start = moment(date).startOf('week')
         end = moment(date).endOf('week')
       }
@@ -137,8 +148,7 @@ export default {
       if (this.mode === 'day') {
         start = date
         end = moment(date).add(1, "day")
-      }
-      else if (this.mode === 'week') {
+      } else if (this.mode === 'week') {
         start = moment(date).startOf('week')
         end = moment(date).endOf('week')
       }
@@ -153,40 +163,40 @@ export default {
     },
     fetchData(start, end) {
       this.$store
-        .dispatch("report/dmQuery", {
-          from: this.dayString(start),
-          to: this.dayString(end),
-        })
-        .then((tasks) => {
-          let nameBased = this.$_.groupBy(tasks, "staff_name");
-          this.reports = Object.keys(nameBased).map((name) => {
-            let tasks = nameBased[name];
-            let department = tasks[0].department;
-            let cost = 0;
-            let content = [];
-            tasks.forEach((task) => {
-              cost += task.task_cost;
-              let tc =  '<' + task.task_name + '>' + "[";
+          .dispatch("report/dmQuery", {
+            from: this.dayString(start),
+            to: this.dayString(end),
+          })
+          .then((tasks) => {
+            let nameBased = this.$_.groupBy(tasks, "staff_name");
+            this.reports = Object.keys(nameBased).map((name) => {
+              let tasks = nameBased[name];
+              let department = tasks[0].department;
+              let cost = 0;
+              let content = [];
+              tasks.forEach((task) => {
+                cost += task.task_cost;
+                let tc = '<' + task.task_name + '>' + "[";
 
-              if (task.project_name) {
-                tc += task.project_name + ":";
-              }
-              if (task.product_name) {
-                tc += task.product_name;
-              }
+                if (task.project_name) {
+                  tc += task.project_name + ":";
+                }
+                if (task.product_name) {
+                  tc += task.product_name;
+                }
 
-              tc += "]" + "(" + task.task_cost + "h)"
-              let td = task.task_detail
-              content.push({tc, td});
+                tc += "]" + "(" + task.task_cost + "h)"
+                let td = task.task_detail
+                content.push({tc, td});
+              });
+              let key = this.count;
+              this.count++;
+              return {name, cost, tasks: content, department, key};
             });
-            let key = this.count;
-            this.count++;
-            return { name, cost, tasks: content, department, key };
+          })
+          .catch((e) => {
+            this.$message.error(e);
           });
-        })
-        .catch((e) => {
-          this.$message.error(e);
-        });
     },
     dayString(day) {
       return day.format("yyyy-MM-DD");
@@ -209,9 +219,11 @@ export default {
   color: #999;
   transition: all 0.3s;
 }
+
 .dynamic-delete-button:hover {
   color: #777;
 }
+
 .dynamic-delete-button[disabled] {
   cursor: not-allowed;
   opacity: 0.5;

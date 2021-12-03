@@ -48,19 +48,6 @@
           </a-input>
         </a-form-item>
         <a-form-item>
-          <!-- <a-checkbox
-            v-decorator="[
-              'remember',
-              {
-                valuePropName: 'checked',
-                initialValue: true,
-              },
-            ]"
-          >
-            {{ $t("login.label.remember") }}
-          </a-checkbox> -->
-          <!-- <a class="login-form-forgot" href=""> Forgot password </a>
-           -->
           <a-button
             type="primary"
             html-type="submit"
@@ -69,11 +56,6 @@
           >
             {{ $t("login.button.login") }}
           </a-button>
-          <!-- Or -->
-          <!-- <a href=""> register now! </a> -->
-          <!-- <router-link to="/register">{{
-            $t("login.link.register")
-          }}</router-link> -->
         </a-form-item>
       </a-form>
     </div>
@@ -113,7 +95,6 @@ export default {
               }
             })
             .catch((error) => {
-
               if (typeof error === 'string') {
                 that.$message.error(error, 3)
               } else {
