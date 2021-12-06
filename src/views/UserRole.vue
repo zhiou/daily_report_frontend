@@ -1,6 +1,11 @@
 <template>
   <div id="user-role" v-title data-title="用户角色">
-    <a-button type="primary" style="float:right;margin:0 16px;" :disabled="nochanges" @click="onConfirm">{{ $t('button.save') }}</a-button>
+    <a-row :gutter="16">
+      <a-col :offset="22" :span="2">
+        <a-button :loading="loading" type="primary" :disabled="nochanges" @click="onConfirm">{{ $t('button.save') }}</a-button>
+      </a-col>
+    </a-row>
+
     <a-spin :spinning="spinning">
       <a-table
           :columns="columns"
@@ -84,7 +89,6 @@ export default {
       this.fetchUsers()
     } else {
       this.userRoles = this.originUserRoles
-
     }
   },
   data() {
@@ -93,12 +97,13 @@ export default {
       columns,
       user_changes: {},
       userRoles: [],
+      loading: false,
     }
   },
   computed: {
     nochanges() {
-      console.log('changed', this.user_changes.size, this.user_changes)
-      return this.user_changes.size === 0
+      console.log('changed', Object.keys(this.user_changes).length, this.user_changes)
+      return Object.keys(this.user_changes).length === 0
     },
     originUserRoles() {
       return this.$store.state.user.all.map((user) => {
@@ -144,7 +149,7 @@ export default {
       console.log('all changes', this.user_changes)
     },
     onConfirm() {
-      let changes = []
+      this.loading = true
       console.log('change', Object.keys(this.user_changes))
       let keys = Object.keys(this.user_changes)
 
@@ -160,7 +165,10 @@ export default {
           })
           .catch((e) => {
             this.$message.error(e, 3);
-          });
+          })
+      .finally(() => {
+        this.loading = false
+      });
     }
 
   },
