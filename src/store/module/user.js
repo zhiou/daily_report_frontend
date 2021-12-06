@@ -1,13 +1,15 @@
 /*
  * @Author: your name
  * @Date: 2021-06-09 14:58:52
- * @LastEditTime: 2021-11-22 15:21:58
+ * @LastEditTime: 2021-12-06 18:07:06
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /soft-otp-admin/src/store/modules/account.js
  */
 import {getToken, setToken} from "../../api/request/token";
+
 import {login, logout, modify, info, list, modify_roles} from "../../api/login";
+
 
 const state = () => ({
     all: [],
@@ -88,9 +90,11 @@ const actions = {
                 });
         });
     },
+
     modify_roles({commit}, data) {
         return new Promise((resolve, reject) => {
             modify_roles(data)
+
                 .then(() => {
                     resolve()
                 })

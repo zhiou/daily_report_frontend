@@ -24,6 +24,7 @@
           <a-checkbox
               :checked="(flag & 0x1) !== 0"
               @change="(e) => onCheck(e.target.checked, record.work_code, 'pm')"
+
           ></a-checkbox>
         </template>
       </a-table>
@@ -39,13 +40,16 @@ const columns = [
     title: i18n.t("user_role.column.number"),
     dataIndex: "work_code",
     key: "work_code",
+
     scopedSlots: {customRender: "text"},
+
   },
   {
     title: i18n.t("user_role.column.name"),
     dataIndex: "name",
     key: "name",
     scopedSlots: {customRender: "text"},
+
   },
   {
     title: i18n.t("user_role.column.depart"),
@@ -70,6 +74,7 @@ const columns = [
     dataIndex: "role_flag",
     key: "role_flag_pm",
     scopedSlots: {customRender: "check_box_pm"},
+
   },
 ];
 export default {
@@ -79,6 +84,7 @@ export default {
       this.fetchUsers()
     } else {
       this.userRoles = this.originUserRoles
+
     }
   },
   data() {
@@ -156,6 +162,7 @@ export default {
             this.$message.error(e, 3);
           });
     }
+
   },
 };
 </script>
