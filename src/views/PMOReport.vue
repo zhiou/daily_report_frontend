@@ -89,6 +89,28 @@
 // @ is an alias to /src
 import i18n from "../i18n";
 
+function unique2(arr, name) {
+  var hash = [];
+  var len = arr.length;
+  for (var i = 0; i < len; i++) {
+      for (var j = i + 1; j < len; j++) {
+          if (arr[i][name] === arr[j][name]) {
+              j = ++i;
+          }
+      }
+      hash.push(arr[i][name]);
+  }
+  return hash;
+}
+function formfilter(arr) {
+  var filtersList = [];
+  for(let i= 0, taskslen = arr.length; i<taskslen; i++)
+  {
+    filtersList.push({text:arr[i], value:arr[i]});
+  }
+  return filtersList;
+}
+
 let queryitems = [
   { number: "0", name: "产品" },
   { number: "1", name: "项目" },
@@ -102,6 +124,8 @@ let columns = [
     title: i18n.t("report.column.line"),
     dataIndex: "product_line",
     key: "product_line",
+    filters: [],
+    onFilter: (value, record) => record.product_line.indexOf(value) === 0,
   },
   {
     label: "产品",
@@ -109,6 +133,8 @@ let columns = [
     title: i18n.t("report.column.prod"),
     dataIndex: "product_name",
     key: "product_name",
+    filters: [],
+    onFilter: (value, record) => record.product_name.indexOf(value) === 0,    
   },
   {
     label: "部门",
@@ -116,6 +142,8 @@ let columns = [
     title: i18n.t("report.column.depart"),
     dataIndex: "department",
     key: "department",
+    filters: [],
+    onFilter: (value, record) => record.department.indexOf(value) === 0,
   },
   {
     label: "员工姓名",
@@ -123,6 +151,8 @@ let columns = [
     title: i18n.t("report.column.user"),
     dataIndex: "staff_name",
     key: "staff_name",
+    filters: [],
+    onFilter: (value, record) => record.staff_name.indexOf(value) === 0,
   },
   {
     label: "工时",
@@ -138,6 +168,8 @@ let columns = [
     title: i18n.t("report.column.proj"),
     dataIndex: "project_name",
     key: "project_name",
+    filters: [],
+    onFilter: (value, record) => record.project_name.indexOf(value) === 0,
   },
   {
     label: "报告日期",
@@ -145,6 +177,8 @@ let columns = [
     title: i18n.t("report.column.oday"),
     dataIndex: "report_date",
     key: "report_date",
+    defaultSortOrder: "descend",
+    sorter: (a, b) => {return a.report_date>b.report_date?1:-1},
   },
   {
     label: "任务名",
@@ -167,6 +201,8 @@ let columns = [
     title: i18n.t("report.column.cday"),
     dataIndex: "commit_date",
     key: "commit_date",
+    defaultSortOrder: "descend",
+    sorter: (a, b) => {return a.commit_date>b.commit_date?1:-1},
   },
 ];
 
@@ -256,6 +292,16 @@ export default {
         })
         .then((tasks) => {
           this.tasks = tasks;
+          let tasksTemp = unique2(tasks, 'product_line');
+          this.columns[0].filters = formfilter(tasksTemp);
+          tasksTemp = unique2(tasks, 'product_name');
+          this.columns[1].filters = formfilter(tasksTemp);
+          tasksTemp = unique2(tasks, 'department');
+          this.columns[2].filters = formfilter(tasksTemp); 
+          tasksTemp = unique2(tasks, 'staff_name');
+          this.columns[3].filters = formfilter(tasksTemp);
+          tasksTemp = unique2(tasks, 'project_name');
+          this.columns[5].filters = formfilter(tasksTemp);
         })
         .catch((e) => {
           console.log(e);
