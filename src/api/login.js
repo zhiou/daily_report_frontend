@@ -54,18 +54,10 @@ export function list() {
 })
 }
 
-export function add_role(data) {
+export function modify_roles(data) {
   return request({
     url: '/user/role',
-    method: 'post',
-    data
-  })
-}
-
-export function del_role(data) {
-  return request({
-    url: '/user/role',
-    method: 'delete',
+    method: 'put',
     data
   })
 }

@@ -7,7 +7,7 @@
  * @FilePath: /soft-otp-admin/src/store/modules/account.js
  */
 import {getToken, setToken} from "../../api/request/token";
-import {login, logout, modify, info, list, add_role, del_role} from "../../api/login";
+import {login, logout, modify, info, list, modify_roles} from "../../api/login";
 
 const state = () => ({
     all: [],
@@ -88,20 +88,9 @@ const actions = {
                 });
         });
     },
-    add_role({commit}, data) {
+    modify_roles({commit}, data) {
         return new Promise((resolve, reject) => {
-            add_role(data)
-                .then(() => {
-                    resolve()
-                })
-                .catch((e) => {
-                    reject(e);
-                });
-        })
-    },
-    del_role({commit}, data) {
-        return new Promise((resolve, reject) => {
-            del_role(data)
+            modify_roles(data)
                 .then(() => {
                     resolve()
                 })
