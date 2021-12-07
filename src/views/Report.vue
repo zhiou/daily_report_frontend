@@ -58,46 +58,31 @@
             :defaultExpandedRowKeys="[0]"
             :pagination="false"
         >
-          <template slot="product_line" slot-scope="text, record">
+          <template slot="task_name" slot-scope="text, record">
             <editable-cell
                 :text="text"
-                @change="onCellChange(record.key, 'product_line', $event)"
+                @change="onCellChange(record.key, 'task_name', $event)"
             />
           </template>
-          <span slot="product-selector" slot-scope="number, record">
-            <a-select
-                show-search
-                option-filter-prop="children"
-                :filter-option="filterOption"
-                style="width: 150px"
-                :default-value="number"
+          <template slot="product-selector" slot-scope="number, record">
+            <editable-selector-cell
+                :default_value="number"
+                :options="refreshProducts"
+                v-if="editable"
                 @change="onProductChanged(record.key, 'product_number', $event)"
-            >
-              <a-select-option
-                  v-for="product in refreshProducts"
-                  :key="product.number"
-              >
-                {{ product.name }}
-              </a-select-option>
-            </a-select>
-          </span>
-          <span slot="project-selector" slot-scope="number, record">
-            <a-select
-                show-search
-                option-filter-prop="children"
-                :filter-option="filterOption"
-                style="width: 150px"
-                :default-value="number"
+            />
+            <span v-else> {{ record.product_name }}</span>
+          </template>
+          <template slot="project-selector" slot-scope="number, record">
+            <editable-selector-cell
+                :default_value="number"
+                :options="refreshProjects"
+                v-if="editable"
                 @change="onProjectChanged(record.key, 'project_number', $event)"
-            >
-              <a-select-option
-                  v-for="project in refreshProjects"
-                  :key="project.number"
-              >
-                {{ project.name }}
-              </a-select-option>
-            </a-select>
-          </span>
+            />
+            <span v-else> {{ record.project_name }}</span>
+          </template>
+
           <template slot="day" slot-scope="date">
             <span>
               <b>{{ week(date) }}</b>
@@ -122,14 +107,18 @@
           <template slot="cost" slot-scope="number, record">
             <editable-number-cell
                 :number="number"
+                v-if="editable"
                 @change="onCellChange(record.key, 'task_cost', $event)"
             />
+            <span v-else> {{ number }}</span>
           </template>
           <template slot="details" slot-scope="text, record">
             <editable-area-cell
                 :text="text"
+                v-if="editable"
                 @change="onCellChange(record.key, 'task_detail', $event)"
             />
+            <span v-else> {{ text }}</span>
           </template>
           <template slot="operation" slot-scope="text, record">
             <a-button
@@ -166,6 +155,7 @@
 import EditableCell from "./components/EditableAreaCell.vue";
 import EditableNumberCell from "./components/EditableNumberCell.vue";
 import EditableAreaCell from "./components/EditableAreaCell.vue";
+import EditableSelectorCell from "./components/EditableSelectorCell";
 import TaskModalForm from "./components/TaskModalForm.vue";
 import moment from "moment";
 import i18n from "../i18n";
@@ -176,37 +166,43 @@ const day_columns = [
     title: i18n.t("report.column.line"),
     dataIndex: "product_line",
     key: "product_line",
+    width: 200,
     scopedSlots: {customRender: "text"},
   },
   {
     title: i18n.t("report.column.proj"),
-    dataIndex: "project_name",
-    key: "project",
-    scopedSlots: {customRender: "text"},
+    dataIndex: "project_number",
+    key: "project_number",
+    // width: 300,
+    scopedSlots: {customRender: "project-selector"},
   },
   {
     title: i18n.t("report.column.prod"),
-    dataIndex: "product_name",
-    key: "product",
-    scopedSlots: {customRender: "text"},
+    dataIndex: "product_number",
+    key: "product_number",
+    // width: 300,
+    scopedSlots: {customRender: "product-selector"},
   },
   {
     title: i18n.t("report.column.name"),
     dataIndex: "task_name",
     key: "name",
     width: 200,
+    scopedSlots: {customRender: "task_name"}
   },
   {
     title: i18n.t("report.column.cost"),
     dataIndex: "task_cost",
     key: "cost",
     width: 60,
+    scopedSlots: {customRender: "cost"},
   },
   {
     title: i18n.t("report.column.detail"),
     dataIndex: "task_detail",
     key: "details",
     width: 300,
+    scopedSlots: {customRender: "details"},
   },
   {
     title: "",
@@ -244,6 +240,7 @@ export default {
     EditableCell,
     EditableNumberCell,
     EditableAreaCell,
+    EditableSelectorCell,
     TaskModalForm,
   },
   beforeCreate() {
@@ -299,12 +296,12 @@ export default {
     },
     refreshProducts() {
       return this.$store.state.product.all.map((product) => {
-        return {...product, key: product.number};
+        return {...product, key: product.number, name: product.name};
       });
     },
     refreshProjects() {
       return this.$store.state.project.all.map((project) => {
-        return {...project, key: project.number};
+        return {...project, key: project.number, name: project.name};
       });
     },
     datasource() {

@@ -11,6 +11,7 @@
     <div v-if="editable" class="editable-cell-input-wrapper">
       <a-input
         type="textarea"
+        ref="area"
         v-model="value"
         :autoSize="true"
         :allowClear="false"
@@ -18,7 +19,7 @@
         @blur="check"
       /><a-icon type="check" class="editable-cell-icon-check" @click="check" />
     </div>
-    <div v-else class="editable-cell-text-wrapper">
+    <div v-else class="editable-cell-text-wrapper" @click="edit">
       {{ value || " " }}
       <a-icon type="edit" class="editable-cell-icon" @click="edit" />
     </div>
@@ -28,7 +29,7 @@
 <script>
 export default {
   name: "EditableAreaCell",
-  props: { text: String },
+  props: { text: String},
   data() {
     return {
       value: this.text,
@@ -46,6 +47,10 @@ export default {
     },
     edit() {
       this.editable = true;
+      this.$nextTick(() => {
+        console.log(this.$refs, this.$refs.area);
+        this.$refs.area.focus();
+      });
     },
   },
 };

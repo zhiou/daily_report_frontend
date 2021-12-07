@@ -9,7 +9,7 @@
 <template>
   <div class="editable-tag-cell">
     <div v-if="editable" class="editable-cell-input-wrapper">
-      <a-select :default-value="value" @change="handleChange" @blur="check">
+      <a-select :default-value="value" @change="handleChange" @blur="check" ref="tag">
         <a-select-option v-for="(option, index) in options" :key="index">
           {{ option }}
         </a-select-option>
@@ -52,6 +52,10 @@ export default {
     },
     edit(checked) {
       this.editable = true;
+      this.$nextTick(() => {
+        console.log(this.$refs, this.$refs.tag);
+        this.$refs.tag.focus();
+      });
     },
   },
 };

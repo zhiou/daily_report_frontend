@@ -31,7 +31,8 @@
         </template>
         <template slot="manager_number" slot-scope="number, record">
           <editable-selector-cell
-            :number="number"
+            :default_value="number"
+            :options="employers"
             @change="onCellChange(record.key, 'manager_number', $event)"
           />
         </template>

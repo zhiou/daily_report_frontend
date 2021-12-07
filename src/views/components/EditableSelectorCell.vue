@@ -9,46 +9,52 @@
 <template>
   <div class="editable-selector-cell">
     <div v-if="editable" class="editable-cell-input-wrapper">
-      <a-select
-        show-search
-        option-filter-prop="children"
-        :filter-option="filterOption"
-        style="width: 120px"
-        @change="handleChange"
-        @blur="check"
-      >
-        <a-select-option v-for="staff in employers" :key="staff.number">
-          {{ staff.name }}
-        </a-select-option>
-      </a-select>
+      <a-row :gutter="8">
+        <a-col :span="22">
+          <a-select
+              show-search
+              ref="selector"
+              option-filter-prop="children"
+              :filter-option="filterOption"
+              style="width:100%;"
+              @change="handleChange"
+              @blur="check"
+          >
+            <a-select-option v-for="option in options" :key="option.number">
+              {{ option.name }}
+            </a-select-option>
+          </a-select>
+        </a-col>
+        <a-col :span="2">
+          <a-icon type="check" class="editable-cell-icon-check" @click="check"/>
+        </a-col>
+      </a-row>
+
     </div>
-    <div v-else>
-      <span @click="edit">
-        {{ this.name || " " }}
-      </span>
+
+    <div v-else class="editable-cell-text-wrapper" @click="edit">
+      {{ this.name || " " }}
+      <a-icon type="edit" class="editable-cell-icon" @click="edit"/>
     </div>
+
   </div>
 </template>
 
 <script>
 export default {
   name: "EditableTagCell",
-  props: ["number"],
+  props: ["default_value", 'options'],
   data() {
     return {
-      value: this.number,
+      value: this.default_value,
       editable: false,
     };
   },
   computed: {
     name() {
-      let staff = this.employers.find((target) => target.number === this.value);
-      return staff ? staff.name : "";
-    },
-    employers() {
-      return this.$store.state.user.all.map((worker) => {
-        return { ...worker, key: worker.work_code, number: worker.work_code };
-      });
+
+      let option = this.options.find((target) => target.number === this.value);
+      return option ? option.name : "";
     },
   },
   methods: {
@@ -61,12 +67,16 @@ export default {
     },
     edit(checked) {
       this.editable = true;
+      this.$nextTick(() => {
+        console.log(this.$refs, this.$refs.selector);
+        this.$refs.selector.focus();
+      });
     },
     filterOption(input, option) {
       return (
-        option.componentOptions.children[0].text
-          .toLowerCase()
-          .indexOf(input.toLowerCase()) >= 0
+          option.componentOptions.children[0].text
+              .toLowerCase()
+              .indexOf(input.toLowerCase()) >= 0
       );
     },
   },
@@ -74,18 +84,17 @@ export default {
 </script>
 
 <style scoped>
-.editable-tag-cell {
+.editable-selector-cell {
   position: relative;
 }
 
 .editable-cell-input-wrapper,
 .editable-cell-text-wrapper {
-  white-space: nowrap;
   padding-right: 24px;
 }
 
 .editable-cell-text-wrapper {
-  padding: 5px 24px 5px 5px;
+  padding: 5px 24px 5px 0px;
 }
 
 .editable-cell-icon,
@@ -105,7 +114,7 @@ export default {
   line-height: 28px;
 }
 
-.editable-cell:hover .editable-cell-icon {
+.editable-selector-cell:hover .editable-cell-icon {
   display: inline-block;
 }
 
