@@ -30,6 +30,7 @@
             <a-select
               v-model="clearflag"
               show-search
+              @focus="clearevent"
               option-filter-prop="children"
               :filter-option="filterOption"
               style="width: 150px"
@@ -75,6 +76,7 @@
         <a-table
           :columns="columns"
           :data-source="tasks"
+          :rowKey="(record,index)=>{return index}"
           style="margin: 16px"
           :defaultExpandedRowKeys="[0]"
           :pagination="false"
@@ -98,7 +100,13 @@ function unique2(arr, name) {
               j = ++i;
           }
       }
-      hash.push(arr[i][name]);
+      if(null == arr[i][name]){
+          hash.push("其它");
+      }
+      else{
+          hash.push(arr[i][name]);
+      }
+      
   }
   return hash;
 }
@@ -125,7 +133,17 @@ let columns = [
     dataIndex: "product_line",
     key: "product_line",
     filters: [],
-    onFilter: (value, record) => record.product_line.indexOf(value) === 0,
+    onFilter: (value, record) => {
+      if(null == record.product_line && '其它' == value){
+        return true;
+      }
+      else if(null == record.product_line && '其它' != value){
+        return false;
+      }
+      else{
+        return record.product_line.indexOf(value) === 0
+      } 
+    }, 
   },
   {
     label: "产品",
@@ -134,7 +152,17 @@ let columns = [
     dataIndex: "product_name",
     key: "product_name",
     filters: [],
-    onFilter: (value, record) => record.product_name.indexOf(value) === 0,    
+    onFilter: (value, record) => {
+      if(null == record.product_name && '其它' == value){
+        return true;
+      }
+      else if(null == record.product_name && '其它' != value){
+        return false;
+      }
+      else{
+        return record.product_name.indexOf(value) === 0
+      }
+    },    
   },
   {
     label: "部门",
@@ -169,7 +197,17 @@ let columns = [
     dataIndex: "project_name",
     key: "project_name",
     filters: [],
-    onFilter: (value, record) => record.project_name.indexOf(value) === 0,
+    onFilter: (value, record) => {
+      if(null == record.project_name && '其它' == value){
+        return true;
+      }
+      else if(null == record.project_name && '其它' != value){
+        return false;
+      }
+      else{
+        return record.project_name.indexOf(value) === 0
+      }
+    },
   },
   {
     label: "报告日期",
@@ -209,17 +247,23 @@ let columns = [
 export default {
   name: "PMOReport",
   components: {},
-  beforeCreate() {
-    //todo, 这里需要加判断，如果数据已经存在，则不需要再去获取了
-    this.$store.dispatch("product/list").catch((error) => {
-      this.$message.error(error, 3);
+  mounted() {
+    if(0 == this.$store.state.product.all.length){
+      this.$store.dispatch("product/list").catch((error) => {
+        this.$message.error(error, 3);
     });
-    this.$store.dispatch("project/list").catch((error) => {
-      this.$message.error(error, 3);
+    }
+    if(0 == this.$store.state.project.all.length){
+      this.$store.dispatch("project/list").catch((error) => {
+       this.$message.error(error, 3);
     });
-    this.$store.dispatch("user/list").catch((error) => {
-      this.$message.error(error, 3);
+    }
+    if(0 == this.$store.state.user.all.length){
+      this.$store.dispatch("user/list").catch((error) => {
+        this.$message.error(error, 3);
     });
+    }
+
   },
   data() {
     return {
@@ -253,6 +297,7 @@ export default {
       });
     },
     refreshEmployers() {
+      console.log("aaaaaaa");
       return this.$store.state.user.all.map((worker) => {
         return { ...worker, key: worker.work_code };
       });
@@ -329,6 +374,20 @@ export default {
           .indexOf(input.toLowerCase()) >= 0
       );
     },
+    clearevent(){
+      if(3 == this.typeid)
+      {
+        this.onQueryItemChanged(0)
+      }
+      else if(2 == this.typeid)
+      {
+        this.onQueryItemChanged(1)
+      }
+      else if(0 == this.typeid)
+      {
+        this.onQueryItemChanged(2)
+      }
+    }
   },
 };
 </script>
