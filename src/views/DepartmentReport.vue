@@ -56,7 +56,7 @@
               <li v-for="(task, index) in tasks" :key="index">
                 <b>{{ task.tc }}</b>
                 <br/>
-                <p style="text-indent: 0.5em;">{{ task.td }}</p>
+                <p v-html="task.td" style="text-align:left;"></p>
               </li>
             </ul>
           </template>
@@ -68,16 +68,15 @@
 
 <script>
 // @ is an alias to /src
-import EditableCell from "./components/EditableAreaCell.vue";
-import EditableNumberCell from "./components/EditableNumberCell.vue";
 import moment from "moment";
 import i18n from '../i18n'
+import {conform} from '../utils/taskUtils'
 
 const columns = [
   {
     title: i18n.t("report.column.user"),
-    dataIndex: "name",
-    key: "name",
+    dataIndex: "group_name",
+    key: "group_name",
     width: 120,
     scopedSlots: {customRender: "link"},
   },
@@ -89,8 +88,8 @@ const columns = [
   },
   {
     title: i18n.t("report.column.detail"),
-    dataIndex: "tasks",
-    key: "tasks",
+    dataIndex: "content",
+    key: "content",
     scopedSlots: {customRender: "details"},
   },
 ];
@@ -120,6 +119,17 @@ export default {
     },
   },
   methods: {
+    dateRangeByMode(mode, date) {
+      let start, end
+      if (mode === 'day') {
+        start = moment(date)
+        end = moment(date).add(1, "day")
+      } else if (mode === 'week') {
+        start = moment(date).startOf('week')
+        end = moment(date).endOf('week')
+      }
+      return { start, end }
+    },
     onNameClicked(name) {
       this.$router.push({
         name: 'MemberReport', params: {
@@ -131,27 +141,12 @@ export default {
     },
     onModeChange(mode) {
       let date = this.onDay
-      let start, end
-      console.log('mode changed', mode, date)
-      if (mode === 'day') {
-        start = date
-        end = moment(date).add(1, "day")
-      } else if (mode === 'week') {
-        start = moment(date).startOf('week')
-        end = moment(date).endOf('week')
-      }
+      let {start, end} = this.dateRangeByMode(mode, date)
       this.fetchData(start, end);
     },
     onDayChanged(date) {
-      console.log("day changed", date);
-      let start, end
-      if (this.mode === 'day') {
-        start = date
-        end = moment(date).add(1, "day")
-      } else if (this.mode === 'week') {
-        start = moment(date).startOf('week')
-        end = moment(date).endOf('week')
-      }
+      let mode = this.mode
+      let {start, end} = this.dateRangeByMode(mode, date)
       this.fetchData(start, end);
     },
     fetchDepartment() {
@@ -168,31 +163,7 @@ export default {
             to: this.dayString(end),
           })
           .then((tasks) => {
-            let nameBased = this.$_.groupBy(tasks, "staff_name");
-            this.reports = Object.keys(nameBased).map((name) => {
-              let tasks = nameBased[name];
-              let department = tasks[0].department;
-              let cost = 0;
-              let content = [];
-              tasks.forEach((task) => {
-                cost += task.task_cost;
-                let tc = '<' + task.task_name + '>' + "[";
-
-                if (task.project_name) {
-                  tc += task.project_name + ":";
-                }
-                if (task.product_name) {
-                  tc += task.product_name;
-                }
-
-                tc += "]" + "(" + task.task_cost + "h)"
-                let td = task.task_detail
-                content.push({tc, td});
-              });
-              let key = this.count;
-              this.count++;
-              return {name, cost, tasks: content, department, key};
-            });
+            this.reports = conform('staff_name', tasks)
           })
           .catch((e) => {
             this.$message.error(e);
