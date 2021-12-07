@@ -42,7 +42,7 @@
               <li v-for="(task, index) in tasks" :key="index">
                 <b>{{ task.tc }}</b>
                 <br />
-                <p style="text-indent: 0.5em;">{{ task.td }}</p>
+                <p v-html="task.td" style="text-align:left;"></p>
               </li>
             </ul>
           </template>
@@ -56,12 +56,13 @@
 // @ is an alias to /src
 import moment from "moment";
 import i18n from '../i18n'
+import {conform} from "../utils/taskUtils";
 
 const columns = [
   {
     title: i18n.t("report.column.user"),
-    dataIndex: "name",
-    key: "name",
+    dataIndex: "group_name",
+    key: "group_name",
     width: 120,
   },
   {
@@ -78,8 +79,8 @@ const columns = [
   },
   {
     title: i18n.t("report.column.detail"),
-    dataIndex: "tasks",
-    key: "tasks",
+    dataIndex: "content",
+    key: "content",
     scopedSlots: { customRender: "details" },
   },
 ];
@@ -140,30 +141,7 @@ export default {
         .then((paged) => {
           let tasks = paged.records;
           this.pagination = {...this.pagination, total: paged.total}
-          let nameBased = this.$_.groupBy(tasks, "staff_name");
-
-          this.reports = Object.keys(nameBased).map((name) => {
-            let tasks = nameBased[name];
-            let department = tasks[0].department;
-            let cost = 0;
-            let content = [];
-            tasks.forEach((task) => {
-              cost += task.task_cost;
-              let tc =  '<' + task.task_name + '>' ;
-
-              if (task.product_name) {
-                tc += "[" + task.product_name +  "]";
-              }
-
-              tc += "(" + task.task_cost + "h)"
-
-              let td = task.task_detail
-              content.push({tc, td});
-            });
-            let key = this.count;
-            this.count++;
-            return { name, cost, tasks: content, department, key };
-          });
+          this.reports = conform('staff_name', tasks)
         })
         .catch((error) => {
           this.$message.error(error, 3);

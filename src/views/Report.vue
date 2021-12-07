@@ -110,7 +110,7 @@
               <li v-for="(task, index) in tasks" :key="index">
                 <b>{{ task.tc }}</b>
                 <br />
-                <p style="text-indent: 0.5em;">{{ task.td }}</p>
+                <p v-html="task.td" style="text-align:left;"></p>
               </li>
             </ul>
           </template>
@@ -169,6 +169,7 @@ import EditableAreaCell from "./components/EditableAreaCell.vue";
 import TaskModalForm from "./components/TaskModalForm.vue";
 import moment from "moment";
 import i18n from "../i18n";
+import { conform } from '../utils/taskUtils.js'
 
 const day_columns = [
   {
@@ -217,12 +218,10 @@ const day_columns = [
 const weak_column = [
   {
     title: i18n.t("report.column.day"),
-    dataIndex: "date",
-    key: "date",
+    dataIndex: "group_name",
+    key: "group_name",
     scopedSlots: {customRender: "day"},
     width: 120,
-    sorter: (a, b) => (a.date > b.date),
-    sortDirections: ['descend'],
   },
   {
     title: i18n.t("report.column.cost"),
@@ -233,8 +232,8 @@ const weak_column = [
   },
   {
     title: i18n.t("report.column.detail"),
-    dataIndex: "tasks",
-    key: "tasks",
+    dataIndex: "content",
+    key: "content",
     scopedSlots: {customRender: "report"},
   },
 ];
@@ -293,7 +292,7 @@ export default {
       return this.$route.params.name ?? this.$store.state.user.name
     },
     editable() {
-      return this.author === this.$store.state.user.name
+      return this.author === this.$store.state.user.name && (this.mode === 'day')
     },
     spinning() {
       return this.$store.state.report.spinning;
@@ -312,29 +311,7 @@ export default {
       return this.mode === 'day' ? this.tasks : this.reports
     },
     reports() {
-      let dateBased = this.$_.groupBy(this.tasks, "report_date");
-      let count = 1
-      return Object.keys(dateBased).sort().map((date) => {
-        let tasks = dateBased[date];
-        let cost = 0;
-        let content = [];
-        tasks.forEach((task) => {
-          cost += task.task_cost;
-          let tc =  '<' + task.task_name + '>' ;
-
-          if (task.product_name) {
-            tc += "[" + task.product_name +  "]";
-          }
-
-          tc += "(" + task.task_cost + "h)"
-
-          let td = task.task_detail
-          content.push({tc, td});
-        });
-        let key = count;
-        count++;
-        return { date, cost, tasks: content,  key };
-      });
+      return conform('report_date', this.tasks)
     }
   },
   methods: {
