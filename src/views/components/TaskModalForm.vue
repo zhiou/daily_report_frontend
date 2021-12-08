@@ -27,8 +27,11 @@
       <a-form layout="vertical" :form="form">
         <a-space>
           <a-form-item :label="$t('task.label.name')">
-            <a-input
-                style="width: 350px"
+            <a-auto-complete 
+            :data-source="this.tasksnames"
+            :filter-option="filterOption"
+            @focus="refreshtasksname"
+            style="width: 350px"
                 v-decorator="[
               'task_name',
               {
@@ -134,6 +137,7 @@
 </template>
 
 <script>
+import { reverseTaskNames } from '../../utils/taskfilter.js'
 
 export default {
   name: "TaskModalForm",
@@ -142,8 +146,16 @@ export default {
     this.form = this.$form.createForm(this);
   },
   components: {},
+  mounted() {
+    this.tasksnames = reverseTaskNames();
+    console.log("ddd")
+    console.log(this.tasksnames)
+  },
   data() {
-    return {};
+    return {
+      tasksnames: []
+    };
+    
   },
   computed: {
     products() {
@@ -165,6 +177,10 @@ export default {
               .indexOf(input.toLowerCase()) >= 0
       );
     },
+    refreshtasksname()
+    {
+      this.tasksnames = reverseTaskNames();
+    }
   },
 };
 </script>

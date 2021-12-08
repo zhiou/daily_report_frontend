@@ -160,7 +160,7 @@ import TaskModalForm from "./components/TaskModalForm.vue";
 import moment from "moment";
 import i18n from "../i18n";
 import { conform } from '../utils/taskUtils.js'
-
+import {storeTaskNames } from '../utils/taskfilter.js'
 const day_columns = [
   {
     title: i18n.t("report.column.line"),
@@ -269,7 +269,7 @@ export default {
       onDay: moment(),
       visible: false,
       saving: false,
-      mode: 'day'
+      mode: 'day',
     };
   },
   computed: {
@@ -409,7 +409,9 @@ export default {
         };
         this.count = count + 1;
         this.tasks = [...this.tasks, newTask];
-        this.update(0)
+        this.update(0);
+        //localStorage.clear();
+        storeTaskNames(newTask);
       });
     },
     onDelete(key) {
