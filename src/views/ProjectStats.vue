@@ -50,29 +50,35 @@ export default {
     projects() {
       return this.$store.state.user.projects;
     },
-    lineData() {
-      let xAxis = this.$_.map(this.reports, "report_date").sort();
+    lineAxisX() {
+      let set = new Set(this.$_.map(this.reports, "report_date"));
+      return [...set].sort();
+    },
+    lineAxisY() {
       let grouped = this.$_.groupBy(this.reports, "staff_name");
-      let yAxis = this.$_.mapValues(grouped, (tasks) => {
+      return this.$_.mapValues(grouped, (tasks) => {
         let report = this.$_.groupBy(tasks, "report_date");
-        return this.$_.map(xAxis, (x) => {
+        return this.$_.map(this.lineAxisX, (x) => {
           if (report[x]) {
             return this.$_.reduce(
-              report[x],
-              (sum, task) => sum + task.task_cost,
-              0
+                report[x],
+                (sum, task) => sum + task.task_cost,
+                0
             );
           }
           return 0;
         });
       });
+    },
+    lineData() {
+      let xAxis = this.lineAxisX;
+      let yAxis = this.lineAxisY;
 
       let grid = this.$_.map(yAxis, (v, k) => {
         return [k, ...v];
       });
-
-      let result = this.$_.concat([["工时", ...xAxis]], grid);
-      return result;
+      console.log('grid', grid, this.$_.concat([["工时", ...xAxis]], grid))
+      return this.$_.concat([["工时", ...xAxis]], grid);
     },
     pieData() {
       let grouped = this.$_.groupBy(this.reports, "staff_name");
@@ -135,15 +141,17 @@ export default {
 
       let dbview = this.lineData;
       let pieData = this.pieData;
+      let lineAxises = this.lineAxisX
       line.on("updateAxisPointer", function (event) {
         const xAxisInfo = event.axesInfo[0];
+
         if (xAxisInfo) {
-          const dimension = xAxisInfo.value + 1;
+          const dimension = lineAxises[xAxisInfo.value];
           line.setOption({
             series: {
               id: "pie",
               label: {
-                formatter: "{b}: {@[" + dimension + "]} ({d}%)",
+                formatter: "{b}: {@[" + (xAxisInfo.value+1) + "]} ({d}%)",
               },
               encode: {
                 value: dimension,
@@ -200,7 +208,7 @@ export default {
               focus: "self",
             },
             label: {
-              formatter: "{b}: {@1} ({d}%)",
+              formatter: "{b}: {@0} ({d}%)",
             },
             encode: {
               itemName: "工时",
@@ -209,7 +217,7 @@ export default {
             },
           },
           {
-            name: "Access From",
+            name: "总工时",
             type: "pie",
             radius: ["15%", "30%"],
             center: ["67%", "25%"],
