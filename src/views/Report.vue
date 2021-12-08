@@ -427,8 +427,10 @@ export default {
     onProductChanged(key, dataIndex, number) {
       const tasks = [...this.tasks];
       const target = tasks.find((item) => item.key === key);
+      const prod = this.getProductFrom(number);
       if (target) {
         target[dataIndex] = number;
+        target['product_line'] = prod.in_line ?? '其他'
         this.tasks = tasks;
       }
     },
