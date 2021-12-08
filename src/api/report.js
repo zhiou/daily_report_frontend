@@ -7,69 +7,59 @@
  * @FilePath: /daily-report-frontend/src/api/report.js
  */
 import request from './request'
-import { downloader } from './request/downloader'
+import {downloader} from './request/downloader'
 
 export function update(report) {
     return request({
-      url: '/report',
-      method: 'post',
-      data: report
+        url: '/report',
+        method: 'post',
+        data: report
     })
-  }
-
-export function remove(report) {
-  return request({
-    url: '/report',
-    method: 'delete',
-    params: {
-      date: report.on_day
-    }
-  })
 }
 
-  export function selfQuery(report) {
+export function selfQuery(report) {
     return request({
-      url: '/report',
-      method: 'get',
-      params: report
+        url: '/report',
+        method: 'get',
+        params: report
     })
-  }
+}
 
-  export function dmQuery(report) {
+export function dmQuery(report) {
     return request({
-      url: '/report/dm',
-      method: 'get',
-      params: report
+        url: '/report/dm',
+        method: 'get',
+        params: report
     })
-  }
+}
 
-  export function pmPageQuery(report) {
+export function pmPageQuery(report) {
     return request({
-      url: '/report/pm/page',
-      method: 'get',
-      params: report
+        url: '/report/pm/page',
+        method: 'get',
+        params: report
     })
-  }
+}
 
-  export function pmQuery(report) {
+export function pmQuery(report) {
     return request({
-      url: '/report/pm',
-      method: 'get',
-      params: report
+        url: '/report/pm',
+        method: 'get',
+        params: report
     })
-  }
+}
 
-  export function pmoQuery(report) {
+export function pmoQuery(report) {
     return request({
-      url: '/report/pmo',
-      method: 'get',
-      params: report
+        url: '/report/pmo',
+        method: 'get',
+        params: report
     })
-  }
+}
 
-  export function download(report) {
+export function download(report) {
     return downloader({
-      url: '/report/download',
-      params: report
+        url: '/report/download',
+        params: report
     })
-  }
+}
