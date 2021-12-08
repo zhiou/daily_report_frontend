@@ -121,16 +121,35 @@
             <span v-else> {{ text }}</span>
           </template>
           <template slot="operation" slot-scope="text, record">
-            <a-button
-                type="danger"
-                shape="circle"
-                icon="delete"
-                v-show="editable && tasks.length"
-                @click="() => onDelete(record.key)"
-            />
+            <a-space>
+              <a-button
+                  type="danger"
+                  shape="circle"
+                  icon="delete"
+                  v-show="editable && tasks.length"
+                  @click="() => onDelete(record.key)"
+              />
+              <a-button
+                  shape="circle"
+                  icon="copy"
+                  v-show="editable && tasks.length"
+                  @click="() => onCopy(record.key)"
+              />
+            </a-space>
           </template>
         </a-table>
         <a-button
+            v-if="copied.length > 0"
+            v-show="editable && mode === 'day'"
+            type="dashed"
+            style="width: 40%; margin-top: 8px; margin-left: 30%"
+            @click="handlePasteTask"
+        >
+          <a-icon type="plus"/>
+          {{ $t('task.button.paste') }}
+        </a-button>
+        <a-button
+            v-else
             v-show="editable && mode === 'day'"
             type="dashed"
             style="width: 40%; margin-top: 8px; margin-left: 30%"
@@ -269,7 +288,8 @@ export default {
       onDay: moment(),
       visible: false,
       saving: false,
-      mode: 'day'
+      mode: 'day',
+      copied: [],
     };
   },
   computed: {
@@ -286,7 +306,7 @@ export default {
       return this.$store.state.user.department
     },
     author() {
-      return this.$route.params.name ?? this.$store.state.user.name
+      return this.$route.params.name || this.$store.state.user.name
     },
     editable() {
       return this.author === this.$store.state.user.name && (this.mode === 'day')
@@ -381,6 +401,15 @@ export default {
     handleCreateTask() {
       this.visible = true;
     },
+    handlePasteTask() {
+      const tasks = this.tasks.concat(this.copied);
+      let key = 0
+      this.tasks = tasks.map((task) => {
+        key += 1
+        return {...task, key}
+      })
+      this.copied = []
+    },
     onCellChange(key, dataIndex, value) {
       const tasks = [...this.tasks];
       const target = tasks.find((item) => item.key === key);
@@ -415,6 +444,10 @@ export default {
     onDelete(key) {
       const tasks = [...this.tasks];
       this.tasks = tasks.filter((item) => item.key !== key);
+    },
+    onCopy(key) {
+      const task = this.tasks.find((task) => task.key === key);
+      this.copied.push({...task})
     },
     onProjectChanged(key, dataIndex, number) {
       const tasks = [...this.tasks];

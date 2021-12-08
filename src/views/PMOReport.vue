@@ -15,26 +15,27 @@
           <span>请选择查询项：</span>
           <a-col :span="4">
             <a-select
-              show-search
-              option-filter-prop="children"
-              :filter-option="filterOption"
-              style="width: 150px"
-              @change="onQueryItemChanged($event)"
+                show-search
+                option-filter-prop="children"
+                :filter-option="filterOption"
+                style="width: 150px"
+                v-model="selected"
+                @change="onQueryTypeChanged()"
             >
-              <a-select-option v-for="item in queryitems" :key="item.number">
-                {{ item.name }}
+              <a-select-option v-for="(item, index) in queryitems" :key="index">
+                {{ item }}
               </a-select-option>
             </a-select>
           </a-col>
           <a-col :span="4">
             <a-select
-              v-model="clearflag"
-              show-search
-              @focus="clearevent"
-              option-filter-prop="children"
-              :filter-option="filterOption"
-              style="width: 150px"
-              @change="onProductorProjectorEmployerChanged($event)"
+                v-model="clearflag"
+                show-search
+                @focus="onQueryTypeChanged"
+                option-filter-prop="children"
+                :filter-option="filterOption"
+                style="width: 150px"
+                @change="onQueryContentChanged($event)"
             >
               <a-select-option v-for="item in multiItems" :key="item.key">
                 {{ item.name }}
@@ -44,43 +45,48 @@
           <span>请选择查询时间：</span>
           <a-col :span="4">
             <a-range-picker
-              v-model="resetdate"
-              showTime
-              format="YYYY-MM-DD"
-              :placeholder="['开始时间', '结束时间']"
-              @change="onChange"
+                v-model="resetdate"
+                showTime
+                format="YYYY-MM-DD"
+                :placeholder="['开始时间', '结束时间']"
+                @change="onChange"
             />
           </a-col>
           <a-button
-            :span="4"
-            type="primary"
-            :loading="searching"
-            @click="onQueryLog"
+              :span="4"
+              type="primary"
+              :loading="searching"
+              @click="onQueryLog"
           >
             查询
           </a-button>
           <a-button
-            :span="4"
-            type="primary"
-            :disabled="!tasks || tasks.length == 0"
-            :loading="downloading"
-            @click="onDownload"
+              :span="4"
+              type="primary"
+              :disabled="!tasks || tasks.length == 0"
+              :loading="downloading"
+              @click="onDownload"
           >
             {{ $t("button.export") }}
           </a-button>
         </a-space>
 
-        <a-col :span="24"> </a-col>
+        <a-col :span="24"></a-col>
       </a-row>
       <a-spin :spinning="spinning">
         <a-table
-          :columns="columns"
-          :data-source="tasks"
-          :rowKey="(record,index)=>{return index}"
-          style="margin: 16px"
-          :defaultExpandedRowKeys="[0]"
-          :pagination="false"
+            :columns="columns"
+            :data-source="tasks"
+            :rowKey="(record,index)=>{return index}"
+            style="margin: 16px"
+            :defaultExpandedRowKeys="[0]"
+            :pagination="false"
         >
+          <template slot="text" slot-scope="text">
+            <span>
+              {{ text || "其他" }}
+            </span>
+          </template>
         </a-table>
       </a-spin>
     </div>
@@ -90,40 +96,44 @@
 <script>
 // @ is an alias to /src
 import i18n from "../i18n";
+const OTHER = '其他'
 
 function unique2(arr, name) {
   var hash = [];
   var len = arr.length;
   for (var i = 0; i < len; i++) {
-      for (var j = i + 1; j < len; j++) {
-          if (arr[i][name] === arr[j][name]) {
-              j = ++i;
-          }
+    for (var j = i + 1; j < len; j++) {
+      if (arr[i][name] === arr[j][name]) {
+        j = ++i;
       }
-      if(null == arr[i][name]){
-          hash.push("其它");
-      }
-      else{
-          hash.push(arr[i][name]);
-      }
-      
+    }
+    if (null == arr[i][name]) {
+      hash.push(OTHER);
+    } else {
+      hash.push(arr[i][name]);
+    }
+
   }
   return hash;
 }
+
 function formfilter(arr) {
   var filtersList = [];
-  for(let i= 0, taskslen = arr.length; i<taskslen; i++)
-  {
-    filtersList.push({text:arr[i], value:arr[i]});
+  for (let i = 0, taskslen = arr.length; i < taskslen; i++) {
+    filtersList.push({text: arr[i], value: arr[i]});
   }
   return filtersList;
 }
 
 let queryitems = [
-  { number: "0", name: "产品" },
-  { number: "1", name: "项目" },
-  { number: "2", name: "员工" },
+  "产品", "项目", "员工",
 ];
+
+function filter(match, target) {
+  let t = target ?? OTHER
+  console.log('filter', match, t, t.indexOf(match))
+  return t.indexOf(match) > -1;
+}
 
 let columns = [
   {
@@ -133,17 +143,10 @@ let columns = [
     dataIndex: "product_line",
     key: "product_line",
     filters: [],
+    scopedSlots: {customRender: "text"},
     onFilter: (value, record) => {
-      if(null == record.product_line && '其它' == value){
-        return true;
-      }
-      else if(null == record.product_line && '其它' != value){
-        return false;
-      }
-      else{
-        return record.product_line.indexOf(value) === 0
-      } 
-    }, 
+      return filter(value, record.product_line)
+    },
   },
   {
     label: "产品",
@@ -152,17 +155,10 @@ let columns = [
     dataIndex: "product_name",
     key: "product_name",
     filters: [],
+    scopedSlots: {customRender: "text"},
     onFilter: (value, record) => {
-      if(null == record.product_name && '其它' == value){
-        return true;
-      }
-      else if(null == record.product_name && '其它' != value){
-        return false;
-      }
-      else{
-        return record.product_name.indexOf(value) === 0
-      }
-    },    
+      return filter(value, record.product_name)
+    },
   },
   {
     label: "部门",
@@ -171,7 +167,8 @@ let columns = [
     dataIndex: "department",
     key: "department",
     filters: [],
-    onFilter: (value, record) => record.department.indexOf(value) === 0,
+    scopedSlots: {customRender: "text"},
+    onFilter: (value, record) => filter(value, record.department),
   },
   {
     label: "员工姓名",
@@ -180,7 +177,7 @@ let columns = [
     dataIndex: "staff_name",
     key: "staff_name",
     filters: [],
-    onFilter: (value, record) => record.staff_name.indexOf(value) === 0,
+    onFilter: (value, record) => filter(value, record.staff_name),
   },
   {
     label: "工时",
@@ -198,15 +195,7 @@ let columns = [
     key: "project_name",
     filters: [],
     onFilter: (value, record) => {
-      if(null == record.project_name && '其它' == value){
-        return true;
-      }
-      else if(null == record.project_name && '其它' != value){
-        return false;
-      }
-      else{
-        return record.project_name.indexOf(value) === 0
-      }
+      return filter(value, record.project_name)
     },
   },
   {
@@ -216,7 +205,9 @@ let columns = [
     dataIndex: "report_date",
     key: "report_date",
     defaultSortOrder: "descend",
-    sorter: (a, b) => {return a.report_date>b.report_date?1:-1},
+    sorter: (a, b) => {
+      return a.report_date > b.report_date ? 1 : -1
+    },
   },
   {
     label: "任务名",
@@ -240,37 +231,42 @@ let columns = [
     dataIndex: "commit_date",
     key: "commit_date",
     defaultSortOrder: "descend",
-    sorter: (a, b) => {return a.commit_date>b.commit_date?1:-1},
+    sorter: (a, b) => {
+      return a.commit_date > b.commit_date ? 1 : -1
+    },
   },
 ];
-
+const index2id = [3, 2, 0]
 export default {
   name: "PMOReport",
   components: {},
   mounted() {
-    if(0 == this.$store.state.product.all.length){
-      this.$store.dispatch("product/list").catch((error) => {
-        this.$message.error(error, 3);
-    });
+    if (0 == this.products.length) {
+      this.$store
+          .dispatch("product/list")
+          .catch((error) => {
+            this.$message.error(error, 3);
+          });
     }
-    if(0 == this.$store.state.project.all.length){
-      this.$store.dispatch("project/list").catch((error) => {
-       this.$message.error(error, 3);
-    });
+    if (0 == this.projects.length) {
+      this.$store
+          .dispatch("project/list")
+          .catch((error) => {
+            this.$message.error(error, 3);
+          });
     }
-    if(0 == this.$store.state.user.all.length){
-      this.$store.dispatch("user/list").catch((error) => {
-        this.$message.error(error, 3);
-    });
+    if (0 == this.employers.length) {
+      this.$store
+          .dispatch("user/list")
+          .catch((error) => {
+            this.$message.error(error, 3);
+          });
     }
-
   },
   data() {
     return {
       count: 0,
-      multiItems: [],
       queryitems,
-      typeid: 0,
       conditionid: "001",
       fromtime: "",
       totime: "",
@@ -280,45 +276,49 @@ export default {
       downloading: false,
       tasks: [],
       columns,
+      selected: 0,
     };
   },
   computed: {
     spinning() {
       return this.$store.state.report.spinning;
     },
-    refreshProducts() {
+    products() {
       return this.$store.state.product.all.map((product) => {
-        return { ...product, key: product.number };
+        return {...product, key: product.number};
       });
     },
-    refreshProjects() {
+    projects() {
       return this.$store.state.project.all.map((project) => {
-        return { ...project, key: project.number };
+        return {...project, key: project.number};
       });
     },
-    refreshEmployers() {
-      console.log("aaaaaaa");
+    employers() {
       return this.$store.state.user.all.map((worker) => {
-        return { ...worker, key: worker.work_code };
+        return {...worker, key: worker.work_code};
       });
     },
+    typeid() {
+      return index2id[this.selected]
+    },
+    multiItems() {
+      switch (this.selected) {
+        case 0:
+          return this.products
+        case 1:
+          return this.projects
+        case 2:
+          return this.employers
+      }
+      return []
+    }
   },
   methods: {
-    onQueryItemChanged(number) {
-      if (0 == number) {
-        this.multiItems = this.refreshProducts;
-        this.typeid = 3;
-      } else if (1 == number) {
-        this.multiItems = this.refreshProjects;
-        this.typeid = 2;
-      } else {
-        this.multiItems = this.refreshEmployers;
-        this.typeid = 0;
-      }
+    onQueryTypeChanged() {
       this.clearflag = "";
       this.resetdate = ["", ""];
     },
-    onProductorProjectorEmployerChanged(number) {
+    onQueryContentChanged(number) {
       this.conditionid = number;
     },
     onChange(dates, dateStrings) {
@@ -329,65 +329,51 @@ export default {
     onQueryLog() {
       this.searching = true;
       this.$store
-        .dispatch("report/pmoQuery", {
-          type: this.typeid,
-          condition: this.conditionid,
-          from: this.fromtime,
-          to: this.totime,
-        })
-        .then((tasks) => {
-          this.tasks = tasks;
-          let tasksTemp = unique2(tasks, 'product_line');
-          this.columns[0].filters = formfilter(tasksTemp);
-          tasksTemp = unique2(tasks, 'product_name');
-          this.columns[1].filters = formfilter(tasksTemp);
-          tasksTemp = unique2(tasks, 'department');
-          this.columns[2].filters = formfilter(tasksTemp); 
-          tasksTemp = unique2(tasks, 'staff_name');
-          this.columns[3].filters = formfilter(tasksTemp);
-          tasksTemp = unique2(tasks, 'project_name');
-          this.columns[5].filters = formfilter(tasksTemp);
-        })
-        .catch((e) => {
-          console.log(e);
-          this.$message.error(e);
-        })
-        .finally(() => {
-          this.searching = false;
-        });
+          .dispatch("report/pmoQuery", {
+            type: this.typeid,
+            condition: this.conditionid,
+            from: this.fromtime,
+            to: this.totime,
+          })
+          .then((tasks) => {
+            this.tasks = tasks;
+            let tasksTemp = unique2(tasks, 'product_line');
+            this.columns[0].filters = formfilter(tasksTemp);
+            tasksTemp = unique2(tasks, 'product_name');
+            this.columns[1].filters = formfilter(tasksTemp);
+            tasksTemp = unique2(tasks, 'department');
+            this.columns[2].filters = formfilter(tasksTemp);
+            tasksTemp = unique2(tasks, 'staff_name');
+            this.columns[3].filters = formfilter(tasksTemp);
+            tasksTemp = unique2(tasks, 'project_name');
+            this.columns[5].filters = formfilter(tasksTemp);
+          })
+          .catch((e) => {
+            console.log(e);
+            this.$message.error(e);
+          })
+          .finally(() => {
+            this.searching = false;
+          });
     },
     onDownload() {
       this.downloading = true;
       this.$export
-        .excel({
-          columns: this.columns,
-          data: this.tasks,
-        })
-        .finally(() => {
-          this.downloading = false;
-        });
+          .excel({
+            columns: this.columns,
+            data: this.tasks,
+          })
+          .finally(() => {
+            this.downloading = false;
+          });
     },
     filterOption(input, option) {
       return (
-        option.componentOptions.children[0].text
-          .toLowerCase()
-          .indexOf(input.toLowerCase()) >= 0
+          option.componentOptions.children[0].text
+              .toLowerCase()
+              .indexOf(input.toLowerCase()) >= 0
       );
     },
-    clearevent(){
-      if(3 == this.typeid)
-      {
-        this.onQueryItemChanged(0)
-      }
-      else if(2 == this.typeid)
-      {
-        this.onQueryItemChanged(1)
-      }
-      else if(0 == this.typeid)
-      {
-        this.onQueryItemChanged(2)
-      }
-    }
   },
 };
 </script>
@@ -406,13 +392,16 @@ export default {
   color: #999;
   transition: all 0.3s;
 }
+
 .dynamic-delete-button:hover {
   color: #777;
 }
+
 .dynamic-delete-button[disabled] {
   cursor: not-allowed;
   opacity: 0.5;
 }
+
 .editable-cell:hover /deep/ .editable-cell-icon {
   display: none;
 }
