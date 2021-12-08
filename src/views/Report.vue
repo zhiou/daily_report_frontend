@@ -138,16 +138,27 @@
             </a-space>
           </template>
         </a-table>
-        <a-button
-            v-if="copied.length > 0"
-            v-show="editable && mode === 'day'"
-            type="dashed"
-            style="width: 40%; margin-top: 8px; margin-left: 30%"
-            @click="handlePasteTask"
-        >
-          <a-icon type="plus"/>
-          {{ $t('task.button.paste') }}
-        </a-button>
+        <div style="width: 40%; margin-left: 30%; padding: 8px;"
+                 v-if="copied.length > 0"
+                 v-show="editable && mode === 'day'">
+          <a-button
+              type="dashed"
+              style="width: 50%;"
+              @click="handlePasteTask"
+          >
+            <a-icon type="plus"/>
+            {{ $t('task.button.paste') + '+' + this.copied.length }}
+          </a-button>
+          <a-button
+              type="dashed"
+              style="width: 50%;"
+              @click="() => {this.copied = []}"
+          >
+            <a-icon type="delete"/>
+            {{ $t('button.cancel') }}
+          </a-button>
+        </div>
+
         <a-button
             v-else
             v-show="editable && mode === 'day'"

@@ -17,6 +17,16 @@ export function update(report) {
     })
   }
 
+export function remove(report) {
+  return request({
+    url: '/report',
+    method: 'delete',
+    params: {
+      date: report.on_day
+    }
+  })
+}
+
   export function selfQuery(report) {
     return request({
       url: '/report',

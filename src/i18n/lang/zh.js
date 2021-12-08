@@ -158,7 +158,7 @@ module.exports = {
       create: "确定",
       cancel: "取消",
       add: "新建任务",
-      paste: "粘贴任务",
+      paste: "复制任务",
     },
     label: {
       name: "任务名",

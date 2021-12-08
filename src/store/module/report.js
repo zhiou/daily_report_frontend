@@ -9,6 +9,7 @@
 
 import {
   update,
+  remove,
   selfQuery,
   dmQuery,
   pmQuery,
@@ -24,7 +25,8 @@ const state = () => ({
 const actions = {
   update({ commit }, report) {
     return new Promise((resolve, reject) => {
-      update(report)
+      let invoke = report.tasks.length > 0 ? update: remove
+      invoke(report)
         .then(() => {
           resolve();
         })
