@@ -135,7 +135,8 @@ export default {
         name: 'MemberReport', params: {
           name,
           mode: this.mode,
-          date: this.onDay
+          date: this.onDay,
+          from: 'department',
         }
       })
     },

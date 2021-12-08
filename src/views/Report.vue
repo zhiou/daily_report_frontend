@@ -320,7 +320,7 @@ export default {
       return this.$route.params.name || this.$store.state.user.name
     },
     editable() {
-      return this.author === this.$store.state.user.name && (this.mode === 'day')
+      return (this.author === this.$store.state.user.name) && (this.mode === 'day') && (this.$route.params.from !== 'department')
     },
     spinning() {
       return this.$store.state.report.spinning;

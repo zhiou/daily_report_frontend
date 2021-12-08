@@ -104,7 +104,8 @@ export default {
           name: "Report", params: {
             name: this.author,
             mode: 'day',
-            date: date
+            date: date,
+            from: 'calendar',
           }
         });
       } else {
