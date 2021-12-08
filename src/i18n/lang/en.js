@@ -142,6 +142,7 @@ module.exports = {
       create: 'Create',
       cancel: 'Cancel',
       add: "Add Task",
+      paste: "Copy Task",
     },
     label: {
       name: 'Task Name',

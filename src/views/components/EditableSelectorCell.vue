@@ -33,7 +33,7 @@
     </div>
 
     <div v-else class="editable-cell-text-wrapper" @click="edit">
-      {{ this.name || " " }}
+      {{ this.name || "其他" }}
       <a-icon type="edit" class="editable-cell-icon" @click="edit"/>
     </div>
 
