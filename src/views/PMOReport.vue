@@ -194,6 +194,7 @@ let columns = [
     dataIndex: "project_name",
     key: "project_name",
     filters: [],
+    scopedSlots: {customRender: "text"},
     onFilter: (value, record) => {
       return filter(value, record.project_name)
     },

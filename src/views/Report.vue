@@ -476,7 +476,7 @@ export default {
       const prod = this.getProductFrom(number);
       if (target) {
         target[dataIndex] = number;
-        target['product_line'] = prod.in_line ?? '其他'
+        target['product_line'] = prod ? (prod.in_line ?? '其他') : '其他'
         this.tasks = tasks;
       }
     },
