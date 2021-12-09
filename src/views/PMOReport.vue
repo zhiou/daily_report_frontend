@@ -80,7 +80,7 @@
             :rowKey="(record,index)=>{return index}"
             style="margin: 16px"
             :defaultExpandedRowKeys="[0]"
-            :pagination="false"
+            :pagination="true"
         >
           <template slot="text" slot-scope="text">
             <span>
@@ -126,7 +126,7 @@ function formfilter(arr) {
 }
 
 let queryitems = [
-  "产品", "项目", "员工",
+  '无', "产品", "项目", "员工",
 ];
 
 function filter(match, target) {
@@ -237,7 +237,7 @@ let columns = [
     },
   },
 ];
-const index2id = [3, 2, 0]
+const index2id = [null, 3, 2, 0]
 export default {
   name: "PMOReport",
   components: {},
@@ -268,7 +268,7 @@ export default {
     return {
       count: 0,
       queryitems,
-      conditionid: "001",
+      conditionid: null,
       fromtime: "",
       totime: "",
       clearflag: "",
@@ -277,7 +277,7 @@ export default {
       downloading: false,
       tasks: [],
       columns,
-      selected: 0,
+      selected: null,
     };
   },
   computed: {
@@ -300,15 +300,15 @@ export default {
       });
     },
     typeid() {
-      return index2id[this.selected]
+      return this.selected ? index2id[this.selected] : null;
     },
     multiItems() {
       switch (this.selected) {
-        case 0:
-          return this.products
         case 1:
-          return this.projects
+          return this.products
         case 2:
+          return this.projects
+        case 3:
           return this.employers
       }
       return []
