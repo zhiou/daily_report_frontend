@@ -10,7 +10,7 @@
   <div id="home">
     <a-layout id="home-layout">
       <a-layout-sider v-model="collapsed" :trigger="null" collapsible>
-        <div class="logo"/>
+        <img src="@/assets/logo.png" class="logo"/>
         <a-menu
             :default-selected-keys="['user']"
             :default-open-keys="['report_mng', 'statistics', 'settings']"
@@ -326,8 +326,11 @@ export default {
 }
 
 #home-layout .logo {
-  height: 32px;
-  background: rgba(255, 255, 255, 0.2);
-  margin: 16px;
+  background-size:contain;
+  width: 80%;
+  height: auto;
+  /*height: 32px;*/
+  /*background: rgba(255, 255, 255, 0.2);*/
+  margin: 16px auto;
 }
 </style>

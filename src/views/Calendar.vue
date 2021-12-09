@@ -79,11 +79,16 @@ export default {
           .then((tasks) => {
             let taskNames = [];
             tasks.forEach((task) => {
-              let day = moment(task.report_date).format('yyyy-MM-DD');
+              let date = moment(task.report_date)
+              let commitDate = moment(task.commit_date)
+              let commitLate = date.isBefore(commitDate, 'day')
+              let fakeReport = moment().isBefore(date, 'day')
+              let type = fakeReport ? 'error' : (commitLate ? 'warning' : 'success');
+              let day = date.format('yyyy-MM-DD');
               if (taskNames[day] == undefined) {
                 taskNames[day] = new Set();
               }
-              taskNames[day].add({type: "success", content: task.task_name});
+              taskNames[day].add({type: type, content: task.task_name});
             });
             this.taskNames = taskNames;
           })

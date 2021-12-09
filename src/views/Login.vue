@@ -1,6 +1,7 @@
 <template>
   <div id="login" v-title :data-title="$t('login.title')">
     <div class="me-login-box me-login-box-radius">
+      <img src="@/assets/logo@2x.png">
       <h1>{{ $t("login.title") }}</h1>
       <a-form
         id="components-form-demo-normal-login"

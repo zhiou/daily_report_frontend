@@ -147,7 +147,8 @@
               @click="handlePasteTask"
           >
             <a-icon type="plus"/>
-            {{ $t('task.button.paste') + '+' + this.copied.length }}
+            {{ $t('task.button.paste') }}
+            <a-badge :count="this.copied.length" style="margin-left:8px"></a-badge>
           </a-button>
           <a-button
               type="dashed"
