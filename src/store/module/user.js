@@ -20,6 +20,7 @@ const state = () => ({
     roles: [],
 });
 
+
 const actions = {
     login({commit}, user) {
         return new Promise((resolve, reject) => {

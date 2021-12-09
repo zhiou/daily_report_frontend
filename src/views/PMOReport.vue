@@ -95,6 +95,7 @@
 
 <script>
 // @ is an alias to /src
+import moment from 'moment'
 import i18n from "../i18n";
 const OTHER = '其他'
 
@@ -126,7 +127,7 @@ function formfilter(arr) {
 }
 
 let queryitems = [
-  '无', "产品", "项目", "员工",
+  '无', "产品", "项目", "员工", "部门"
 ];
 
 function filter(match, target) {
@@ -237,7 +238,7 @@ let columns = [
     },
   },
 ];
-const index2id = [null, 3, 2, 0]
+const index2id = [null, 3, 2, 0, 1]
 export default {
   name: "PMOReport",
   components: {},
@@ -263,16 +264,21 @@ export default {
             this.$message.error(error, 3);
           });
     }
+    if (0 == this.departments.length) {
+      this.$store
+      .dispatch("department/list")
+      .catch((error) => {
+        this.$message.error(error, 3)
+      })
+    }
   },
   data() {
     return {
       count: 0,
       queryitems,
       conditionid: null,
-      fromtime: "",
-      totime: "",
       clearflag: "",
-      resetdate: ["", ""],
+      resetdate: [moment().startOf('week'), moment().endOf('week')],
       searching: false,
       downloading: false,
       tasks: [],
@@ -281,6 +287,12 @@ export default {
     };
   },
   computed: {
+    fromtime() {
+      return this.resetdate[0].format('yyyy-MM-DD')
+    },
+    totime() {
+      return moment(this.resetdate[1]).add(1, 'day').format('yyyy-MM-DD')
+    },
     spinning() {
       return this.$store.state.report.spinning;
     },
@@ -299,6 +311,11 @@ export default {
         return {...worker, key: worker.work_code};
       });
     },
+    departments() {
+      return this.$store.state.department.all.map((department) => {
+        return {...department, key: department.department_id, name: department.department_name}
+      })
+    },
     typeid() {
       return this.selected ? index2id[this.selected] : null;
     },
@@ -310,6 +327,8 @@ export default {
           return this.projects
         case 3:
           return this.employers
+        case 4:
+          return this.departments
       }
       return []
     }

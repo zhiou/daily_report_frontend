@@ -13,6 +13,7 @@ import user from "./module/user";
 import report from "./module/report";
 import project from "./module/project";
 import product from "./module/product";
+import department from "./module/department"
 
 Vue.use(Vuex);
 
@@ -22,6 +23,7 @@ export default new Vuex.Store({
     report,
     project,
     product,
+    department
   },
   state: {
   },
