@@ -336,7 +336,6 @@ export default {
   methods: {
     onQueryTypeChanged() {
       this.clearflag = "";
-      this.resetdate = ["", ""];
     },
     onQueryContentChanged(number) {
       this.conditionid = number;
