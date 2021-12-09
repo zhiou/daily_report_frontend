@@ -208,7 +208,7 @@ export default {
               focus: "self",
             },
             label: {
-              formatter: "{b}: {@0} ({d}%)",
+              formatter: "{b}: {@1} ({d}%)",
             },
             encode: {
               itemName: "工时",
