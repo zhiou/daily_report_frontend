@@ -217,19 +217,13 @@ export default {
             },
           },
           {
-            name: "总工时",
             type: "pie",
             radius: ["15%", "30%"],
             center: ["67%", "25%"],
-            avoidLabelOverlap: false,
             label: {
               show: false,
               position: "center",
               formatter: "{b}\n{d}%",
-            },
-            tooltip: {
-              trigger: "item",
-              showContent: true,
             },
             emphasis: {
               label: {

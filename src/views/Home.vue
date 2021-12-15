@@ -90,18 +90,7 @@ export default {
               key: "user",
               title: this.$t("home.menu.user"),
             },
-            {
-              key: "dm",
-              title: this.$t("home.menu.dm"),
-            },
-            {
-              key: "pm",
-              title: this.$t("home.menu.pm"),
-            },
-            {
-              key: "pmo",
-              title: this.$t("home.menu.pmo"),
-            },
+
           ],
         },
         {
@@ -112,29 +101,6 @@ export default {
             {
               key: "staff",
               title: this.$t("home.menu.staff"),
-            },
-            {
-              key: "proj_stats",
-              title: this.$t("home.menu.proj_stats"),
-            },
-          ],
-        },
-        {
-          key: "settings",
-          title: this.$t("home.menu.settings"),
-          type: "setting",
-          items: [
-            {
-              key: "proj",
-              title: this.$t("home.menu.proj"),
-            },
-            {
-              key: "prod",
-              title: this.$t("home.menu.prod"),
-            },
-            {
-              key: "user_role",
-              title: this.$t("home.menu.user_role"),
             },
           ],
         },

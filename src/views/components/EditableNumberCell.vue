@@ -12,6 +12,7 @@
       <a-input-number
         :min="0.5"
         :max="12"
+        :step="0.5"
         :value="value"
         :allowClear="false"
         ref="number"

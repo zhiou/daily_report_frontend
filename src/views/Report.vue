@@ -225,7 +225,7 @@ const day_columns = [
     title: i18n.t("report.column.cost"),
     dataIndex: "task_cost",
     key: "cost",
-    width: 60,
+    width: 100,
     scopedSlots: {customRender: "cost"},
   },
   {
@@ -441,13 +441,15 @@ export default {
         const {count} = this;
         let prod = this.getProductFrom(task.product_number);
         let proj = this.getProjectFrom(task.project_number);
+
         let newTask = {
           ...task,
           key: count,
           product_line: prod ? prod.in_line : "其他",
           product_name: prod ? prod.name : "其他",
-          project_name: proj ? prod.name : "其他",
+          project_name: (proj ? proj.name : "其他"),
         };
+        console.log('task', newTask)
         this.count = count + 1;
         this.tasks = [...this.tasks, newTask];
         this.update(0);

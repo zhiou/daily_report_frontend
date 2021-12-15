@@ -46,6 +46,7 @@
             <a-input-number
                 :min="0.5"
                 :max="12"
+                :step="0.5"
                 v-decorator="[
               'task_cost',
               {
