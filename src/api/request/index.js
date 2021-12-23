@@ -23,7 +23,7 @@ const service = axios.create({
 });
 
 MockConfig.mocks.forEach((config) => {
-  if (config.enabled && prod) {
+  if (config.enabled && !prod) {
     Mock.mock(config.api, config.method, () => {
       return config.data
     });
