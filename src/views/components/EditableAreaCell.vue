@@ -19,7 +19,7 @@
         @blur="check"
       /><a-icon type="check" class="editable-cell-icon-check" @click="check" />
     </div>
-    <div v-else class="editable-cell-text-wrapper" @click="edit">
+    <div v-else class="editable-cell-text-wrapper" id="pre" @click="edit">
       {{ value || " " }}
       <a-icon type="edit" class="editable-cell-icon" @click="edit" />
     </div>
@@ -43,6 +43,7 @@ export default {
     },
     check() {
       this.editable = false;
+      console.log('area value', this.value)
       this.$emit("change", this.value);
     },
     edit() {
@@ -98,5 +99,14 @@ export default {
 
 .editable-add-btn {
   margin-bottom: 8px;
+}
+
+#pre{
+  white-space: pre-wrap;       /* css-3 */
+  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  overflow: auto;
+  word-break: break-all;
+  word-wrap: break-word;
 }
 </style>
