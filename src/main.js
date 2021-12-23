@@ -21,7 +21,7 @@ const echarts = require("echarts")
 
 Vue.config.productionTip = false
 
-var prod = process.env.NODE_ENV === 'production';
+const prod = process.env.NODE_ENV === 'production';
 console.log = (function (oriLogFunc) {
   return function () {
     if (!prod) {

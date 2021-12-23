@@ -15,13 +15,15 @@ import i18n from "../../i18n";
 import Mock from "mockjs";
 import MockConfig from "../mock";
 
+const prod = process.env.NODE_ENV === 'production';
+
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
   timeout: 10000,
 });
 
 MockConfig.mocks.forEach((config) => {
-  if (config.enabled) {
+  if (config.enabled && prod) {
     Mock.mock(config.api, config.method, () => {
       return config.data
     });
