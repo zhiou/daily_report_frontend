@@ -139,7 +139,7 @@ img{
 .me-login-box {
   position: absolute;
   width: 300px;
-  height: 300px;
+  height: 320px;
   background-color: white;
   margin-top: 150px;
   margin-left: -150px;
@@ -149,7 +149,7 @@ img{
 
 .me-login-box-radius {
   border-radius: 10px;
-  box-shadow: 0px 0px 1px 1px rgba(161, 159, 159, 0.1);
+  box-shadow: 0px 0px 1px 1px rgba(161, 159, 159, 0.3);
 }
 
 .me-login-box h1 {
