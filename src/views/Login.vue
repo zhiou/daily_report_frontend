@@ -118,6 +118,8 @@ export default {
   min-height: 100%;
 }
 
+img{border:0}
+
 .me-video-player {
   background-color: transparent;
   width: 100%;
