@@ -1,7 +1,8 @@
 <template>
   <div id="login" v-title :data-title="$t('login.title')">
+
     <div class="me-login-box me-login-box-radius">
-      <img src="@/assets/logo@2x.png">
+      <img src="@/assets/logo.png"  alt=""/>
       <h1>{{ $t("login.title") }}</h1>
       <a-form
         id="components-form-demo-normal-login"
@@ -118,7 +119,10 @@ export default {
   min-height: 100%;
 }
 
-img{border:0}
+img{
+  border:0;
+  margin-bottom: 16px;
+}
 
 .me-video-player {
   background-color: transparent;
@@ -135,10 +139,10 @@ img{border:0}
 .me-login-box {
   position: absolute;
   width: 300px;
-  height: 260px;
+  height: 300px;
   background-color: white;
   margin-top: 150px;
-  margin-left: -180px;
+  margin-left: -150px;
   left: 50%;
   padding: 30px;
 }
