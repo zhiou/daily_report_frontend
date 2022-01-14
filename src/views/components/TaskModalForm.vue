@@ -27,11 +27,11 @@
       <a-form layout="vertical" :form="form">
         <a-space>
           <a-form-item :label="$t('task.label.name')">
-            <a-auto-complete 
-            :data-source="this.tasksnames"
-            :filter-option="filterOption"
-            @focus="refreshtasksname"
-            style="width: 350px"
+            <a-auto-complete
+                :data-source="this.tasksnames"
+                :filter-option="filterOption"
+                @focus="refreshtasksname"
+                style="width: 350px"
                 v-decorator="[
               'task_name',
               {
@@ -79,12 +79,35 @@
 
         <a-space>
           <a-form-item :label="$t('task.label.proj')">
-            <a-select
-                show-search
-                option-filter-prop="children"
-                :filter-option="filterOption"
-                style="width: 220px"
-                v-decorator="[
+            <!--            <a-select-->
+            <!--                show-search-->
+            <!--                option-filter-prop="children"-->
+            <!--                :filter-option="filterOption"-->
+            <!--                style="width: 220px"-->
+            <!--                v-decorator="[-->
+            <!--              'project_number',-->
+            <!--              {-->
+            <!--                rules: [-->
+            <!--                  {-->
+            <!--                    required: false,-->
+            <!--                    message: $t('task.tips.proj'),-->
+            <!--                  },-->
+            <!--                ],-->
+            <!--              },-->
+            <!--            ]"-->
+            <!--            >-->
+            <!--              <a-select-option-->
+            <!--                  v-for="project in projects"-->
+            <!--                  :key="project.number"-->
+            <!--              >-->
+            <!--                {{ project.name }}-->
+            <!--              </a-select-option>-->
+            <!--            </a-select>-->
+            <a-cascader :options="options"
+                        :show-search="{ filterOption }"
+                        change-on-select
+                        style="width: 220px"
+                        v-decorator="[
               'project_number',
               {
                 rules: [
@@ -94,15 +117,8 @@
                   },
                 ],
               },
-            ]"
-            >
-              <a-select-option
-                  v-for="project in projects"
-                  :key="project.number"
-              >
-                {{ project.name }}
-              </a-select-option>
-            </a-select>
+            ]"/>
+
           </a-form-item>
           <a-form-item :label="$t('task.label.prod')">
             <a-select
@@ -138,7 +154,7 @@
 </template>
 
 <script>
-import { reverseTaskNames } from '../../utils/taskfilter.js'
+import {reverseTaskNames} from '../../utils/taskfilter.js'
 
 export default {
   name: "TaskModalForm",
@@ -156,7 +172,7 @@ export default {
     return {
       tasksnames: []
     };
-    
+
   },
   computed: {
     products() {
@@ -169,6 +185,19 @@ export default {
         return {...project, key: project.number};
       });
     },
+    options() {
+      return this.projects.map((project) => {
+        return {
+          ...project,
+          value: project.number,
+          label: project.name,
+          children: project.sublist.map((p) => {
+                return {...p, value: p.number, label: p.name}
+              }
+          )
+        };
+      })
+    },
   },
   methods: {
     filterOption(input, option) {
@@ -178,8 +207,7 @@ export default {
               .indexOf(input.toLowerCase()) >= 0
       );
     },
-    refreshtasksname()
-    {
+    refreshtasksname() {
       this.tasksnames = reverseTaskNames();
     }
   },

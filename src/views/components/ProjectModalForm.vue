@@ -9,16 +9,16 @@
 <template>
   <div id="project-modal-form">
     <a-modal
-      :visible="visible"
-      :title="$t('project.title')"
-      :okText="$t('project.button.create')"
-      :cancelText="$t('project.button.cancel')"
-      @cancel="
+        :visible="visible"
+        :title="$t('project.title')"
+        :okText="$t('project.button.create')"
+        :cancelText="$t('project.button.cancel')"
+        @cancel="
         () => {
           $emit('cancel');
         }
       "
-      @ok="
+        @ok="
         () => {
           $emit('create');
         }
@@ -27,7 +27,7 @@
       <a-form layout="vertical" :form="form">
         <a-form-item :label="$t('project.form.number')">
           <a-input
-            v-decorator="[
+              v-decorator="[
               'number',
               {
                 rules: [
@@ -42,7 +42,7 @@
         </a-form-item>
         <a-form-item :label="$t('project.form.name')">
           <a-input
-            v-decorator="[
+              v-decorator="[
               'name',
               {
                 rules: [
@@ -55,13 +55,37 @@
             ]"
           />
         </a-form-item>
+        <a-form-item :label="$t('project.form.parent')">
+          <a-select
+              show-search
+              ref="selector"
+              option-filter-prop="children"
+              :filter-option="filterOption"
+              style="width:100%;"
+              v-decorator="[
+              'parent_number',
+              {
+                rules: [
+                  {
+                    required: false,
+                    message: $t('project.tips.parent'),
+                  },
+                ],
+              },
+            ]"
+          >
+            <a-select-option v-for="project in root_projects" :key="project.number">
+              {{ project.name }}
+            </a-select-option>
+          </a-select>
+        </a-form-item>
         <a-form-item :label="$t('project.form.manager')">
           <a-select
-            show-search
-            option-filter-prop="children"
-            :filter-option="filterOption"
-            style="width: 120px"
-            v-decorator="[
+              show-search
+              option-filter-prop="children"
+              :filter-option="filterOption"
+              style="width: 120px"
+              v-decorator="[
               'manager_number',
               {
                 rules: [
@@ -80,8 +104,8 @@
         </a-form-item>
         <a-form-item :label="$t('project.form.status')">
           <a-select
-            style="width: 120px"
-            v-decorator="[
+              style="width: 120px"
+              v-decorator="[
               'status',
               {
                 rules: [
@@ -100,8 +124,8 @@
         </a-form-item>
         <a-form-item :label="$t('project.form.remark')">
           <a-input
-            type="textarea"
-            v-decorator="[
+              type="textarea"
+              v-decorator="[
               'remark',
               {
                 rules: [
@@ -133,8 +157,15 @@ export default {
   computed: {
     staffs() {
       return this.$store.state.user.all.map((worker) => {
-        return { ...worker, key: worker.work_code, number: worker.work_code };
+        return {...worker, key: worker.work_code, number: worker.work_code};
       });
+    },
+    root_projects() {
+      return this.$store.state.project.all
+          .filter(project => project.parent == null
+          ).map((project) => {
+            return {...project, key: project.number};
+          });
     },
   },
   components: {},
@@ -146,9 +177,9 @@ export default {
   methods: {
     filterOption(input, option) {
       return (
-        option.componentOptions.children[0].text
-          .toLowerCase()
-          .indexOf(input.toLowerCase()) >= 0
+          option.componentOptions.children[0].text
+              .toLowerCase()
+              .indexOf(input.toLowerCase()) >= 0
       );
     },
   },

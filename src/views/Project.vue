@@ -55,7 +55,7 @@
             shape="circle"
             icon="delete"
             v-if="projects.length"
-            @click="() => onDelete(record.key)"
+            @click="() => onDelete(record.key, record)"
           />
         </template>
       </a-table>
@@ -159,7 +159,10 @@ export default {
     },
     projects() {
        return this.$store.state.project.all.map((project) => {
-        return { ...project, key: project.number };
+        return { ...project,
+          key: project.number,
+          children: project.sublist.length > 0 ? project.sublist.map(sp => {return {...sp, key:sp.number}}) : null
+        };
       });
     }
   },
@@ -198,9 +201,16 @@ export default {
           });
       });
     },
-    onDelete(key) {
+    onDelete(key, record) {
+      console.log('on delete', key, record)
       this.$store
         .dispatch("project/remove", { numbers: [key] })
+          .then(() => {
+            this.$store.dispatch("project/list")
+            .catch((e) => {
+              console.log(e);
+            })
+          })
         .catch((e) => {
           console.log(e);
         });

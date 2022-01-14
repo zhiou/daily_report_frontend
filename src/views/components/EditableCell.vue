@@ -68,7 +68,7 @@ export default {
 }
 
 .editable-cell-text-wrapper {
-  padding: 5px 24px 5px 5px;
+  padding: 5px 24px 5px 0px;
 }
 
 .editable-cell-icon,

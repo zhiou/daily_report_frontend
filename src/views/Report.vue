@@ -16,7 +16,7 @@
           <a-space>
             <a-radio-group v-model="mode" @change="e => onModeChange(e.target.value)">
               <a-radio value="week">
-                 周
+                周
               </a-radio>
               <a-radio value="day">
                 日
@@ -29,10 +29,10 @@
                 @change="onDateChanged"
             />
             <a-week-picker
-              v-else
-              :allow-clear="false"
-              v-model="onDay"
-              @change="onDateChanged"
+                v-else
+                :allow-clear="false"
+                v-model="onDay"
+                @change="onDateChanged"
             />
             <a-input :value="author" addonBefore="Name" disabled/>
             <a-input
@@ -76,7 +76,7 @@
           <template slot="project-selector" slot-scope="number, record">
             <editable-selector-cell
                 :default_value="number"
-                :options="refreshProjects"
+                :options="childProjects"
                 v-if="editable"
                 @change="onProjectChanged(record.key, 'project_number', $event)"
             />
@@ -86,7 +86,7 @@
           <template slot="day" slot-scope="date">
             <span>
               <b>{{ week(date) }}</b>
-              <br />
+              <br/>
               <i style="font-size: small">{{ date }}</i>
             </span>
           </template>
@@ -94,7 +94,7 @@
             <ul style="list-style-type: decimal;">
               <li v-for="(task, index) in tasks" :key="index">
                 <b>{{ task.tc }}</b>
-                <br />
+                <br/>
                 <p v-html="task.td" style="text-align:left;"></p>
               </li>
             </ul>
@@ -139,8 +139,8 @@
           </template>
         </a-table>
         <div style="width: 40%; margin-left: 30%; padding: 8px;"
-                 v-if="copied.length > 0"
-                 v-show="editable && mode === 'day'">
+             v-if="copied.length > 0"
+             v-show="editable && mode === 'day'">
           <a-button
               type="dashed"
               style="width: 50%;"
@@ -190,8 +190,9 @@ import EditableSelectorCell from "./components/EditableSelectorCell";
 import TaskModalForm from "./components/TaskModalForm.vue";
 import moment from "moment";
 import i18n from "../i18n";
-import { conform } from '../utils/taskUtils.js'
-import {storeTaskNames } from '../utils/taskfilter.js'
+import {conform} from '../utils/taskUtils.js'
+import {storeTaskNames} from '../utils/taskfilter.js'
+
 const day_columns = [
   {
     title: i18n.t("report.column.line"),
@@ -341,6 +342,17 @@ export default {
     },
     reports() {
       return conform('report_date', this.tasks)
+    },
+    childProjects() {
+      let nodes = []
+      this.refreshProjects.forEach(project => {
+        nodes.push(project)
+        if (project.sublist) {
+          nodes = nodes.concat(project.sublist)
+        }
+      })
+      console.log('nodes', nodes)
+      return nodes;
     }
   },
   methods: {
@@ -350,8 +362,7 @@ export default {
       if (mode === 'day') {
         start = date
         end = moment(date).add(1, "day")
-      }
-      else if (mode === 'week') {
+      } else if (mode === 'week') {
         start = moment(date).startOf('week')
         end = moment(date).endOf('week')
       }
@@ -384,8 +395,7 @@ export default {
       if (this.mode === 'day') {
         start = date
         end = moment(date).add(1, "day")
-      }
-      else if (this.mode === 'week') {
+      } else if (this.mode === 'week') {
         start = moment(date).startOf('week')
         end = moment(date).endOf('week')
       }
@@ -436,18 +446,23 @@ export default {
         if (err) {
           return;
         }
+        console.log('task', task)
         modalForm.resetFields();
         this.visible = false;
         const {count} = this;
+        // 级联列表, 取最后一个元素
+        const [project_number, ...rest] = [...task.project_number].reverse();
+        console.log('project_number', project_number, this.refreshProjects);
         let prod = this.getProductFrom(task.product_number);
-        let proj = this.getProjectFrom(task.project_number);
-
+        let proj = this.getProjectFrom(project_number);
+        console.log('proj', proj);
         let newTask = {
           ...task,
           key: count,
           product_line: prod ? prod.in_line : "其他",
           product_name: prod ? prod.name : "其他",
           project_name: (proj ? proj.name : "其他"),
+          project_number
         };
         console.log('task', newTask)
         this.count = count + 1;
@@ -494,13 +509,26 @@ export default {
       return this.refreshProducts.find((prod) => prod.number === number);
     },
     getProjectFrom(number) {
-      return this.refreshProjects.find((proj) =>  proj.number === number);
-    },
-    week(date) {
-      return moment(date).format('dddd')
-    }
+      for (let proj of this.refreshProjects) {
+        if (proj.number === number) {
+          return proj;
+        } else if (proj.sublist.length > 0) {
+          for (let sp of proj.sublist) {
+            if (sp.number === number) {
+              return sp;
+            }
+          }
+        }
+      }
+      return null;
   },
-};
+  week(date) {
+    return moment(date).format('dddd')
+  }
+}
+,
+}
+;
 </script>
 
 <style scoped>

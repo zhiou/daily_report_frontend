@@ -81,6 +81,14 @@ module.exports = {
       manager: 'Project Manager',
       status: 'Status',
       remark: 'Remark',
+      parent: 'Parent',
+    },
+    tips: {
+      number: 'Please input project number',
+      name: 'Please input project name',
+      manager: 'Please select project manager',
+      status: 'Please select project status',
+      parent: 'Please input project parent'
     }
   },
   product: {

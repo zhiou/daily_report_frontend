@@ -84,12 +84,14 @@ module.exports = {
       manager: '项目经理',
       status: '项目状态',
       remark: '备注',
+      parent: '父项目'
     },
     tips: {
       number: '请输入项目编号',
       name: '请输入项目名',
       manager: '请选择项目经理',
       status: '请设置项目状态',
+      parent: '请选择父项目'
     }
   },
   product: {
