@@ -243,28 +243,28 @@ export default {
   name: "PMOReport",
   components: {},
   mounted() {
-    if (0 == this.products.length) {
+    if (0 === this.products.length) {
       this.$store
           .dispatch("product/list")
           .catch((error) => {
             this.$message.error(error, 3);
           });
     }
-    if (0 == this.projects.length) {
+    if (0 === this.projects.length) {
       this.$store
           .dispatch("project/list")
           .catch((error) => {
             this.$message.error(error, 3);
           });
     }
-    if (0 == this.employers.length) {
+    if (0 === this.employers.length) {
       this.$store
           .dispatch("user/list")
           .catch((error) => {
             this.$message.error(error, 3);
           });
     }
-    if (0 == this.departments.length) {
+    if (0 === this.departments.length) {
       this.$store
       .dispatch("department/list")
       .catch((error) => {
@@ -297,24 +297,23 @@ export default {
       return this.$store.state.report.spinning;
     },
     products() {
-      return this.$store.state.product.all.map((product) => {
-        return {...product, key: product.number};
-      });
+      return this.$store.state.product.all
     },
     projects() {
-      return this.$store.state.project.all.map((project) => {
-        return {...project, key: project.number};
-      });
+      let nodes = []
+      this.$store.state.project.all.forEach(project => {
+        nodes.push(project)
+        if (project.children && project.children.length > 0) {
+          nodes = nodes.concat(project.children)
+        }
+      })
+      return nodes;
     },
     employers() {
-      return this.$store.state.user.all.map((worker) => {
-        return {...worker, key: worker.work_code};
-      });
+      return this.$store.state.user.all
     },
     departments() {
-      return this.$store.state.department.all.map((department) => {
-        return {...department, key: department.department_id, name: department.department_name}
-      })
+      return this.$store.state.department.all
     },
     typeid() {
       return this.selected ? index2id[this.selected] : null;

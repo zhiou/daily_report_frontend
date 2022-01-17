@@ -180,7 +180,7 @@ export default {
           role_flag |= user.roles.indexOf("dm") > -1 ? 2 : 0;
           role_flag |= user.roles.indexOf("pm") > -1 ? 1 : 0;
         }
-        return {...user, key: user.work_code, role_flag};
+        return {...user, role_flag};
       });
     },
   },

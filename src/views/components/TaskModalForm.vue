@@ -103,9 +103,8 @@
             <!--                {{ project.name }}-->
             <!--              </a-select-option>-->
             <!--            </a-select>-->
-            <a-cascader :options="options"
+            <a-cascader :options="projects"
                         :show-search="{ filterOption }"
-                        change-on-select
                         style="width: 220px"
                         v-decorator="[
               'project_number',
@@ -176,27 +175,10 @@ export default {
   },
   computed: {
     products() {
-      return this.$store.state.product.all.map((product) => {
-        return {...product, key: product.number};
-      });
+      return this.$store.state.product.all
     },
     projects() {
-      return this.$store.state.project.all.map((project) => {
-        return {...project, key: project.number};
-      });
-    },
-    options() {
-      return this.projects.map((project) => {
-        return {
-          ...project,
-          value: project.number,
-          label: project.name,
-          children: project.sublist.map((p) => {
-                return {...p, value: p.number, label: p.name}
-              }
-          )
-        };
-      })
+      return this.$store.state.project.all
     },
   },
   methods: {

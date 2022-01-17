@@ -328,14 +328,10 @@ export default {
       return this.$store.state.report.spinning;
     },
     refreshProducts() {
-      return this.$store.state.product.all.map((product) => {
-        return {...product, key: product.number, name: product.name};
-      });
+      return this.$store.state.product.all
     },
     refreshProjects() {
-      return this.$store.state.project.all.map((project) => {
-        return {...project, key: project.number, name: project.name};
-      });
+      return this.$store.state.project.all
     },
     datasource() {
       return this.mode === 'day' ? this.tasks : this.reports
@@ -346,9 +342,10 @@ export default {
     childProjects() {
       let nodes = []
       this.refreshProjects.forEach(project => {
-        nodes.push(project)
-        if (project.sublist) {
-          nodes = nodes.concat(project.sublist)
+        if (project.children && project.children.length > 0) {
+          nodes = nodes.concat(project.children)
+        } else {
+          nodes.push(project)
         }
       })
       console.log('nodes', nodes)
@@ -512,8 +509,8 @@ export default {
       for (let proj of this.refreshProjects) {
         if (proj.number === number) {
           return proj;
-        } else if (proj.sublist.length > 0) {
-          for (let sp of proj.sublist) {
+        } else if (proj.children.length > 0) {
+          for (let sp of proj.children) {
             if (sp.number === number) {
               return sp;
             }

@@ -21,7 +21,7 @@ export const mockProject = {
                     "manager_number|1": "@cname",
                     "status|1": "@integer(0,3)",
                     "remark|1": "@csentence",
-                    "sublist|8": [
+                    "children|8": [
                         {
                             "number|1": "@natural(1,1000)",
                             "name|1": "@cword(7,10)",

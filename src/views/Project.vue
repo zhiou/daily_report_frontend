@@ -153,17 +153,10 @@ export default {
       return this.$store.state.project.spinning;
     },
     employers() {
-      return this.$store.state.user.all.map((worker) => {
-        return { ...worker, key: worker.work_code, number: worker.work_code };
-      });
+      return this.$store.state.user.all
     },
     projects() {
-       return this.$store.state.project.all.map((project) => {
-        return { ...project,
-          key: project.number,
-          children: project.sublist.length > 0 ? project.sublist.map(sp => {return {...sp, key:sp.number}}) : null
-        };
-      });
+       return this.$store.state.project.all
     }
   },
   methods: {

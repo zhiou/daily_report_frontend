@@ -156,16 +156,11 @@ export default {
   },
   computed: {
     staffs() {
-      return this.$store.state.user.all.map((worker) => {
-        return {...worker, key: worker.work_code, number: worker.work_code};
-      });
+      return this.$store.state.user.all
     },
     root_projects() {
       return this.$store.state.project.all
-          .filter(project => project.parent == null
-          ).map((project) => {
-            return {...project, key: project.number};
-          });
+          .filter(project => project.parent == null)
     },
   },
   components: {},

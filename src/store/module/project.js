@@ -84,10 +84,10 @@ const mutations = {
         if (project.parent_number) {
             state.all = [...state.all].map(proj => {
                 if (proj.number === project.parent_number) {
-                    if (proj.sublist) {
-                        proj.sublist.push(project)
+                    if (proj.children) {
+                        proj.children.push(project)
                     } else {
-                        proj.sublist = [project]
+                        proj.children = [project]
                     }
                 }
                 return proj;

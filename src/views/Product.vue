@@ -138,9 +138,7 @@ export default {
       return this.$store.state.product.spinning;
     },
     products() {
-      return this.$store.state.product.all.map((product) => {
-        return { ...product, key: product.number };
-      });
+      return this.$store.state.product.all
     },
   },
   methods: {
