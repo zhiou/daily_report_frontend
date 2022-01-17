@@ -34,7 +34,6 @@
           :data-source="reports"
           style="margin: 16px"
           :defaultExpandedRowKeys="[0]"
-          :pagination="pagination"
           @change="onTableChange"
         >
           <template slot="details" slot-scope="tasks">
@@ -97,7 +96,6 @@ export default {
       columns,
       onDay: moment(),
       projectNumber: null,
-      pagination: { current: 1, pageSize: 10 },
     };
   },
   computed: {
@@ -133,14 +131,10 @@ export default {
     },
     fetchData() {
       this.$store
-        .dispatch("report/pmPageQuery", {
-          project_number: this.projectNumber,
-          page_index: this.pagination.current,
-          page_size: this.pagination.pageSize,
+        .dispatch("report/pmQuery", {
+          project_number: this.projectNumber
         })
-        .then((paged) => {
-          let tasks = paged.records;
-          this.pagination = {...this.pagination, total: paged.total}
+        .then((tasks) => {
           this.reports = conform('staff_name', tasks)
         })
         .catch((error) => {
