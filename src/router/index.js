@@ -130,7 +130,7 @@ const routes = [
         component: Project,
         meta: {
           requireAuth: true,
-          requireRole: 'pmo',
+          requireRole: 'pm',
           inMenu: 'settings',
           breadcrumb: '项目信息'
         },

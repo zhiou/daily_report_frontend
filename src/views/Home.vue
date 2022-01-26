@@ -199,7 +199,9 @@ export default {
           items: [],
         },
       ];
-      if (roles.indexOf("pmo") > -1 || roles.indexOf("admin") > -1) {
+      if (roles.indexOf("pmo") > -1
+          || roles.indexOf("admin") > -1
+          || roles.indexOf("pm") > -1) {
         menus.push({
           key: "settings",
           title: this.$t("home.menu.settings"),
@@ -214,8 +216,11 @@ export default {
         const requireRole = route.meta.requireRole;
         const belongMenu = route.meta.inMenu;
         console.log("require role:", requireRole, "roles:", roles);
-        // 如果属于某个Menu且没有角色要求,或者满足角色要求就加入到menu
-        if (belongMenu && (!requireRole || roles.indexOf(requireRole) > -1)) {
+        // 如果是pmo或admin， 或属于某个Menu且没有角色要求,或者满足角色要求就加入到menu
+        if (belongMenu && (!requireRole
+            || roles.indexOf(requireRole) > -1
+            || (roles.indexOf("pmo") > -1 && requireRole !== "admin" && requireRole !== "dm")
+            )) {
           let menu = menus.find((menu) => menu.key === belongMenu);
           console.log("menu", menu);
           if (menu) {

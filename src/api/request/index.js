@@ -22,13 +22,13 @@ const service = axios.create({
   timeout: 10000,
 });
 
-// MockConfig.mocks.forEach((config) => {
-//   if (config.enabled && !prod) {
-//     Mock.mock(config.api, config.method, () => {
-//       return config.data
-//     });
-//   }
-// });
+MockConfig.mocks.forEach((config) => {
+  if (config.enabled && !prod) {
+    Mock.mock(config.api, config.method, () => {
+      return config.data
+    });
+  }
+});
 
 service.interceptors.request.use(
   (request) => {
