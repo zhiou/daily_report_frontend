@@ -46,8 +46,8 @@ const actions = {
     create({commit}, project) {
         return new Promise((resolve, reject) => {
             create(project)
-                .then(() => {
-                    commit("ADD_PROJECT", project);
+                .then((proj) => {
+                    commit("ADD_PROJECT", proj);
                     resolve();
                 })
                 .catch((error) => {

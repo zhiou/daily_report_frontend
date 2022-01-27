@@ -8,20 +8,18 @@
 -->
 <template>
   <div id="project" v-title data-title="项目信息">
-    <!-- <a-row :gutter="16">
-      <a-col :span="2" :offset="22">
-        <a-button :disabled="notChanged" type="primary" @click="onSave">
-          {{ $t("project.button.save") }}
+
+        <a-button type="primary" style="margin-left: 16px" @click="() => visible = true">
+          <a-icon type="plus" /> {{ $t("project.button.add") }}
         </a-button>
-      </a-col>
-    </a-row> -->
+
     <a-spin :spinning="spinning">
       <a-table
         :columns="columns"
         :data-source="projects"
         style="margin: 16px"
         :defaultExpandedRowKeys="[0]"
-        :pagination="false"
+        :pagination="{ pageSize: 7 }"
       >
         <template slot="name" slot-scope="text, record">
           <editable-cell
@@ -59,13 +57,13 @@
           />
         </template>
       </a-table>
-      <a-button
-        type="dashed"
-        style="width: 40%; margin-top: 8px; margin-left: 30%"
-        @click="() => (visible = true)"
-      >
-        <a-icon type="plus" /> {{ $t("project.button.add") }}
-      </a-button>
+<!--      <a-button-->
+<!--        type="dashed"-->
+<!--        style="width: 40%; margin-top: 8px; margin-left: 30%"-->
+<!--        @click="() => (visible = true)"-->
+<!--      >-->
+<!--        <a-icon type="plus" /> {{ $t("project.button.add") }}-->
+<!--      </a-button>-->
     </a-spin>
 
     <project-modal-form
@@ -179,6 +177,11 @@ export default {
       modalForm.validateFields((err, project) => {
         if (err) {
           return;
+        }
+        let conflict = this.projects.find(proj => proj.number === project.number)
+        if (conflict != null && conflict.number !== project.parent_number) {
+          modalForm.setFields({"number":{value:"", errors:[{"message": "编号已存在", "field":"number"}]}})
+          return
         }
         modalForm.resetFields();
         this.visible = false;

@@ -25,6 +25,31 @@
       "
     >
       <a-form layout="vertical" :form="form">
+        <a-form-item :label="$t('project.form.parent')">
+          <a-select
+              show-search
+              ref="selector"
+              option-filter-prop="children"
+              :filter-option="filterOption"
+              style="width:100%;"
+              @change="onParent"
+              v-decorator="[
+              'parent_number',
+              {
+                rules: [
+                  {
+                    required: false,
+                    message: $t('project.tips.parent'),
+                  },
+                ],
+              },
+            ]"
+          >
+            <a-select-option v-for="project in root_projects" :key="project.number">
+              {{ project.name }}
+            </a-select-option>
+          </a-select>
+        </a-form-item>
         <a-form-item :label="$t('project.form.number')">
           <a-input
               v-decorator="[
@@ -55,36 +80,13 @@
             ]"
           />
         </a-form-item>
-        <a-form-item :label="$t('project.form.parent')">
-          <a-select
-              show-search
-              ref="selector"
-              option-filter-prop="children"
-              :filter-option="filterOption"
-              style="width:100%;"
-              v-decorator="[
-              'parent_number',
-              {
-                rules: [
-                  {
-                    required: false,
-                    message: $t('project.tips.parent'),
-                  },
-                ],
-              },
-            ]"
-          >
-            <a-select-option v-for="project in root_projects" :key="project.number">
-              {{ project.name }}
-            </a-select-option>
-          </a-select>
-        </a-form-item>
+        <a-space>
         <a-form-item :label="$t('project.form.manager')">
           <a-select
               show-search
               option-filter-prop="children"
               :filter-option="filterOption"
-              style="width: 120px"
+              style="width: 200px"
               v-decorator="[
               'manager_number',
               {
@@ -104,7 +106,7 @@
         </a-form-item>
         <a-form-item :label="$t('project.form.status')">
           <a-select
-              style="width: 120px"
+              style="width: 200px"
               v-decorator="[
               'status',
               {
@@ -122,6 +124,7 @@
             </a-select-option>
           </a-select>
         </a-form-item>
+        </a-space>
         <a-form-item :label="$t('project.form.remark')">
           <a-input
               type="textarea"
@@ -170,6 +173,16 @@ export default {
     };
   },
   methods: {
+    onParent(number) {
+
+      let parent = this.root_projects.find(proj => proj.number === number)
+      console.log('parent selected', parent)
+      this.form.setFieldsValue({
+        number: parent.number,
+        manager_number: parent.manager_number,
+        status: parent.status
+      })
+    },
     filterOption(input, option) {
       return (
           option.componentOptions.children[0].text

@@ -77,7 +77,7 @@
           />
         </a-form-item>
 
-        <a-space>
+
           <a-form-item :label="$t('task.label.proj')">
             <!--            <a-select-->
             <!--                show-search-->
@@ -105,7 +105,8 @@
             <!--            </a-select>-->
             <a-cascader :options="projects"
                         :show-search="{ filterOption }"
-                        style="width: 220px"
+                        change-on-select
+                        style="width: 450px"
                         v-decorator="[
               'project_number',
               {
@@ -124,7 +125,7 @@
                 show-search
                 option-filter-prop="children"
                 :filter-option="filterOption"
-                style="width: 220px"
+                style="width: 450px"
                 v-decorator="[
               'product_number',
               {
@@ -141,11 +142,10 @@
                   v-for="product in products"
                   :key="product.number"
               >
-                {{ product.name }}
+                {{ product.in_line + '-' + product.number + '-' +  product.name }}
               </a-select-option>
             </a-select>
           </a-form-item>
-        </a-space>
 
       </a-form>
     </a-modal>

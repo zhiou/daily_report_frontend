@@ -14,6 +14,7 @@
           :columns="columns"
           :data-source="userRoles"
           style="margin: 16px"
+          :pagination="{ pageSize: 9 }"
       >
         <template slot="check_box_pmo" slot-scope="flag, record">
           <a-checkbox

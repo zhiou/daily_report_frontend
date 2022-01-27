@@ -8,13 +8,16 @@
 -->
 <template>
   <div id="product" v-title data-title="产品信息">
+    <a-button type="primary" style="margin-left: 16px" @click="() => visible = true">
+      <a-icon type="plus" /> {{ $t("product.button.add") }}
+    </a-button>
     <a-spin :spinning="spinning">
       <a-table
         :columns="columns"
         :data-source="products"
         style="margin: 16px"
         :defaultExpandedRowKeys="[0]"
-        :pagination="false"
+        :pagination="{ pageSize: 7 }"
       >
         <template slot="name" slot-scope="text, record">
           <editable-cell
@@ -51,13 +54,13 @@
           />
         </template>
       </a-table>
-      <a-button
-        type="dashed"
-        style="width: 40%; margin-top: 8px; margin-left: 30%"
-        @click="() => (visible = true)"
-      >
-        <a-icon type="plus" /> {{ $t("product.button.add") }}
-      </a-button>
+<!--      <a-button-->
+<!--        type="dashed"-->
+<!--        style="width: 40%; margin-top: 8px; margin-left: 30%"-->
+<!--        @click="() => (visible = true)"-->
+<!--      >-->
+<!--        <a-icon type="plus" /> {{ $t("product.button.add") }}-->
+<!--      </a-button>-->
     </a-spin>
     <product-modal-form
       ref="productForm"
