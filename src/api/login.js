@@ -16,7 +16,7 @@ export function login(account, password) {
   return request({
     url: '/user/login',
     method: 'post',
-    timeout: 15 * 1000,
+    timeout: 30 * 1000,
     data
   })
 }
@@ -44,6 +44,7 @@ export function info() {
   return request({
     url: '/user/info',
     method: 'get',
+    timeout: 30 * 1000,
   })
 }
 
@@ -51,6 +52,7 @@ export function list() {
   return request({
     url: '/user',
     method: 'get',
+    timeout: 30 * 1000,
 })
 }
 
