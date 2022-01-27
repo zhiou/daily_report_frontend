@@ -103,14 +103,14 @@ module.exports = {
       add: '新建产品',
     },
     form: {
-      number: '产品编号',
+      model: '产品型号',
       name: '产品名',
       line: '产品线',
       status: '产品状态',
       remark: '备注',
     },
     tips: {
-      number: '请输入产品编号',
+      model: '请输入产品型号',
       name: '请输入产品名',
       manager: '请输入产品线名',
       status: '请设置项目状态',

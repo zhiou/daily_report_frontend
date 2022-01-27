@@ -99,11 +99,18 @@ module.exports = {
       add: 'Add Product',
     },
     form: {
-      number: 'Product Number',
+      model: 'Product Model',
       name: 'Product Name',
       line: 'Product Line',
       status: 'Status',
       remark: 'Remark',
+    },
+    tips: {
+      model: 'Please input product model',
+      name: 'Please input product name',
+      manager: 'Please select product manager',
+      status: 'Please select product status',
+      parent: 'Please input product parent'
     }
   },
   user_role: {

@@ -25,15 +25,15 @@
       "
     >
       <a-form layout="vertical" :form="form">
-        <a-form-item :label="$t('product.form.number')">
+        <a-form-item :label="$t('product.form.model')">
           <a-input
             v-decorator="[
-              'number',
+              'model',
               {
                 rules: [
                   {
                     required: true,
-                    message: $t('product.tips.number'),
+                    message: $t('product.tips.model'),
                   },
                 ],
               },

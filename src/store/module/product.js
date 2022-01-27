@@ -46,8 +46,8 @@ const actions = {
   create({ commit }, product) {
     return new Promise((resolve, reject) => {
       create(product)
-        .then(() => {
-          commit("ADD_PRODUCT", product);
+        .then((prod) => {
+          commit("ADD_PRODUCT", prod);
           resolve();
         })
         .catch((error) => {

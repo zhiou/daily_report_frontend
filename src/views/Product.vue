@@ -19,6 +19,12 @@
         :defaultExpandedRowKeys="[0]"
         :pagination="{ pageSize: 7 }"
       >
+        <template slot="model" slot-scope="text, record">
+          <editable-cell
+              :text="text"
+              @change="onCellChange(record.key, 'model', $event)"
+          />
+        </template>
         <template slot="name" slot-scope="text, record">
           <editable-cell
             :text="text"
@@ -80,9 +86,10 @@ const productState = ["设计", "研发", "发布", "终止"];
 
 const columns = [
   {
-    dataIndex: "number",
-    key: "number",
-    title: "产品编号",
+    dataIndex: "model",
+    key: "model",
+    title: "产品型号",
+    scopedSlots: { customRender: "model" },
   },
   {
     dataIndex: "name",
