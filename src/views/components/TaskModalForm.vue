@@ -118,7 +118,7 @@
                   v-for="product in products"
                   :key="product.number"
               >
-                {{ (product.in_line || '其他') + '-' + product.number + '-' +  product.name }}
+                {{ (product.in_line || '其他') + '-' + product.model + '-' +  product.name }}
               </a-select-option>
             </a-select>
           </a-form-item>
