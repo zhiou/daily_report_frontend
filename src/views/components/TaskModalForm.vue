@@ -79,30 +79,6 @@
 
 
           <a-form-item :label="$t('task.label.proj')">
-            <!--            <a-select-->
-            <!--                show-search-->
-            <!--                option-filter-prop="children"-->
-            <!--                :filter-option="filterOption"-->
-            <!--                style="width: 220px"-->
-            <!--                v-decorator="[-->
-            <!--              'project_number',-->
-            <!--              {-->
-            <!--                rules: [-->
-            <!--                  {-->
-            <!--                    required: false,-->
-            <!--                    message: $t('task.tips.proj'),-->
-            <!--                  },-->
-            <!--                ],-->
-            <!--              },-->
-            <!--            ]"-->
-            <!--            >-->
-            <!--              <a-select-option-->
-            <!--                  v-for="project in projects"-->
-            <!--                  :key="project.number"-->
-            <!--              >-->
-            <!--                {{ project.name }}-->
-            <!--              </a-select-option>-->
-            <!--            </a-select>-->
             <a-cascader :options="projects"
                         :show-search="{ filterOption }"
                         change-on-select
@@ -142,7 +118,7 @@
                   v-for="product in products"
                   :key="product.number"
               >
-                {{ product.in_line + '-' + product.number + '-' +  product.name }}
+                {{ (product.in_line || '其他') + '-' + product.number + '-' +  product.name }}
               </a-select-option>
             </a-select>
           </a-form-item>
@@ -178,6 +154,7 @@ export default {
       return this.$store.state.product.all
     },
     projects() {
+      console.log('projects',this.$store.state.project.all)
       return this.$store.state.project.all
     },
   },

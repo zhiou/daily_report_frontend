@@ -8,7 +8,7 @@
  */
 
 import {list, update, create, remove} from "../../api/project";
-
+import {removeNullChildren} from "../../utils/helper"
 const state = () => ({
     spinning: false,
     all: [],
@@ -70,7 +70,7 @@ const actions = {
 
 const mutations = {
     SET_PROJECTS: (state, projects) => {
-        state.all = projects
+        state.all = removeNullChildren(projects)
     },
     UPDATE_PROJECT: (state, target) => {
         let projects = state.all
