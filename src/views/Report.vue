@@ -448,11 +448,20 @@ export default {
         this.visible = false;
         const {count} = this;
         // 级联列表, 取最后一个元素
-        const [project_number, ...rest] = [...task.project_number].reverse();
+        let project_number = null
+        if (task.project_number) {
+          let rest
+          [project_number, ...rest] = [...task.project_number].reverse();
+        }
+        let product_number = null
+        if (task.product_number) {
+          product_number = task.product_number
+        }
         console.log('project_number', project_number, this.refreshProjects);
-        let prod = this.getProductFrom(task.product_number);
+        console.log('product_number', product_number, this.refreshProducts);
+        let prod = this.getProductFrom(product_number);
         let proj = this.getProjectFrom(project_number);
-        console.log('proj', proj);
+        console.log('proj', proj, 'prod', prod);
         let newTask = {
           ...task,
           key: count,
@@ -503,13 +512,19 @@ export default {
       );
     },
     getProductFrom(number) {
+      if (!number) {
+        return null;
+      }
       return this.refreshProducts.find((prod) => prod.number === number);
     },
     getProjectFrom(number) {
+      if (!number) {
+        return null
+      }
       for (let proj of this.refreshProjects) {
         if (proj.number === number) {
           return proj;
-        } else if (proj.children.length > 0) {
+        } else if (proj.children && proj.children.length > 0) {
           for (let sp of proj.children) {
             if (sp.number === number) {
               return sp;
