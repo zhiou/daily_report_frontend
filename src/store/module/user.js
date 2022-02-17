@@ -9,7 +9,7 @@
 import {getToken, setToken} from "../../api/request/token";
 
 import {login, logout, modify, info, list, modify_roles} from "../../api/login";
-
+import {removeNullChildren} from "../../utils/helper"
 
 const state = () => ({
     all: [],
@@ -118,7 +118,7 @@ const mutations = {
         state.department = department;
     },
     SET_PROJECTS: (state, projects) => {
-        state.projects = projects
+        state.projects = removeNullChildren(projects)
     },
     SET_ROLES: (state, roles) => {
         state.roles = roles

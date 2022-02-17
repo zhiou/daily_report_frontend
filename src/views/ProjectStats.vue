@@ -11,18 +11,14 @@
     <a-row :gutter="16">
       <a-col :span="4">
         <!-- <a-input :value="projectName" addonBefore="Project" disabled /> -->
-        <a-select
-          show-search
-          placeholder="选择一个你负责的项目"
-          option-filter-prop="children"
-          style="width: 200px"
-          :filter-option="filterOption"
-          @change="handleChange"
-        >
-          <a-select-option v-for="project in projects" :key="project.number">
-            {{ project.name }}
-          </a-select-option>
-        </a-select>
+        <a-cascader
+            change-on-select
+            :options="projects"
+            option-filter-prop="children"
+            :filter-option="filterOption"
+            style="width:400px"
+            @change="handleChange"
+        />
       </a-col>
 
       <a-col :span="20"> </a-col>
@@ -98,7 +94,8 @@ export default {
     },
   },
   methods: {
-    handleChange(projectNumber) {
+    handleChange(numbers) {
+      const [projectNumber, ...rest] = [...numbers].reverse();
       this.fetchData(projectNumber);
     },
     fetchProjects() {

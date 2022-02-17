@@ -74,9 +74,9 @@
             <span v-else> {{ record.product_name }}</span>
           </template>
           <template slot="project-selector" slot-scope="number, record">
-            <editable-selector-cell
+            <editable-cascader-cell
                 :default_value="number"
-                :options="childProjects"
+                :options="refreshProjects"
                 v-if="editable"
                 @change="onProjectChanged(record.key, 'project_number', $event)"
             />
@@ -187,6 +187,7 @@ import EditableCell from "./components/EditableAreaCell.vue";
 import EditableNumberCell from "./components/EditableNumberCell.vue";
 import EditableAreaCell from "./components/EditableAreaCell.vue";
 import EditableSelectorCell from "./components/EditableSelectorCell";
+import EditableCascaderCell from "@/views/components/EditableCascaderCell";
 import TaskModalForm from "./components/TaskModalForm.vue";
 import moment from "moment";
 import i18n from "../i18n";
@@ -273,6 +274,7 @@ export default {
     EditableNumberCell,
     EditableAreaCell,
     EditableSelectorCell,
+    EditableCascaderCell,
     TaskModalForm,
   },
   beforeCreate() {
@@ -339,18 +341,6 @@ export default {
     reports() {
       return conform('report_date', this.tasks)
     },
-    childProjects() {
-      let nodes = []
-      this.refreshProjects.forEach(project => {
-        if (project.children && project.children.length > 0) {
-          nodes = nodes.concat(project.children)
-        } else {
-          nodes.push(project)
-        }
-      })
-      console.log('nodes', nodes)
-      return nodes;
-    }
   },
   methods: {
     onModeChange(mode) {
@@ -489,9 +479,14 @@ export default {
     onProjectChanged(key, dataIndex, number) {
       const tasks = [...this.tasks];
       const target = tasks.find((item) => item.key === key);
+      console.log("on project changed", dataIndex, number);
       if (target) {
+        let proj = this.getProjectFrom(number);
+        console.log("on project changed", proj);
         target[dataIndex] = number;
+        target['project_name'] = proj.name
         this.tasks = tasks;
+        console.log("tasks", this.tasks)
       }
     },
     onProductChanged(key, dataIndex, number) {

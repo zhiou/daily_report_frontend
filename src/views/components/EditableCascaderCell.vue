@@ -7,23 +7,19 @@
  * @FilePath: /daily-report-frontend/src/views/components/EditableCell.vue
 -->
 <template>
-  <div class="editable-selector-cell">
+  <div class="editable-cascader-cell">
     <div v-if="editable" class="editable-cell-input-wrapper">
       <a-space align="baseline">
-        <a-select
-            show-search
-
+        <a-cascader
+            change-on-select
             ref="selector"
+            :options="options"
             option-filter-prop="children"
             :filter-option="filterOption"
             style="width:150px"
             @change="handleChange"
             @blur="check"
-        >
-          <a-select-option v-for="option in options" :key="option.number">
-            {{ option.name }}
-          </a-select-option>
-        </a-select>
+        />
         <a-icon type="check" class="editable-cell-icon-check" @click="check"/>
       </a-space>
 
@@ -49,14 +45,33 @@ export default {
   },
   computed: {
     name() {
-
-      let option = this.options.find((target) => target.number === this.value);
-      return option ? option.name : "";
+      let option = this.getProjectFrom(this.value);
+      return option ? option.name : "其他";
     },
   },
   methods: {
     handleChange(number) {
-      this.value = number;
+      console.log("project changed", number)
+      let rest
+      [this.value, ...rest] = [...number].reverse();
+      console.log("project selected", this.value)
+    },
+    getProjectFrom(number) {
+      if (!number) {
+        return null
+      }
+      for (let proj of this.options) {
+        if (proj.number === number) {
+          return proj;
+        } else if (proj.children && proj.children.length > 0) {
+          for (let sp of proj.children) {
+            if (sp.number === number) {
+              return sp;
+            }
+          }
+        }
+      }
+      return null;
     },
     check() {
       this.editable = false;
@@ -81,7 +96,7 @@ export default {
 </script>
 
 <style scoped>
-.editable-selector-cell {
+.editable-cascader-cell {
   position: relative;
 }
 
