@@ -455,10 +455,11 @@ export default {
         let newTask = {
           ...task,
           key: count,
-          product_line: prod ? prod.in_line : "其他",
-          product_name: prod ? prod.name : "其他",
-          project_name: (proj ? proj.name : "其他"),
-          project_number
+          product_line: prod && prod.in_line || "其他",
+          product_name: prod && prod.name || "其他",
+          project_name: proj && proj.name || "其他",
+          project_number,
+          product_number
         };
         console.log('task', newTask)
         this.count = count + 1;

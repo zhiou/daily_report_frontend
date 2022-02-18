@@ -27,7 +27,7 @@
               </a-select-option>
             </a-select>
           </a-col>
-          <a-col :span="4">
+          <a-col :span="8">
             <a-select
                 v-model="clearflag"
                 show-search
@@ -330,6 +330,19 @@ export default {
           return this.departments
       }
       return []
+    },
+    excelItems() {
+      return this.tasks.map(task => {
+        let nt = {...task}
+        if (!nt.project_number) {
+          nt.project_name = '其他'
+        }
+        if (!nt.product_number) {
+          nt.product_name = '其他'
+          nt.product_line = '其他'
+        }
+        return nt
+      })
     }
   },
   methods: {
@@ -379,7 +392,7 @@ export default {
       this.$export
           .excel({
             columns: this.columns,
-            data: this.tasks,
+            data: this.excelItems,
           })
           .finally(() => {
             this.downloading = false;
