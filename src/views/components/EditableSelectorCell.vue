@@ -21,7 +21,7 @@
             @blur="check"
         >
           <a-select-option v-for="option in options" :key="option.number">
-            {{ option.name }}
+            {{ option.name + (option.model ? '-' + option.model : '') }}
           </a-select-option>
         </a-select>
         <a-icon type="check" class="editable-cell-icon-check" @click="check"/>
@@ -49,9 +49,8 @@ export default {
   },
   computed: {
     name() {
-
       let option = this.options.find((target) => target.number === this.value);
-      return option ? option.name : "";
+      return option ? option.name + (option.model ? '-' + option.model : '') : "";
     },
   },
   methods: {

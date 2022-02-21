@@ -151,14 +151,14 @@ let columns = [
   },
   {
     label: "产品",
-    prop: "product_name",
+    prop: "product_display",
     title: i18n.t("report.column.prod"),
-    dataIndex: "product_name",
-    key: "product_name",
+    dataIndex: "product_display",
+    key: "product_display",
     filters: [],
     scopedSlots: {customRender: "text"},
     onFilter: (value, record) => {
-      return filter(value, record.product_name)
+      return filter(value, record.product_display)
     },
   },
   {
@@ -338,7 +338,7 @@ export default {
           nt.project_name = '其他'
         }
         if (!nt.product_number) {
-          nt.product_name = '其他'
+          nt.product_display = '其他'
           nt.product_line = '其他'
         }
         return nt
@@ -370,7 +370,7 @@ export default {
             this.tasks = tasks;
             let tasksTemp = unique2(tasks, 'product_line');
             this.columns[0].filters = formfilter(tasksTemp);
-            tasksTemp = unique2(tasks, 'product_name');
+            tasksTemp = unique2(tasks, 'product_display');
             this.columns[1].filters = formfilter(tasksTemp);
             tasksTemp = unique2(tasks, 'department');
             this.columns[2].filters = formfilter(tasksTemp);

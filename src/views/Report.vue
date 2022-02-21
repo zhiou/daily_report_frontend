@@ -68,19 +68,19 @@
             <editable-selector-cell
                 :default_value="number"
                 :options="refreshProducts"
-                v-if="editable"
+
                 @change="onProductChanged(record.key, 'product_number', $event)"
             />
-            <span v-else> {{ record.product_name }}</span>
+
           </template>
           <template slot="project-selector" slot-scope="number, record">
             <editable-cascader-cell
                 :default_value="number"
                 :options="refreshProjects"
-                v-if="editable"
+
                 @change="onProjectChanged(record.key, 'project_number', $event)"
             />
-            <span v-else> {{ record.project_name }}</span>
+
           </template>
 
           <template slot="day" slot-scope="date">
@@ -457,6 +457,7 @@ export default {
           key: count,
           product_line: prod && prod.in_line || "其他",
           product_name: prod && prod.name || "其他",
+          product_model: prod && prod.model || "其他",
           project_name: proj && proj.name || "其他",
           project_number,
           product_number
