@@ -190,14 +190,14 @@ let columns = [
   },
   {
     label: "项目",
-    prop: "project_name",
+    prop: "project_display",
     title: i18n.t("report.column.proj"),
-    dataIndex: "project_name",
-    key: "project_name",
+    dataIndex: "project_display",
+    key: "project_display",
     filters: [],
     scopedSlots: {customRender: "text"},
     onFilter: (value, record) => {
-      return filter(value, record.project_name)
+      return filter(value, record.project_display)
     },
   },
   {
@@ -335,7 +335,7 @@ export default {
       return this.tasks.map(task => {
         let nt = {...task}
         if (!nt.project_number) {
-          nt.project_name = '其他'
+          nt.project_display = '其他'
         }
         if (!nt.product_number) {
           nt.product_display = '其他'
