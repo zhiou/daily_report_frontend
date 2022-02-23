@@ -134,6 +134,8 @@ export default {
       if (this.$route.path === "/") {
         this.$router.push("user");
       }
+    }).catch((e) => {
+      this.$router.replace("/login")
     });
   },
   methods: {
@@ -151,7 +153,7 @@ export default {
       e.preventDefault();
       this.$store
           .dispatch("user/logout")
-          .finally(() => this.$router.push("/login"));
+          .finally(() => this.$router.replace("/login"));
     },
     onMenuChanged(e) {
       this.$router.push("/" + e.key);

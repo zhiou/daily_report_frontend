@@ -29,7 +29,6 @@
 </template>
 
 <script>
-import moment from "moment";
 
 export default {
   name: "ProjectStats",
@@ -104,9 +103,9 @@ export default {
       this.fetchData(projectNumber);
     },
     fetchProjects() {
-      if (this.projects.length == 0) {
+      if (this.projects.length === 0) {
         this.$store.dispatch("user/info").finally(() => {
-          console.log("user info fechted");
+          console.log("user info fetched");
         });
       }
     },
