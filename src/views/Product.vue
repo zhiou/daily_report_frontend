@@ -51,13 +51,17 @@
           />
         </span>
         <template slot="operation" slot-scope="text, record">
+          <a-popconfirm  v-show="products.length"
+                         title="确认删除?"
+                         okText="确定"
+                         cancelText="取消"
+                         @confirm="() => onDelete(record.key)">
           <a-button
             type="danger"
             shape="circle"
             icon="delete"
-            v-if="products.length"
-            @click="() => onDelete(record.key)"
           />
+          </a-popconfirm>
         </template>
       </a-table>
 <!--      <a-button-->

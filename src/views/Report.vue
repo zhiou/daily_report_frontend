@@ -122,13 +122,17 @@
           </template>
           <template slot="operation" slot-scope="text, record">
             <a-space>
+                <a-popconfirm  v-show="editable && tasks.length"
+                               title="确认删除?"
+                               okText="确定"
+                               cancelText="取消"
+                               @confirm="() => onDelete(record.key)">
               <a-button
                   type="danger"
                   shape="circle"
                   icon="delete"
-                  v-show="editable && tasks.length"
-                  @click="() => onDelete(record.key)"
               />
+              </a-popconfirm>
               <a-button
                   shape="circle"
                   icon="copy"

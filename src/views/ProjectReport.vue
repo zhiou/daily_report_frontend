@@ -103,9 +103,13 @@ export default {
     },
   },
   methods: {
-    handleChange(projectNumber) {
+    handleChange(numbers) {
+      if (numbers.length === 0) {
+        this.reports = []
+        return
+      }
       let rest
-      [this.projectNumber, ...rest] = [...projectNumber].reverse();
+      [this.projectNumber, ...rest] = [...numbers].reverse();
       this.fetchData();
     },
     filterOption(input, option) {

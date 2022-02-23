@@ -95,6 +95,11 @@ export default {
   },
   methods: {
     handleChange(numbers) {
+      if (numbers.length === 0) {
+        this.reports = []
+        this.render();
+        return
+      }
       const [projectNumber, ...rest] = [...numbers].reverse();
       this.fetchData(projectNumber);
     },
