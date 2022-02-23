@@ -2,20 +2,6 @@
 source proj.env
 next_version=""
 
-while getopts ":r:h" opt; do
-  case "$opt" in
-  r)
-    retry
-    ;;
-  h)
-    usage && exit 0
-    ;;
-  \?)
-    echo -e "\033[31mERROR: Unknown Argument! \033[0m\n" && usage && exit 1
-    ;;
-  esac
-done
-
 usage() {
   echo "
   Usage:
@@ -24,6 +10,7 @@ usage() {
 }
 
 retry() {
+  echo 'retry...'
   git add . && git commit --amend --no-edit && deploy
 }
 
@@ -40,6 +27,8 @@ update_container_tag_version() {
   next_version="$current_version_number""_build_$(git rev-parse --short HEAD)"
   current_tag=$(cat deploy/values.yaml | grep -E "tag:")
   sed -i "" "s/$current_tag/  tag: $next_version/g" deploy/values.yaml
+  # 提交修改后的values.yaml文件
+  git add . && git commit --amend --no-edit
 }
 
 # clean dist folder
@@ -96,12 +85,30 @@ upload_image() {
 }
 
 deploy() {
+  echo 'deploy begin'
   check_local_if_latest && clean && compile && update_container_tag_version && build_image && upload_image
+  echo 'deploy done'
 }
 
 upgrade_app() {
   cd ./deploy || exit
   helm upgrade "$appname" . -n $namespace
 }
+
+while getopts ':rh' opt; do
+  case $opt in
+  r)
+    echo 'retry ...'
+    retry
+    exit
+    ;;
+  h)
+    usage && exit 0
+    ;;
+  ?)
+    echo -e "\033[31mERROR: Unknown Argument! \033[0m\n" && usage && exit 1
+    ;;
+  esac
+done
 
 deploy
