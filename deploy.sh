@@ -84,15 +84,15 @@ upload_image() {
   fi
 }
 
-deploy() {
-  echo 'deploy begin'
-  check_local_if_latest && clean && compile && update_container_tag_version && build_image && upload_image
-  echo 'deploy done'
-}
-
 upgrade_app() {
   cd ./deploy || exit
   helm upgrade "$appname" . -n $namespace
+}
+
+deploy() {
+  echo 'deploy begin'
+  check_local_if_latest && clean && compile && update_container_tag_version && build_image && upload_image && upgrade_app
+  echo 'deploy done'
 }
 
 while getopts ':rh' opt; do
