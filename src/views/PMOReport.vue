@@ -178,6 +178,7 @@ let columns = [
     dataIndex: "staff_name",
     key: "staff_name",
     filters: [],
+    width: 90,
     onFilter: (value, record) => filter(value, record.staff_name),
   },
   {
@@ -186,7 +187,7 @@ let columns = [
     title: i18n.t("report.column.cost"),
     dataIndex: "task_cost",
     key: "task_cost",
-    width: 20,
+    width: 60,
   },
   {
     label: "项目",
