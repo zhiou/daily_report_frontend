@@ -24,16 +24,17 @@ export default {
       this.$store
           .dispatch("user/wwlogin", ctx)
           .then(() => {
-            this.$message.success(this.$t("error.tips.login.success"), 3);
             this.$router.replace("/")
+            this.$message.success(this.$t("error.tips.login.success"), 3)
           })
           .catch((error) => {
+            this.$router.replace("/login")
             if (typeof error === 'string') {
               this.$message.error(error, 3)
             } else {
               this.$message.error(this.$t('error.tips.login.failed'), 3);
             }
-            // this.$router.replace("/login")
+
           })
           .finally(() => {
             this.loading = false;
