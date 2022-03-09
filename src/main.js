@@ -43,6 +43,13 @@ Vue.directive("title", function(el) {
   });
 
   router.beforeEach((to, from, next) => {
+      console.log('to', to, 'from', from)
+      // if (to.path === '/oauth') {
+      //     next({
+      //         path: "/oauth",
+      //         query: to.query
+      //     })
+      // }
     const token = store.state.user.token
     if (!to.meta.requireAuth || (token && token != "")) {
       next();
