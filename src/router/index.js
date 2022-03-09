@@ -21,6 +21,7 @@ import PersonalStats from "../views/PersonalStats.vue";
 import ProjectStats from "../views/ProjectStats.vue";
 import PMOReport from "../views/PMOReport.vue";
 import UserRole from "../views/UserRole";
+import OAuth from "../views/OAuth";
 
 Vue.use(VueRouter);
 
@@ -178,6 +179,14 @@ const routes = [
     meta: {
       requireAuth: false,
     },
+  },
+  {
+    path: "/oauth",
+    name: "OAuth",
+    component: OAuth,
+    meta: {
+      requireAuth: false,
+    }
   },
   {
     path: "*",

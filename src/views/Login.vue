@@ -1,18 +1,19 @@
 <template>
   <div id="login" v-title :data-title="$t('login.title')">
-
-    <div class="me-login-box me-login-box-radius">
-      <img src="@/assets/logo.png"  alt=""/>
+    <div v-show="ww_login" id="ww_login" class="we-login-box we-login-box-radius"/>
+    <div v-show="!ww_login" class="me-login-box me-login-box-radius">
+      <img src="@/assets/logo.png" alt=""/>
       <h1>{{ $t("login.title") }}</h1>
+
       <a-form
-        id="components-form-demo-normal-login"
-        :form="form"
-        class="login-form"
-        @submit="handleSubmit"
+          id="components-form-demo-normal-login"
+          :form="form"
+          class="login-form"
+          @submit="handleSubmit"
       >
         <a-form-item>
           <a-input
-            v-decorator="[
+              v-decorator="[
               'username',
               {
                 rules: [
@@ -20,18 +21,18 @@
                 ],
               },
             ]"
-            :placeholder="$t('login.placeholder.username')"
+              :placeholder="$t('login.placeholder.username')"
           >
             <a-icon
-              slot="prefix"
-              type="user"
-              style="color: rgba(0, 0, 0, 0.25)"
+                slot="prefix"
+                type="user"
+                style="color: rgba(0, 0, 0, 0.25)"
             />
           </a-input>
         </a-form-item>
         <a-form-item>
           <a-input
-            v-decorator="[
+              v-decorator="[
               'password',
               {
                 rules: [
@@ -39,22 +40,22 @@
                 ],
               },
             ]"
-            type="password"
-            :placeholder="$t('login.placeholder.password')"
+              type="password"
+              :placeholder="$t('login.placeholder.password')"
           >
             <a-icon
-              slot="prefix"
-              type="lock"
-              style="color: rgba(0, 0, 0, 0.25)"
+                slot="prefix"
+                type="lock"
+                style="color: rgba(0, 0, 0, 0.25)"
             />
           </a-input>
         </a-form-item>
         <a-form-item>
           <a-button
-            type="primary"
-            html-type="submit"
-            class="login-form-button"
-            :loading="loading"
+              type="primary"
+              html-type="submit"
+              class="login-form-button"
+              :loading="loading"
           >
             {{ $t("login.button.login") }}
           </a-button>
@@ -65,14 +66,31 @@
 </template>
 
 <script>
+import WwLogin from '@/static/wwLogin-1.2.5.js'
+
 export default {
   name: "Login",
   beforeCreate() {
     this.form = this.$form.createForm(this);
+
+  },
+  mounted() {
+    console.log("WwLogin", WwLogin);
+    this.login = new WwLogin({
+      "id": "ww_login",
+      "appid": "ww363977121f1c3158",
+      "agentid": "1000032",
+      "redirect_uri": "http://daily-report.excelsecu.com/#/oauth",
+      "state": "",
+      "href": "",
+      "lang": "zh",
+    });
   },
   data() {
     return {
       loading: false,
+      ww_login: true,
+      login: WwLogin,
     };
   },
   methods: {
@@ -83,29 +101,29 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           that.$store
-            .dispatch("user/login", {
-              account: values["username"],
-              password: values["password"],
-            })
-            .then(() => {
-              that.$message.success(this.$t("error.tips.login.success"), 3);
-              let redirect_name = that.$route.query.redirect;
-              if (redirect_name) {
-                that.$router.push({ name: redirect_name });
-              } else {
-                that.$router.push("/");
-              }
-            })
-            .catch((error) => {
-              if (typeof error === 'string') {
-                that.$message.error(error, 3)
-              } else {
-                that.$message.error(this.$t('error.tips.login.failed'), 3);
-              }
-            })
-            .finally(() => {
-              this.loading = false;
-            });
+              .dispatch("user/login", {
+                account: values["username"],
+                password: values["password"],
+              })
+              .then(() => {
+                that.$message.success(this.$t("error.tips.login.success"), 3);
+                let redirect_name = that.$route.query.redirect;
+                if (redirect_name) {
+                  that.$router.push({name: redirect_name});
+                } else {
+                  that.$router.push("/");
+                }
+              })
+              .catch((error) => {
+                if (typeof error === 'string') {
+                  that.$message.error(error, 3)
+                } else {
+                  that.$message.error(this.$t('error.tips.login.failed'), 3);
+                }
+              })
+              .finally(() => {
+                this.loading = false;
+              });
         }
       });
     },
@@ -119,8 +137,8 @@ export default {
   min-height: 100%;
 }
 
-img{
-  border:0;
+img {
+  border: 0;
   margin-bottom: 16px;
 }
 
@@ -134,6 +152,22 @@ img{
   left: 0;
   z-index: 0;
   top: 0;
+}
+
+.we-login-box {
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  background-color: white;
+  margin-top: 150px;
+  margin-left: -210px;
+  left: 50%;
+  padding: 30px;
+}
+
+.we-login-box-radius {
+  border-radius: 10px;
+  box-shadow: 0px 0px 1px 1px rgba(161, 159, 159, 0.3);
 }
 
 .me-login-box {
