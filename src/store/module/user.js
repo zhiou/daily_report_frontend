@@ -8,7 +8,7 @@
  */
 import {getToken, setToken} from "../../api/request/token";
 
-import {login, logout, modify, info, list, modify_roles} from "../../api/login";
+import {login, logout, modify, info, list, modify_roles, wwlogin} from "../../api/login";
 import {removeNullChildren} from "../../utils/helper"
 
 const state = () => ({
