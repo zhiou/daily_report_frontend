@@ -80,7 +80,7 @@ export default {
       "id": "ww_login",
       "appid": "ww363977121f1c3158",
       "agentid": "1000032",
-      "redirect_uri": "http%3A%2F%2Fdaily-report.excelsecu.com%2F%23%2Foauth",
+      "redirect_uri": encodeURIComponent("http://daily-report.excelsecu.com/#/oauth"),
       "state": "",
       "href": "",
       "lang": "zh",

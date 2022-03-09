@@ -33,7 +33,7 @@ export default {
             } else {
               this.$message.error(this.$t('error.tips.login.failed'), 3);
             }
-            this.$router.replace("/login")
+            // this.$router.replace("/login")
           })
           .finally(() => {
             this.loading = false;
