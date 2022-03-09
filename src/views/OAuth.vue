@@ -20,7 +20,7 @@ export default {
   methods: {
     wwlogin(ctx) {
       this.loading = true;
-
+      console.log('ctx', ctx)
       this.$store
           .dispatch("user/wwlogin", ctx)
           .then(() => {

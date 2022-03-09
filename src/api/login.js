@@ -22,7 +22,7 @@ export function login(account, password) {
 }
 
 export function wwlogin(appid, code) {
-  const data = {
+  const params = {
     appid,
     code
   }
@@ -30,7 +30,7 @@ export function wwlogin(appid, code) {
     url: '/user/wwlogin',
     method: 'get',
     timeout: 30 * 1000,
-    params: data,
+    params,
   })
 }
 
