@@ -21,8 +21,13 @@
               @change="handleChange"
           />
         </a-col>
-
-        <a-col :span="20"> </a-col>
+        <a-col :offset="4" :span="6">
+        <a-range-picker
+            :ranges="ranges"
+            @change="onRangeChanged"
+        />
+        </a-col>
+        <a-col :offset="10" :span="14"> </a-col>
       </a-row>
       <a-spin :spinning="spinning">
         <a-table
@@ -88,10 +93,15 @@ export default {
   data() {
     return {
       count: 0,
-      reports: [],
+      tasks: [],
+      filteredTasks: [],
       columns,
       onDay: moment(),
       projectNumber: null,
+      ranges: {
+        '本周': [moment(), moment().endOf('week')],
+        '本月': [moment(), moment().endOf('month')]
+      }
     };
   },
   computed: {
@@ -101,11 +111,28 @@ export default {
     projects() {
       return this.$store.state.user.projects;
     },
+    reports() {
+      if (this.filteredTasks.length === 0) {
+        return []
+      }
+      return conform('staff_name', this.filteredTasks)
+    },
   },
   methods: {
+    onRangeChanged(dateRange) {
+      console.log('date range', dateRange)
+      if (dateRange.length < 2) {
+        this.filteredTasks = [...this.tasks]
+        return
+      }
+      this.filteredTasks = [...this.tasks].filter(task => {
+        return moment(task.report_date).isBetween(dateRange[0], dateRange[1])
+      })
+      console.log('filtered tasks', this.filteredTasks)
+    },
     handleChange(numbers) {
       if (numbers.length === 0) {
-        this.reports = []
+        this.tasks = []
         return
       }
       let rest
@@ -120,7 +147,7 @@ export default {
       );
     },
     fetchProjects() {
-      if (this.projects.length == 0) {
+      if (this.projects.length === 0) {
         this.$store.dispatch("user/info").finally(() => {
           console.log("user info fechted");
         });
@@ -136,7 +163,8 @@ export default {
           project_number: this.projectNumber
         })
         .then((tasks) => {
-          this.reports = conform('staff_name', tasks)
+          this.tasks = tasks
+          this.filteredTasks = tasks;
         })
         .catch((error) => {
           this.$message.error(error, 3);

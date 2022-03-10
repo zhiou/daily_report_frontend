@@ -7,8 +7,9 @@ export function merge(tasks) {
         let key = task.staff_name + task.task_name + ':' + (task.project_number ?? '0') + ':' + (task.product_number ?? '0')
         let item = '- ' + '(' + task.task_cost + 'h:' + task.report_date + ')' + task.task_detail
         if (!records.has(key)) {
-            task.task_detail = item
-            records.set(key, task);
+            let rt = {...task}
+            rt.task_detail = item
+            records.set(key, rt);
         } else {
             let merged = records.get(key)
             merged.task_detail += '<br/>' + item
