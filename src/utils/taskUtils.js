@@ -5,7 +5,7 @@ export function merge(tasks) {
     let records = new Map()
     tasks.sort((a, b) => moment(a.report_date).diff(moment(b.report_date), 'day')).forEach((task) => {
         let key = task.staff_name + task.task_name + ':' + (task.project_number ?? '0') + ':' + (task.product_number ?? '0')
-        let item = '- ' + '(' + task.task_cost + 'h)' + task.task_detail
+        let item = '- ' + '(' + task.task_cost + 'h:' + task.report_date + ')' + task.task_detail
         if (!records.has(key)) {
             task.task_detail = item
             records.set(key, task);
@@ -42,7 +42,7 @@ export function conform(prop, tasks) {
                 }
                 tc += "]"
             }
-            tc += "(" + task.task_cost + "h)"
+            tc += "(" + task.task_cost  + "h)"
             let td = task.task_detail
             content.push({tc, td});
         });
