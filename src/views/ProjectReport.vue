@@ -99,8 +99,8 @@ export default {
       onDay: moment(),
       projectNumber: null,
       ranges: {
-        '本周': [moment(), moment().endOf('week')],
-        '本月': [moment(), moment().endOf('month')]
+        'This Week': [moment().startOf('week'), moment().endOf('week')],
+        'This Month': [moment().startOf('month'), moment().endOf('month')]
       }
     };
   },
