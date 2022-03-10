@@ -1,5 +1,6 @@
 <template>
   <div id="login" v-title :data-title="$t('login.title')">
+
     <div v-show="ww_login" id="ww_login" class="we-login-box we-login-box-radius"/>
     <div v-show="!ww_login" class="me-login-box me-login-box-radius">
       <img src="@/assets/logo.png" alt=""/>
@@ -62,6 +63,8 @@
         </a-form-item>
       </a-form>
     </div>
+    <a-button v-if="ww_login" class="switch_btn" type="link" @click="(e) => ww_login=false">账号密码登录<a-icon type="right" /> </a-button>
+    <a-button v-else type="link" class="switch_btn" @click="(e) => ww_login = true"> 企业微信登录<a-icon type="right" /></a-button>
   </div>
 </template>
 
@@ -154,13 +157,22 @@ img {
   top: 0;
 }
 
+.switch_btn {
+  position: absolute;
+  width: 120px;
+  height: 60px;
+  margin-top: 100px;
+  /*margin-left: -60px;*/
+  left: 53%;
+}
+
 .we-login-box {
   position: absolute;
-  width: 420px;
+  width: 360px;
   height: 420px;
   background-color: white;
   margin-top: 150px;
-  margin-left: -210px;
+  margin-left: -180px;
   left: 50%;
   padding: 30px;
 }
@@ -172,11 +184,11 @@ img {
 
 .me-login-box {
   position: absolute;
-  width: 300px;
+  width: 360px;
   height: 320px;
   background-color: white;
   margin-top: 150px;
-  margin-left: -150px;
+  margin-left: -180px;
   left: 50%;
   padding: 30px;
 }
