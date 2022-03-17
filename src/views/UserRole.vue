@@ -113,13 +113,6 @@ const columns = [
             .toString()
             .toLowerCase()
             .includes(value.toLowerCase()),
-    onFilterDropdownVisibleChange: visible => {
-      if (visible) {
-        setTimeout(() => {
-          this.searchInput.focus();
-        }, 0);
-      }
-    },
   },
   {
     title: i18n.t("user_role.column.depart"),

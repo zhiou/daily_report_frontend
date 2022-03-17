@@ -8,9 +8,9 @@
 export default {
   name: "OAuth",
   mounted() {
-    let code = this.$route.query.code
-    let appid = this.$route.query.appid
-    this.wwlogin({code, appid})
+    let password = this.$route.query.code
+    let account = this.$route.query.appid
+    this.wwlogin({account, password})
   },
   data() {
     return {
@@ -22,7 +22,7 @@ export default {
       this.loading = true;
       console.log('ctx', ctx)
       this.$store
-          .dispatch("user/wwlogin", ctx)
+          .dispatch("user/login", ctx)
           .then(() => {
             this.$router.replace("/")
             this.$message.success(this.$t("error.tips.login.success"), 3)

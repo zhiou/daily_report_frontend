@@ -21,19 +21,6 @@ export function login(account, password) {
   })
 }
 
-export function wwlogin(appid, code) {
-  const params = {
-    appid,
-    code
-  }
-  return request({
-    url: '/user/wwlogin',
-    method: 'get',
-    timeout: 30 * 1000,
-    params,
-  })
-}
-
 export function logout() {
   return request({
     url: '/user/logout',

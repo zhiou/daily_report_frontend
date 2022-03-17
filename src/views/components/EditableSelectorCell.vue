@@ -90,7 +90,8 @@ export default {
 }
 
 .editable-cell-text-wrapper {
-  padding: 5px 24px 5px 0px;
+  padding: 5px 24px 5px 0;
+  width: 150px;
 }
 
 .editable-cell-icon {

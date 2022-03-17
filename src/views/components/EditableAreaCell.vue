@@ -20,7 +20,7 @@
       /><a-icon type="check" class="editable-cell-icon-check" @click="check" />
     </div>
     <div v-else class="editable-cell-text-wrapper"  @click="edit">
-      <p id="pre">{{ value || " " }}</p>
+      {{ value || " " }}
       <a-icon type="edit" class="editable-cell-icon" @click="edit" />
     </div>
   </div>

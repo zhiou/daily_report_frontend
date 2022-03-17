@@ -203,28 +203,28 @@ const day_columns = [
     title: i18n.t("report.column.line"),
     dataIndex: "product_line",
     key: "product_line",
-    width: 200,
+    width: 150,
     scopedSlots: {customRender: "text"},
   },
   {
     title: i18n.t("report.column.proj"),
     dataIndex: "project_number",
     key: "project_number",
-    // width: 300,
+    width: 150,
     scopedSlots: {customRender: "project-selector"},
   },
   {
     title: i18n.t("report.column.prod"),
     dataIndex: "product_number",
     key: "product_number",
-    // width: 300,
+    width: 150,
     scopedSlots: {customRender: "product-selector"},
   },
   {
     title: i18n.t("report.column.name"),
     dataIndex: "task_name",
     key: "name",
-    width: 200,
+    width: 150,
     scopedSlots: {customRender: "task_name"}
   },
   {
@@ -238,7 +238,6 @@ const day_columns = [
     title: i18n.t("report.column.detail"),
     dataIndex: "task_detail",
     key: "details",
-    width: 300,
     scopedSlots: {customRender: "details"},
   },
   {
@@ -416,11 +415,7 @@ export default {
     },
     handlePasteTask() {
       const tasks = this.tasks.concat(this.copied);
-      let key = 0
-      this.tasks = tasks.map((task) => {
-        key += 1
-        return {...task, key}
-      })
+      this.tasks = [...tasks]
       this.copied = []
     },
     onCellChange(key, dataIndex, value) {
@@ -480,7 +475,8 @@ export default {
     },
     onCopy(key) {
       const task = this.tasks.find((task) => task.key === key);
-      this.copied.push({...task})
+      this.copied.push({...task , key: task.key+1000})
+      console.log("copied", this.copied)
     },
     onProjectChanged(key, dataIndex, number) {
       const tasks = [...this.tasks];
