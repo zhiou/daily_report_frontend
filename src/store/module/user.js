@@ -8,7 +8,7 @@
  */
 import {getToken, setToken} from "../../api/request/token";
 
-import {login, logout, modify, info, list, modify_roles} from "../../api/login";
+import {login, auth, logout, modify, info, list, modify_roles} from "../../api/login";
 import {removeNullChildren} from "../../utils/helper"
 
 const state = () => ({
@@ -25,6 +25,23 @@ const actions = {
     login({commit}, user) {
         return new Promise((resolve, reject) => {
             login(user.account, user.password)
+                .then((data) => {
+                    commit("SET_TOKEN", data["token"]);
+                    commit("SET_NAME", data["name"]);
+                    commit("SET_DEPARTMENT", data["department"]);
+                    commit("SET_PROJECTS", data["projects"])
+                    commit("SET_ROLES", data['roles'])
+                    console.log('login resp', data)
+                    resolve();
+                })
+                .catch((error) => {
+                    reject(error);
+                });
+        });
+    },
+    auth({commit}, ctx) {
+        return new Promise((resolve, reject) => {
+            auth(ctx.app_id, ctx.code)
                 .then((data) => {
                     commit("SET_TOKEN", data["token"]);
                     commit("SET_NAME", data["name"]);

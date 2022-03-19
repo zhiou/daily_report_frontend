@@ -21,6 +21,19 @@ export function login(account, password) {
   })
 }
 
+export function auth(app_id, code) {
+  const data = {
+    app_id,
+    code
+  }
+  return request({
+    url: '/user/auth',
+    method: 'post',
+    timeout: 30 * 1000,
+    data
+  })
+}
+
 export function logout() {
   return request({
     url: '/user/logout',

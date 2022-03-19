@@ -144,6 +144,7 @@ let columns = [
     dataIndex: "product_line",
     key: "product_line",
     filters: [],
+    width: 100,
     scopedSlots: {customRender: "text"},
     onFilter: (value, record) => {
       return filter(value, record.product_line)
@@ -156,6 +157,7 @@ let columns = [
     dataIndex: "product_display",
     key: "product_display",
     filters: [],
+    width: 150,
     scopedSlots: {customRender: "text"},
     onFilter: (value, record) => {
       return filter(value, record.product_display)
@@ -168,6 +170,7 @@ let columns = [
     dataIndex: "department",
     key: "department",
     filters: [],
+    width: 100,
     scopedSlots: {customRender: "text"},
     onFilter: (value, record) => filter(value, record.department),
   },
@@ -196,6 +199,7 @@ let columns = [
     dataIndex: "project_display",
     key: "project_display",
     filters: [],
+    width: 100,
     scopedSlots: {customRender: "text"},
     onFilter: (value, record) => {
       return filter(value, record.project_display)
@@ -207,6 +211,7 @@ let columns = [
     title: i18n.t("report.column.oday"),
     dataIndex: "report_date",
     key: "report_date",
+    width: 100,
     defaultSortOrder: "descend",
     sorter: (a, b) => {
       return a.report_date > b.report_date ? 1 : -1
@@ -217,6 +222,7 @@ let columns = [
     prop: "task_name",
     title: i18n.t("report.column.name"),
     dataIndex: "task_name",
+    width: 100,
     key: "task_name",
   },
   {
@@ -225,7 +231,6 @@ let columns = [
     title: i18n.t("report.column.detail"),
     dataIndex: "task_detail",
     key: "task_detail",
-    width: 200,
   },
   {
     label: "提交日期",
