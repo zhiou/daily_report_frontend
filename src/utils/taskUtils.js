@@ -36,16 +36,16 @@ export function conform(prop, tasks) {
             let content = [];
             tasks.forEach((task) => {
                 cost += task.task_cost;
-                let tc = '<' + task.task_name + '>';
+                let tc = '【' + task.task_name + '】-';
                 if (task.project_name || task.product_name) {
-                    tc += "["
+                    tc += "【"
                     if (task.project_name) {
-                        tc += task.project_name + ":";
+                        tc += "项目：" + task.project_name + ", ";
                     }
                     if (task.product_name) {
-                        tc += task.product_name;
+                        tc += "产品：" +task.product_name;
                     }
-                    tc += "]"
+                    tc += "】"
                 }
                 tc += "(" + task.task_cost + "h)"
                 let td = task.task_detail
