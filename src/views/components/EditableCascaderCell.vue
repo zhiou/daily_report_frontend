@@ -12,6 +12,7 @@
       <a-space align="baseline">
         <a-cascader
             change-on-select
+            :show-search="{ filterOption }"
             ref="selector"
             :options="options"
             option-filter-prop="children"

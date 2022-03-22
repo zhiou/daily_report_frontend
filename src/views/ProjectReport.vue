@@ -10,24 +10,23 @@
   <div id="report" v-title data-title="项目日志">
     <div class="report-frame">
       <a-row :gutter="16">
-        <a-col :span="4">
-          <!-- <a-input :value="projectName" addonBefore="Project" disabled /> -->
+        <a-col :span="6">
+          <a-range-picker
+              :ranges="ranges"
+              @change="onRangeChanged"
+          />
+
+        </a-col>
+        <a-col :span="10">
           <a-cascader
               change-on-select
               :options="projects"
               option-filter-prop="children"
               :filter-option="filterOption"
-              style="width:400px"
+              style="width: 400px"
               @change="handleChange"
           />
         </a-col>
-        <a-col :offset="4" :span="6">
-        <a-range-picker
-            :ranges="ranges"
-            @change="onRangeChanged"
-        />
-        </a-col>
-        <a-col :offset="10" :span="14"> </a-col>
       </a-row>
       <a-spin :spinning="spinning">
         <a-table

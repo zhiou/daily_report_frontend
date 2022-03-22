@@ -344,6 +344,9 @@ export default {
     reports() {
       return conform('report_date', this.tasks)
     },
+    work_code() {
+      return this.$route.params.work_code || null
+    }
   },
   methods: {
     onModeChange(mode) {
@@ -364,21 +367,40 @@ export default {
       });
     },
     fetchData(start, end) {
-      this.$store
-          .dispatch("report/selfQuery", {
-            from: start.format('yyyy-MM-DD'),
-            to: end.format('yyyy-MM-DD'),
-          })
-          .then((tasks) => {
-            this.tasks = tasks.map((task) => {
-              let key = this.count;
-              this.count = key + 1;
-              return {...task, key: key};
+      if (this.work_code) {
+        this.$store
+            .dispatch("report/member", {
+              from: start.format('yyyy-MM-DD'),
+              to: end.format('yyyy-MM-DD'),
+              workcode: this.work_code
+            })
+            .then((tasks) => {
+              this.tasks = tasks.map((task) => {
+                let key = this.count;
+                this.count = key + 1;
+                return {...task, key: key};
+              });
+            })
+            .catch((error) => {
+              this.$message.error(error, 3);
             });
-          })
-          .catch((error) => {
-            this.$message.error(error, 3);
-          });
+      } else {
+        this.$store
+            .dispatch("report/selfQuery", {
+              from: start.format('yyyy-MM-DD'),
+              to: end.format('yyyy-MM-DD'),
+            })
+            .then((tasks) => {
+              this.tasks = tasks.map((task) => {
+                let key = this.count;
+                this.count = key + 1;
+                return {...task, key: key};
+              });
+            })
+            .catch((error) => {
+              this.$message.error(error, 3);
+            });
+      }
     },
     onDateChanged(date) {
       let start, end

@@ -48,8 +48,8 @@
             :defaultExpandedRowKeys="[0]"
             :pagination="false"
         >
-          <template slot="link" slot-scope="text">
-            <a-button type="link" @click="(e) => onNameClicked(text)">{{ text }}</a-button>
+          <template slot="link" slot-scope="text, report">
+            <a-button type="link" @click="(e) => onNameClicked(text, report)">{{ text }}</a-button>
           </template>
           <template slot="details" slot-scope="tasks">
             <ul style="list-style-type: decimal;">
@@ -130,10 +130,12 @@ export default {
       }
       return { start, end }
     },
-    onNameClicked(name) {
+    onNameClicked(name, report) {
+      console.log('report', report)
       this.$router.push({
         name: 'MemberReport', params: {
           name,
+          work_code: report.work_code,
           mode: this.mode,
           date: this.onDay,
           from: 'department',

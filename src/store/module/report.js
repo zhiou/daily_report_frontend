@@ -12,6 +12,7 @@ import {
   selfQuery,
   dmQuery,
   pmQuery,
+  memberQuery,
   pmPageQuery,
   pmoQuery,
   download,
@@ -46,6 +47,21 @@ const actions = {
         .finally(() => {
           commit("SET_SPINNING", false);
         });
+    });
+  },
+  member({ commit }, info) {
+    return new Promise((resolve, reject) => {
+      commit("SET_SPINNING", true);
+      memberQuery(info)
+          .then((data) => {
+            resolve(data);
+          })
+          .catch((e) => {
+            reject(e);
+          })
+          .finally(() => {
+            commit("SET_SPINNING", false);
+          });
     });
   },
   dmQuery({ commit }, info) {

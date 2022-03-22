@@ -1,5 +1,6 @@
 var _ = require('lodash');
 import moment from 'moment'
+
 // 把具有相同任务名、项目和产品的任务合并成一个，工时相加
 export function merge(tasks) {
     let records = new Map()
@@ -25,29 +26,32 @@ export function conform(prop, tasks) {
     let merged = merge(tasks)
     let grouped = _.groupBy(merged, prop);
     let key = 1
-    return Object.keys(grouped).sort().map((group_name) => {
-        let tasks = grouped[group_name];
-        let department = tasks[0].department;
-        let cost = 0;
-        let content = [];
-        tasks.forEach((task) => {
-            cost += task.task_cost;
-            let tc = '<' + task.task_name + '>';
-            if (task.project_name || task.product_name) {
-                tc += "["
-                if (task.project_name) {
-                    tc += task.project_name + ":";
+    return Object.keys(grouped)
+        .sort()
+        .map((group_name) => {
+            let tasks = grouped[group_name];
+            let department = tasks.length ? tasks[0].department : "";
+            let work_code = tasks.length ? tasks[0].work_code : "";
+            let cost = 0;
+            let content = [];
+            tasks.forEach((task) => {
+                cost += task.task_cost;
+                let tc = '<' + task.task_name + '>';
+                if (task.project_name || task.product_name) {
+                    tc += "["
+                    if (task.project_name) {
+                        tc += task.project_name + ":";
+                    }
+                    if (task.product_name) {
+                        tc += task.product_name;
+                    }
+                    tc += "]"
                 }
-                if (task.product_name) {
-                    tc += task.product_name;
-                }
-                tc += "]"
-            }
-            tc += "(" + task.task_cost  + "h)"
-            let td = task.task_detail
-            content.push({tc, td});
+                tc += "(" + task.task_cost + "h)"
+                let td = task.task_detail
+                content.push({tc, td});
+            });
+            key++;
+            return {group_name, work_code, cost, content, department, key};
         });
-        key++;
-        return {group_name, cost, content, department, key};
-    });
 }

@@ -33,6 +33,15 @@ export function dmQuery(report) {
     })
 }
 
+
+export function memberQuery(report) {
+    return request({
+        url: '/report/dm/member',
+        method: 'get',
+        params: report
+    })
+}
+
 export function pmPageQuery(report) {
     return request({
         url: '/report/pm/page',
