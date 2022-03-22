@@ -106,7 +106,7 @@ export default {
       count: 0,
       reports: [],
       columns,
-      onDay: moment(),
+      onDay: this.defaultDay(),
       mode: 'day'
     };
   },
@@ -117,8 +117,20 @@ export default {
     department() {
       return this.$store.state.user.department;
     },
+
   },
   methods: {
+    isWorking() {
+      return moment().isSameOrBefore(moment().hour(19).minute(0).second(0))
+    },
+    isMonday() {
+      console.log('day', moment().day())
+      return moment().day() === 1;
+    },
+    defaultDay() {
+      let subDays = this.isMonday() ? 3 : 1;
+      return this.isWorking() ? moment().subtract(subDays, 'days') : moment()
+    },
     dateRangeByMode(mode, date) {
       let start, end
       if (mode === 'day') {
