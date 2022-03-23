@@ -19,7 +19,6 @@
             :filter-option="filterOption"
             style="width:150px"
             @change="handleChange"
-            @blur="check"
         />
         <a-icon type="check" class="editable-cell-icon-check" @click="check"/>
       </a-space>
