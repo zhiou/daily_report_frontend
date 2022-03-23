@@ -62,6 +62,11 @@ export default {
   position: relative;
 }
 
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
 .editable-cell-input-wrapper,
 .editable-cell-text-wrapper {
   padding-right: 24px;
