@@ -64,6 +64,7 @@ module.exports = {
       worktime: "工时统计",
       staff: "员工工时",
       proj_stats: "项目工时统计",
+      cmt_stats: "提交统计",
       proj: "项目信息",
       prod: "产品信息",
       user_role: '用户角色',

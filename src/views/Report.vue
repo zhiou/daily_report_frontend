@@ -42,12 +42,19 @@
             />
           </a-space>
         </a-col>
-        <a-col :span="2" :offset="4">
+        <a-col :span="2" :offset="2">
+          <a-space>
+          <a-button
+              v-show="editable"
+              :loading="saving" type="default" @click="(e) => update(0)">
+            {{ $t("report.button.save") }}
+          </a-button>
           <a-button
               v-show="editable"
               :loading="saving" type="primary" @click="(e) => update(1)">
             {{ $t("report.button.submit") }}
           </a-button>
+          </a-space>
         </a-col>
       </a-row>
       <a-spin :spinning="spinning">
@@ -566,6 +573,7 @@ export default {
 .report-frame {
   background-color: white;
   margin: 8px 8px;
+  padding: 8px 8px;
 }
 
 .dynamic-delete-button {

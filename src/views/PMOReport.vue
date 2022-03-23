@@ -10,7 +10,7 @@
 <template>
   <div id="PMOreport" v-title data-title="PMO日志">
     <div class="report-frame">
-      <a-row type="flex" justify="start" :gutter="2" style="margin: 30px 20px">
+      <a-row type="flex" justify="start" :gutter="2">
         <a-space>
           <span>请选择查询项：</span>
           <a-col :span="4">
@@ -419,6 +419,7 @@ export default {
 .report-frame {
   background-color: white;
   margin: 8px 8px;
+  padding: 8px 8px;
 }
 
 .dynamic-delete-button {

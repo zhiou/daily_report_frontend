@@ -62,6 +62,7 @@ module.exports = {
       worktime: "Work Time",
       staff: "Staff",
       proj_stats: "Project Statistics",
+      cmt_stats: "Commit Statitstics",
       proj: "Project",
       prod: "Product",
       user_role: 'User Role',

@@ -177,6 +177,7 @@ export default {
 .report-frame {
   background-color: white;
   margin: 8px 8px;
+  padding: 8px 8px;
 }
 
 .dynamic-delete-button {

@@ -19,6 +19,7 @@ import Project from "../views/Project.vue";
 import Product from "../views/Product.vue";
 import PersonalStats from "../views/PersonalStats.vue";
 import ProjectStats from "../views/ProjectStats.vue";
+import CommitStats from "../views/CommitStats.vue";
 import PMOReport from "../views/PMOReport.vue";
 import UserRole from "../views/UserRole";
 import OAuth from "../views/OAuth";
@@ -123,6 +124,17 @@ const routes = [
           requireRole: 'pm',
           inMenu: 'statistics',
           breadcrumb: '项目统计'
+        },
+      },
+      {
+        path: "cmt_stats",
+        name: "CommitStats",
+        component: CommitStats,
+        meta: {
+          requireAuth: true,
+          requireRole: 'pmo',
+          inMenu: 'statistics',
+          breadcrumb: '提交统计'
         },
       },
       {

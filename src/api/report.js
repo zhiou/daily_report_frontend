@@ -42,6 +42,14 @@ export function memberQuery(report) {
     })
 }
 
+export function statsQuery(range) {
+    return request({
+        url: '/report/stats',
+        method: 'get',
+        params: range
+    })
+}
+
 export function pmPageQuery(report) {
     return request({
         url: '/report/pm/page',

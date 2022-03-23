@@ -10,6 +10,7 @@
 import {
   update,
   selfQuery,
+  statsQuery,
   dmQuery,
   pmQuery,
   memberQuery,
@@ -47,6 +48,17 @@ const actions = {
         .finally(() => {
           commit("SET_SPINNING", false);
         });
+    });
+  },
+  stats({ commit }, range) {
+    return new Promise((resolve, reject) => {
+      statsQuery(range)
+          .then((data) => {
+            resolve(data);
+          })
+          .catch((error) => {
+            reject(error);
+          });
     });
   },
   member({ commit }, info) {
