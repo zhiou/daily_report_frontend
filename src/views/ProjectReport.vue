@@ -62,19 +62,19 @@ const columns = [
     title: i18n.t("report.column.user"),
     dataIndex: "group_name",
     key: "group_name",
-    width: 120,
+    width: 90,
   },
   {
     title: i18n.t("report.column.cost"),
     dataIndex: "cost",
     key: "cost",
-    width: 100,
+    width: 60,
   },
   {
     title: i18n.t("report.column.depart"),
     dataIndex: "department",
     key: "department",
-    width: 140,
+    width: 150,
   },
   {
     title: i18n.t("report.column.detail"),
