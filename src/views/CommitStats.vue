@@ -61,9 +61,13 @@ export default {
   name: "CommitStats",
   mounted() {
     if (!this.commiters.length) {
+      this.spinning = true
       this.$store.dispatch("user/list")
       .then(() => {
         this.fetchReport()
+      })
+      .finally(() => {
+        this.spinning = false
       })
     } else {
       this.fetchReport()
