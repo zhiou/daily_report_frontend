@@ -37,6 +37,7 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
+    redirect: "/user",
     meta: {
       breadcrumb: '首页',
       requireAuth: true,

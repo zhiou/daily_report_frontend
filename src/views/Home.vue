@@ -116,6 +116,7 @@ export default {
         "pmo",
         "staff",
         "proj_stats",
+        "cmt_stats",
         "pm",
         "proj",
         "prod",

@@ -122,6 +122,7 @@ module.exports = {
       is_pmo: 'PMO',
       is_pm: "Project Manager",
       is_dm: "Department Manager",
+      is_cm: "Commiter",
     }
   },
   report: {

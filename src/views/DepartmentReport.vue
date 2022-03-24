@@ -52,10 +52,9 @@
             <a-button type="link" @click="(e) => onNameClicked(text, report)">{{ text }}</a-button>
           </template>
           <template slot="details" slot-scope="tasks">
-            <ul style="list-style-type: decimal;">
+            <ul style="list-style-type: disc;">
               <li v-for="(task, index) in tasks" :key="index">
                 <b>{{ task.tc }}</b>
-                <br/>
                 <p v-html="task.td" style="text-align:left;"></p>
               </li>
             </ul>
@@ -196,6 +195,11 @@ export default {
   background-color: white;
   margin: 8px 8px;
   padding: 8px 8px;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .dynamic-delete-button {

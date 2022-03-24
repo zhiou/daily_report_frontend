@@ -37,7 +37,7 @@
           @change="onTableChange"
         >
           <template slot="details" slot-scope="tasks">
-            <ul style="list-style-type: decimal;">
+            <ul style="list-style-type: disc;">
               <li v-for="(task, index) in tasks" :key="index">
                 <b>{{ task.tc }}</b>
                 <br />

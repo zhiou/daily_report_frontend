@@ -7,14 +7,14 @@ export function merge(tasks) {
     tasks.sort((a, b) => moment(a.report_date).diff(moment(b.report_date), 'day')).forEach((task) => {
         let key = task.staff_name + task.task_name + ':' + (task.project_number ?? '0') + ':' + (task.product_number ?? '0')
         let date = moment(task.report_date).format("MM-DD")
-        let item = '- ' + '(' + task.task_cost + 'h:' + date + ')' + task.task_detail
+        let item = '- ' + '(' + task.task_cost + 'h:' + date + ')' + '<pre style="margin-left: 16px;white-space: pre-wrap;word-wrap: break-word;">' + task.task_detail + '</pre>'
         if (!records.has(key)) {
             let rt = {...task}
             rt.task_detail = item
             records.set(key, rt);
         } else {
             let merged = records.get(key)
-            merged.task_detail += '<br/>' + item
+            merged.task_detail += item
             merged.task_cost += task.task_cost
             records.set(key, merged)
         }

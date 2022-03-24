@@ -125,6 +125,7 @@ module.exports = {
       is_pmo: 'PMO',
       is_pm: "项目经理",
       is_dm: "部门经理",
+      is_cm: "提交者",
     }
   },
   report: {

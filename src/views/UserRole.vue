@@ -34,6 +34,12 @@
               @change="(e) => onCheck(e.target.checked, record.work_code, 'pm')"
           ></a-checkbox>
         </template>
+        <template slot="check_box_cm" slot-scope="flag, record">
+          <a-checkbox
+              :checked="(flag & 0x8) !== 0"
+              @change="(e) => onCheck(e.target.checked, record.work_code, 'cm')"
+          ></a-checkbox>
+        </template>
         <div
             slot="filterDropdown"
             slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"
@@ -137,7 +143,12 @@ const columns = [
     dataIndex: "role_flag",
     key: "role_flag_pm",
     scopedSlots: {customRender: "check_box_pm"},
-
+  },
+  {
+    title: i18n.t("user_role.column.is_cm"),
+    dataIndex: "role_flag",
+    key: "role_flag_cm",
+    scopedSlots: {customRender: "check_box_cm"},
   },
 ];
 export default {
@@ -170,6 +181,7 @@ export default {
       return this.$store.state.user.all.map((user) => {
         let role_flag = 0
         if (user.roles) {
+          role_flag |= user.roles.indexOf("cm") > -1 ? 8 : 0;
           role_flag |= user.roles.indexOf("pmo") > -1 ? 4 : 0;
           role_flag |= user.roles.indexOf("dm") > -1 ? 2 : 0;
           role_flag |= user.roles.indexOf("pm") > -1 ? 1 : 0;
@@ -208,8 +220,8 @@ export default {
       console.log("checkbox", check, work_code, role_name);
       let records = [...this.userRoles]
       const record = records.find((userRole) => userRole.work_code === work_code)
-      let flag = role_name === 'pmo' ? 4 : role_name === 'dm' ? 2 : 1
-      let mask = role_name === 'pmo' ? 3 : role_name === 'dm' ? 5 : 6
+      let flag = role_name === 'cm' ? 8 : role_name === 'pmo' ? 4 : role_name === 'dm' ? 2 : 1
+      let mask = role_name === 'cm' ? 7 : role_name === 'pmo' ? 11 : role_name === 'dm' ? 13 : 14
       record.role_flag = record.role_flag & mask | (check ? flag : 0)
       this.userRoles = records;
       console.log('current role  change', {work_code, flag: record.role_flag})
