@@ -67,6 +67,22 @@ export default {
     firstDayOfMonth(month) {
       return moment(month).startOf("month").format("yyyy-MM-DD");
     },
+    process(tasks) {
+      let taskNames = [];
+      tasks.forEach((task) => {
+        let date = moment(task.report_date)
+        let commitDate = moment(task.commit_date)
+        let commitLate = date.isBefore(commitDate, 'day')
+        let fakeReport = moment().isBefore(date, 'day')
+        let type = fakeReport ? 'error' : (commitLate ? 'warning' : 'success');
+        let day = date.format('yyyy-MM-DD');
+        if (taskNames[day] === undefined) {
+          taskNames[day] = new Set();
+        }
+        taskNames[day].add({type: type, content: task.task_name});
+      });
+      return taskNames;
+    },
     fetchData(month) {
       const startDate = this.firstDayOfMonth(month);
       // 这里必须用moment包裹一下,否则month的值会发生改变导致控件显示有问题
@@ -77,23 +93,12 @@ export default {
             to: endDate,
           })
           .then((tasks) => {
-            let taskNames = [];
-            tasks.forEach((task) => {
-              let date = moment(task.report_date)
-              let commitDate = moment(task.commit_date)
-              let commitLate = date.isBefore(commitDate, 'day')
-              let fakeReport = moment().isBefore(date, 'day')
-              let type = fakeReport ? 'error' : (commitLate ? 'warning' : 'success');
-              let day = date.format('yyyy-MM-DD');
-              if (taskNames[day] == undefined) {
-                taskNames[day] = new Set();
-              }
-              taskNames[day].add({type: type, content: task.task_name});
-            });
-            this.taskNames = taskNames;
+            this.taskNames = this.process(tasks);
           })
           .catch((e) => {
-            this.$message.error(e);
+            if (e) {
+              this.$message.error(e);
+            }
           });
     },
     getListData(value) {

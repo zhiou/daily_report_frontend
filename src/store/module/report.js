@@ -36,18 +36,28 @@ const actions = {
     });
   },
   selfQuery({ commit }, info) {
+    let times = 1
+    let delay = 200
     return new Promise((resolve, reject) => {
-      commit("SET_SPINNING", true);
-      selfQuery(info)
-        .then((data) => {
-          resolve(data);
-        })
-        .catch((e) => {
-          reject(e);
-        })
-        .finally(() => {
-          commit("SET_SPINNING", false);
-        });
+      function retry() {
+        commit("SET_SPINNING", true);
+        selfQuery(info)
+            .then((data) => {
+              resolve(data);
+            })
+            .catch((e) => {
+              if (e || times === 0) {
+                reject(e);
+              } else {
+                times--;
+                setTimeout(retry(), delay)
+              }
+            })
+            .finally(() => {
+              commit("SET_SPINNING", false);
+            });
+      }
+      retry()
     });
   },
   stats({ commit }, range) {
