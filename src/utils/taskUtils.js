@@ -23,8 +23,11 @@ export function merge(tasks) {
 }
 
 // 把任务列表根据prop聚合，形成报告
-export function conform(prop, tasks) {
-    let merged = merge(tasks)
+export function conform(prop, tasks, sm=true) {
+    let merged = [...tasks]
+    if (sm) {
+        merged = merge(tasks)
+    }
     let grouped = _.groupBy(merged, prop);
     let key = 1
     return Object.keys(grouped)

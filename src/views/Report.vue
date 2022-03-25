@@ -349,7 +349,10 @@ export default {
       return this.mode === 'day' ? this.tasks : this.reports
     },
     reports() {
-      return conform('report_date', this.tasks)
+      let r = conform('report_date', this.tasks, false)
+      console.log('tasks', this.tasks)
+      console.log('reports', r)
+      return r
     },
     work_code() {
       return this.$route.params.work_code || null
