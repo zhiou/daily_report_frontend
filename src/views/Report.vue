@@ -289,10 +289,10 @@ export default {
   },
   beforeCreate() {
     this.$store.dispatch("product/list").catch((error) => {
-      this.$message.error(error, 3);
+      this.showError(error)
     });
     this.$store.dispatch("project/list").catch((error) => {
-      this.$message.error(error, 3);
+      this.showError(error)
     });
   },
   mounted() {
@@ -356,6 +356,11 @@ export default {
     }
   },
   methods: {
+    showError(e) {
+      if (e) {
+        this.$message.error(e, 3)
+      }
+    },
     onModeChange(mode) {
       let date = this.onDay
       let start, end
@@ -369,7 +374,9 @@ export default {
       this.fetchData(start, end);
     },
     fetchUserInfo() {
-      this.$store.dispatch("user/info").finally(() => {
+      this.$store.dispatch("user/info")
+          .catch((error) => this.showError(error))
+          .finally(() => {
         console.log("user info done");
       });
     },
@@ -389,7 +396,7 @@ export default {
               });
             })
             .catch((error) => {
-              this.$message.error(error, 3);
+              this.showError(error)
             });
       } else {
         this.$store
@@ -405,7 +412,7 @@ export default {
               });
             })
             .catch((error) => {
-              this.$message.error(error, 3);
+              this.showError(error)
             });
       }
     },
@@ -433,7 +440,7 @@ export default {
             this.$message.success("工作日志已" + (status === 0 ? "保存" : "提交"));
           })
           .catch((error) => {
-            this.$message.error(error, 2);
+            this.showError(error);
           })
           .finally(() => {
             this.saving = false
