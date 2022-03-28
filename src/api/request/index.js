@@ -37,7 +37,7 @@ service.interceptors.request.use(
     return request;
   },
   (error) => {
-    Promise.reject(error);
+    return Promise.reject(error);
   }
 );
 
@@ -47,7 +47,7 @@ service.interceptors.response.use(
     if (resp.code === 0) {
       return resp.data;
     } else {
-      if (resp.code == 101004) {
+      if (resp.code === 101004) {
         throttle(onTokenInvalid);
       }
       return Promise.reject(resp.message);

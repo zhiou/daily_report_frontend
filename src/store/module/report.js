@@ -46,7 +46,7 @@ const actions = {
               resolve(data);
             })
             .catch((e) => {
-              if (e || times === 0) {
+              if (times === 0) {
                 reject(e);
               } else {
                 times--;
