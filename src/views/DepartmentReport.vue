@@ -7,7 +7,7 @@
  * @FilePath: /daily-report-frontend/src/views/DepartmentReport.vue
 -->
 <template>
-  <div id="report" v-title data-title="工作日志-创建">
+  <div id="report" v-title data-title="部门日志">
     <div class="report-frame">
       <a-row :gutter="16">
         <a-col :span="6">

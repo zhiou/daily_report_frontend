@@ -7,7 +7,7 @@
  * @FilePath: /daily-report-frontend/src/views/Home.vue
 -->
 <template>
-  <div class="calendar">
+  <div class="calendar" v-title data-title="月度日历">
     <a-spin :spinning="spinning">
       <a-calendar
           class="calendar-frame"
@@ -138,6 +138,7 @@ export default {
   margin: auto;
   width: 100%;
   height: 100%;
+  background-color: white;
 }
 
 .events {

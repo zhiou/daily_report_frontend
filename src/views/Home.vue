@@ -31,15 +31,16 @@
         </a-menu>
       </a-layout-sider>
       <a-layout>
-        <a-layout-header style="background: #fff; padding: 0">
+        <a-layout-header style="background: #243547; padding: 0">
           <a-icon
               class="trigger"
+              :style="{color: '#fff'}"
               :type="collapsed ? 'menu-unfold' : 'menu-fold'"
               @click="toggleCollapsed"
           />
           <div class="icons-list">
             <a-space size="middle">
-              <a-icon type="logout" @click="onLogout"/>
+              <a-icon type="logout" :style="{color: '#fff'}" @click="onLogout"/>
             </a-space>
           </div>
         </a-layout-header>

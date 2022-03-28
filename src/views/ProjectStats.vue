@@ -7,7 +7,7 @@
  * @FilePath: /daily-report-frontend/src/views/Personal.vue
 -->
 <template>
-  <div id="project-stats" style="width: 100%; height: 100%; margin: 16px 16px">
+  <div id="project-stats" v-title data-title="项目工时统计" style="width: 100%; height: 100%; margin: 16px 16px">
     <a-row :gutter="16">
       <a-col :span="4">
         <!-- <a-input :value="projectName" addonBefore="Project" disabled /> -->

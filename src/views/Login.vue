@@ -1,5 +1,5 @@
 <template>
-  <div id="login" v-title :data-title="$t('login.title')">
+  <div id="login" v-title data-title="OA登录">
 
     <div v-show="ww_login" id="ww_login" class="we-login-box we-login-box-radius"/>
     <div v-show="!ww_login" class="me-login-box me-login-box-radius">

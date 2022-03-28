@@ -7,7 +7,7 @@
  * @FilePath: /daily-report-frontend/src/views/Personal.vue
 -->
 <template>
-  <div style="width: 100%; height: 100%">
+  <div id='personal_stats' v-title data-title="个人工时统计" style="width: 100%; height: 100%">
     <a-range-picker
       @change="onDataChanged"
       v-model="dateRange"

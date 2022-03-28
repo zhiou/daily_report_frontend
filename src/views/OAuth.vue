@@ -1,5 +1,5 @@
 <template>
-  <div id="oauth">
+  <div id="oauth" v-title data-title="企业微信登录">
 
   </div>
 </template>
