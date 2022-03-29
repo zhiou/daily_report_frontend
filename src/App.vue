@@ -23,7 +23,9 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-    height: 100%;
+  height: 100%;
+  background-color: #F0F2F5;
+  background-image: url("/image/background.svg");
 }
 
 #nav {

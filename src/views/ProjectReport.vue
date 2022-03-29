@@ -12,6 +12,7 @@
       <a-row :gutter="16">
         <a-col :span="6">
           <a-range-picker
+              v-model="range"
               :ranges="ranges"
               @change="onRangeChanged"
           />
@@ -97,9 +98,12 @@ export default {
       columns,
       onDay: moment(),
       projectNumber: null,
+      range: [moment().subtract(1, 'months').startOf('week'), moment().subtract(1, 'months').endOf('week')],
       ranges: {
         'This Week': [moment().startOf('week'), moment().endOf('week')],
-        'This Month': [moment().startOf('month'), moment().endOf('month')]
+        'Last Week': [moment().subtract(1, 'months').startOf('week'), moment().subtract(1, 'months').endOf('week')],
+        'This Month': [moment().startOf('month'), moment().endOf('month')],
+        'Last Month': [moment().subtract(1, 'months').startOf('month'), moment().subtract(1, 'months').endOf('month')]
       }
     };
   },
@@ -163,7 +167,9 @@ export default {
         })
         .then((tasks) => {
           this.tasks = tasks
-          this.filteredTasks = tasks;
+          this.filteredTasks = [...this.tasks].filter(task => {
+            return moment(task.report_date).isBetween(this.range[0], this.range[1])
+          })
         })
         .catch((error) => {
           this.$message.error(error, 3);
@@ -175,7 +181,7 @@ export default {
 
 <style lang="css" scoped>
 .report-frame {
-  background-color: white;
+  background-color: #F0F2F5;
   margin: 8px 8px;
   padding: 8px 8px;
 }

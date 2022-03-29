@@ -170,7 +170,7 @@ img {
   position: absolute;
   width: 360px;
   height: 420px;
-  background-color: white;
+  background-color: #F0F2F5;
   margin-top: 150px;
   margin-left: -180px;
   left: 50%;

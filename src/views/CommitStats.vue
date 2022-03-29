@@ -175,7 +175,7 @@ export default {
 
 <style scoped>
 .report-frame {
-  background-color: white;
+  background-color: #F0F2F5;
   margin: 8px 8px;
   padding: 8px 8px;
 }
