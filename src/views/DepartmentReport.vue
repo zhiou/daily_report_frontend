@@ -11,7 +11,18 @@
     <div class="report-frame">
       <a-row :gutter="16">
         <a-col :span="6">
-          <a-input v-model="department" addonBefore="Department" disabled/>
+          <a-select
+              :default-value="defaultDepart"
+              v-model="department"
+              v-if="is_pmo"
+              style="width: 150px"
+              @change="onDepartChange($event)"
+          >
+            <a-select-option v-for="item in departments" :key="item.key">
+              {{ item.name }}
+            </a-select-option>
+          </a-select>
+          <a-input v-else v-model="department" addonBefore="Department" disabled/>
         </a-col>
         <a-col :span="8">
           <a-space>
@@ -97,6 +108,7 @@ export default {
   name: "DepartmentReport",
   components: {},
   mounted() {
+    this.fetchUserInfo()
     this.fetchDepartment();
     this.onModeChange(this.mode)
   },
@@ -106,17 +118,24 @@ export default {
       reports: [],
       columns,
       onDay: this.defaultDay(),
-      mode: 'day'
+      mode: 'day',
+      department: this.defaultDepart,
     };
   },
   computed: {
     spinning() {
       return this.$store.state.report.spinning;
     },
-    department() {
-      return this.$store.state.user.department;
+    departments() {
+      return this.$store.state.department.all
     },
-
+    is_pmo() {
+      return this.$store.state.user.roles.includes("pmo")
+    },
+    defaultDepart() {
+      console.log("self depart", this.$store.state.user.department)
+      return this.$store.state.user.department
+    }
   },
   methods: {
     isWorking() {
@@ -130,6 +149,7 @@ export default {
       let subDays = this.isMonday() ? 3 : 1;
       return this.isWorking() ? moment().subtract(subDays, 'days') : moment()
     },
+
     dateRangeByMode(mode, date) {
       let start, end
       if (mode === 'day') {
@@ -139,7 +159,12 @@ export default {
         start = moment(date).startOf('week')
         end = moment(date).endOf('week')
       }
-      return { start, end }
+      return {start, end}
+    },
+    onDepartChange(department) {
+      console.log('department', department)
+      let {start, end} = this.dateRangeByMode(this.mode, this.onDay)
+      this.fetchData(department, start, end)
     },
     onNameClicked(name, report) {
       console.log('report', report)
@@ -156,35 +181,74 @@ export default {
     onModeChange(mode) {
       let date = this.onDay
       let {start, end} = this.dateRangeByMode(mode, date)
-      this.fetchData(start, end);
+      this.fetchData(this.department, start, end);
     },
     onDayChanged(date) {
       let mode = this.mode
       let {start, end} = this.dateRangeByMode(mode, date)
-      this.fetchData(start, end);
+      this.fetchData(this.department, start, end);
     },
-    fetchDepartment() {
-      if (!this.department) {
-        this.$store.dispatch("user/info").finally(() => {
-          console.log("user info done");
-        });
+    fetchUserInfo() {
+      if (!this.defaultDepart || this.defaultDepart.length === 0) {
+        this.$store.dispatch("user/info")
+            .then(() => {
+              this.department = this.defaultDepart
+            })
+            .finally(() => {
+              console.log("user info done");
+            });
+      }
+      else {
+        this.department = this.defaultDepart
       }
     },
-    fetchData(start, end) {
-      this.$store
-          .dispatch("report/dmQuery", {
-            from: this.dayString(start),
-            to: this.dayString(end),
-          })
-          .then((tasks) => {
-            this.reports = conform('staff_name', tasks)
-          })
-          .catch((e) => {
-            this.$message.error(e);
-          });
+    fetchDepartment() {
+      if (this.departments.length === 0) {
+        this.$store
+            .dispatch("department/list")
+            .catch((error) => {
+              this.$message.error(error, 3)
+            })
+      }
+    },
+    fetchData(department, start, end) {
+      if (this.is_pmo && department && department.length > 0) {
+        this.$store
+            .dispatch("report/pmoQuery", {
+              type: 1,
+              condition: department,
+              from: this.dayString(start),
+              to: this.dayString(end),
+            })
+            .then((tasks) => {
+              this.reports = conform('staff_name', tasks)
+            })
+            .catch((e) => {
+              this.$message.error(e);
+            });
+      } else {
+        this.$store
+            .dispatch("report/dmQuery", {
+              from: this.dayString(start),
+              to: this.dayString(end),
+            })
+            .then((tasks) => {
+              this.reports = conform('staff_name', tasks)
+            })
+            .catch((e) => {
+              this.$message.error(e);
+            });
+      }
     },
     dayString(day) {
       return day.format("yyyy-MM-DD");
+    },
+    filterOption(input, option) {
+      return (
+          option.componentOptions.children[0].text
+              .toLowerCase()
+              .indexOf(input.toLowerCase()) >= 0
+      );
     },
   },
 };
