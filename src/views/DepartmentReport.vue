@@ -203,7 +203,7 @@ export default {
       }
     },
     fetchDepartment() {
-      if (this.departments.length === 0) {
+      if (this.is_pmo && this.departments.length === 0) {
         this.$store
             .dispatch("department/list")
             .catch((error) => {
