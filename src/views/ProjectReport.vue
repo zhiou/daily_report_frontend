@@ -101,7 +101,7 @@ export default {
       range: [moment().subtract(1, 'months').startOf('week'), moment().subtract(1, 'months').endOf('week')],
       ranges: {
         'This Week': [moment().startOf('week'), moment().endOf('week')],
-        'Last Week': [moment().subtract(1, 'months').startOf('week'), moment().subtract(1, 'months').endOf('week')],
+        'Last Week': [moment().subtract(1, 'weeks').startOf('week'), moment().subtract(1, 'weeks').endOf('week')],
         'This Month': [moment().startOf('month'), moment().endOf('month')],
         'Last Month': [moment().subtract(1, 'months').startOf('month'), moment().subtract(1, 'months').endOf('month')]
       }

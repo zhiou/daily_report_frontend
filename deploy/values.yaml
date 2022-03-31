@@ -8,7 +8,7 @@ image:
   repository: registry-dev.excelsecu.com/daily_report/dashboard
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 1.16.0_build_813da86
+  tag: 1.16.0_build_2448339
 
 imagePullSecrets: []
 nameOverride: ""
