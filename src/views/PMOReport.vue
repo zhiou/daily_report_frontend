@@ -12,7 +12,7 @@
     <div class="report-frame">
       <a-row type="flex" justify="start" :gutter="2">
         <a-space>
-          <span>请选择查询项：</span>
+          <span>查询项：</span>
           <a-col :span="4">
             <a-select
                 show-search
@@ -29,6 +29,7 @@
           </a-col>
           <a-col :span="8">
             <a-select
+                v-if="selected !== 2"
                 v-model="clearflag"
                 show-search
                 @focus="onQueryTypeChanged"
@@ -41,15 +42,23 @@
                 {{ item.name }}
               </a-select-option>
             </a-select>
+            <a-cascader v-else
+                        v-model="emptyflag"
+                        :options="multiItems"
+                        @focus="onQueryTypeChanged"
+                        :show-search="{ filterOption }"
+                        change-on-select
+                        @change="onQueryContentChanged($event.length > 0 ? $event[$event.length-1] : '')"
+                        style="width: 300px"
+                        />
           </a-col>
-          <span>请选择查询时间：</span>
+          <span>查询时间：</span>
           <a-col :span="4">
             <a-range-picker
                 v-model="resetdate"
                 showTime
                 format="YYYY-MM-DD"
                 :placeholder="['开始时间', '结束时间']"
-                @change="onChange"
             />
           </a-col>
           <a-button
@@ -284,6 +293,7 @@ export default {
       queryitems,
       conditionid: null,
       clearflag: "",
+      emptyflag: [],
       resetdate: [moment().startOf('week'), moment().endOf('week')],
       searching: false,
       downloading: false,
@@ -306,14 +316,7 @@ export default {
       return this.$store.state.product.all
     },
     projects() {
-      let nodes = []
-      this.$store.state.project.all.forEach(project => {
-        nodes.push(project)
-        if (project.children && project.children.length > 0) {
-          nodes = nodes.concat(project.children)
-        }
-      })
-      return nodes;
+      return this.$store.state.project.all
     },
     employers() {
       return this.$store.state.user.all
@@ -354,14 +357,11 @@ export default {
   methods: {
     onQueryTypeChanged() {
       this.clearflag = "";
+      this.emptyflag = []
     },
     onQueryContentChanged(number) {
+      console.log('content', number)
       this.conditionid = number;
-    },
-    onChange(dates, dateStrings) {
-      console.log("From: ", dateStrings[0], ", to: ", dateStrings[1]);
-      this.fromtime = dateStrings[0];
-      this.totime = dateStrings[1];
     },
     onQueryLog() {
       this.searching = true;
