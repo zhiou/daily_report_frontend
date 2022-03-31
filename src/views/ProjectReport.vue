@@ -98,7 +98,7 @@ export default {
       columns,
       onDay: moment(),
       projectNumber: null,
-      range: [moment().subtract(1, 'months').startOf('week'), moment().subtract(1, 'months').endOf('week')],
+      range: [moment().subtract(1, 'weeks').startOf('week'), moment().subtract(1, 'weeks').endOf('week')],
       ranges: {
         'This Week': [moment().startOf('week'), moment().endOf('week')],
         'Last Week': [moment().subtract(1, 'weeks').startOf('week'), moment().subtract(1, 'weeks').endOf('week')],
@@ -129,7 +129,7 @@ export default {
         return
       }
       this.filteredTasks = [...this.tasks].filter(task => {
-        return moment(task.report_date).isBetween(dateRange[0], dateRange[1])
+        return moment(task.report_date).isBetween(dateRange[0], dateRange[1], null, '[]')
       })
       console.log('filtered tasks', this.filteredTasks)
     },
@@ -167,8 +167,9 @@ export default {
         })
         .then((tasks) => {
           this.tasks = tasks
-          this.filteredTasks = [...this.tasks].filter(task => {
-            return moment(task.report_date).isBetween(this.range[0], this.range[1])
+          this.filteredTasks = [...this.tasks]
+              .filter(task => {
+            return moment(task.report_date).isBetween(this.range[0], this.range[1], null, '[]')
           })
         })
         .catch((error) => {
