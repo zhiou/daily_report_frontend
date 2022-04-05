@@ -118,9 +118,9 @@ export default {
     },
     lastMonth() {
       let startDate = moment()
-        .startOf("month");
+        .subtract(2, "weeks");
       let endDate = moment()
-        .add(1, 'day')
+        .add(1, 'days')
         console.log('start date', startDate, endDate, moment().month())
       return [startDate, endDate];
     },

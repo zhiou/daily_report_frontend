@@ -98,7 +98,7 @@ export default {
       columns,
       onDay: moment(),
       projectNumber: null,
-      range: [moment().subtract(1, 'weeks').startOf('week'), moment().subtract(1, 'weeks').endOf('week')],
+      range: [moment().subtract(1, 'weeks').startOf('week'), moment().endOf('week')],
       ranges: {
         'This Week': [moment().startOf('week'), moment().endOf('week')],
         'Last Week': [moment().subtract(1, 'weeks').startOf('week'), moment().subtract(1, 'weeks').endOf('week')],
