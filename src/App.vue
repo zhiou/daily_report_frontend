@@ -15,13 +15,26 @@
     <router-view/>
   </div>
 </template>
-
+<script>
+export default {
+  mounted() {
+    if (this.is_mobile()) {
+      this.$router.replace('/mobile');
+    }
+  },
+  methods: {
+   is_mobile() {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+  }
+}
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  /*text-align: center;*/
   color: #2c3e50;
   height: 100%;
   background-color: #F0F2F5;

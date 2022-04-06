@@ -204,6 +204,7 @@ import moment from "moment";
 import i18n from "../i18n";
 import {conform} from '../utils/taskUtils.js'
 import {storeTaskNames} from '../utils/taskfilter.js'
+import {random_int} from "@/utils/helper";
 
 const day_columns = [
   {
@@ -308,7 +309,6 @@ export default {
   },
   data() {
     return {
-      count: 0,
       tasks: [],
       onDay: moment(),
       visible: false,
@@ -393,9 +393,7 @@ export default {
             })
             .then((tasks) => {
               this.tasks = tasks.map((task) => {
-                let key = this.count;
-                this.count = key + 1;
-                return {...task, key: key};
+                return {...task, key: this.genKey()};
               });
             })
             .catch((error) => {
@@ -409,9 +407,7 @@ export default {
             })
             .then((tasks) => {
               this.tasks = tasks.map((task) => {
-                let key = this.count;
-                this.count = key + 1;
-                return {...task, key: key};
+                return {...task, key: this.genKey()};
               });
             })
             .catch((error) => {
@@ -474,7 +470,6 @@ export default {
         console.log('task', task)
         modalForm.resetFields();
         this.visible = false;
-        const {count} = this;
         // 级联列表, 取最后一个元素
         let project_number = null
         if (task.project_number) {
@@ -492,7 +487,7 @@ export default {
         console.log('proj', proj, 'prod', prod);
         let newTask = {
           ...task,
-          key: count,
+          key: this.genKey(),
           product_line: prod && prod.in_line || "其他",
           product_name: prod && prod.name || "其他",
           product_model: prod && prod.model || "其他",
@@ -501,7 +496,6 @@ export default {
           product_number
         };
         console.log('task', newTask)
-        this.count = count + 1;
         this.tasks = [...this.tasks, newTask];
         this.update(0);
         //localStorage.clear();
@@ -512,9 +506,17 @@ export default {
       const tasks = [...this.tasks];
       this.tasks = tasks.filter((item) => item.key !== key);
     },
+    genKey() {
+      const keys = new Set(this.tasks.map((item) => item.key));
+      let key = random_int(1, 100000);
+      while (keys.has(key)) {
+        key = random_int(1, 100000);
+      }
+      return key;
+    },
     onCopy(key) {
       const task = this.tasks.find((task) => task.key === key);
-      this.copied.push({...task , key: task.key+1000})
+      this.copied.push({...task , key: this.genKey()});
       console.log("copied", this.copied)
     },
     onProjectChanged(key, dataIndex, number) {

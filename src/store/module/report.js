@@ -21,6 +21,7 @@ import {
 
 const state = () => ({
   spinning: false,
+  copied: [],
 });
 
 const actions = {
@@ -164,6 +165,9 @@ const actions = {
 const mutations = {
   SET_SPINNING(state, spinning) {
     state.spinning = spinning;
+  },
+  SET_COPIED(state, copied) {
+    state.copied = copied;
   },
 };
 

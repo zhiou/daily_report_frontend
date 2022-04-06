@@ -53,7 +53,7 @@ export function conform(prop, tasks, sm=true) {
                 }
                 tc += "(" + task.task_cost + "h)"
                 let td = task.task_detail
-                content.push({tc, td});
+                content.push({tc, td, key: task.key});
             });
             key++;
             return {group_name, work_code, cost, content, department, key};

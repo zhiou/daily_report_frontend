@@ -17,6 +17,11 @@ import i18n from "./i18n";
 import lodash from "lodash";
 import excel from '@d2-projects/vue-table-export';
 
+import Vant from 'vant';
+import 'vant/lib/index.css';
+
+Vue.use(Vant);
+
 const echarts = require("echarts")
 
 Vue.config.productionTip = false
