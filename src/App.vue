@@ -16,17 +16,14 @@
   </div>
 </template>
 <script>
+import {is_mobile} from "@/utils/helper";
+
 export default {
   mounted() {
-    if (this.is_mobile()) {
+    if (is_mobile()) {
       this.$router.replace('/mobile');
     }
   },
-  methods: {
-   is_mobile() {
-      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    }
-  }
 }
 </script>
 <style>

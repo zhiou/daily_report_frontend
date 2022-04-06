@@ -70,6 +70,7 @@
 
 <script>
 import WwLogin from '@/static/wwLogin-1.2.5.js'
+import {is_mobile} from "@/utils/helper";
 
 export default {
   name: "Login",
@@ -114,7 +115,11 @@ export default {
                 if (redirect_name) {
                   that.$router.push({name: redirect_name});
                 } else {
-                  that.$router.push("/");
+                  if (is_mobile()){
+                    that.$router.push("/mobile");
+                  } else {
+                    that.$router.push("/");
+                  }
                 }
               })
               .catch((error) => {

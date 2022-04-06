@@ -23,6 +23,7 @@ import CommitStats from "../views/CommitStats.vue";
 import PMOReport from "../views/PMOReport.vue";
 import UserRole from "../views/UserRole";
 import OAuth from "../views/OAuth";
+import {is_mobile} from "@/utils/helper";
 
 Vue.use(VueRouter);
 
@@ -31,6 +32,45 @@ const originalPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function push(location) {
     return originalPush.call(this, location).catch((err) => err);
 };
+
+const mobile_routes = [
+    {
+        path: '/mobile',
+        name: 'MobileReports',
+        component: () => import("../views/mobile/Reports.vue"),
+        meta: {
+            requireAuth: true,
+        },
+    },
+    {
+        path: "/tasks",
+        name: 'MobileTasks',
+        component: () => import("../views/mobile/Tasks.vue"),
+        meta: {
+            requireAuth: true,
+        },
+    },
+    {
+        path: "/login",
+        name: "Login",
+        component: Login,
+        meta: {
+            requireAuth: false,
+        },
+    },
+    {
+        path: "/oauth",
+        name: "OAuth",
+        component: OAuth,
+        meta: {
+            requireAuth: false,
+        }
+    },
+    {
+        path: "*",
+        redirect: "/mobile",
+    },
+]
 
 const routes = [
     {
@@ -174,22 +214,6 @@ const routes = [
         ],
     },
     {
-        path: '/mobile',
-        name: 'MobileReports',
-        component: () => import("../views/mobile/Reports.vue"),
-        meta: {
-            requireAuth: true,
-        },
-    },
-    {
-        path: "/tasks",
-        name: 'MobileTasks',
-        component: () => import("../views/mobile/Tasks.vue"),
-        meta: {
-            requireAuth: true,
-        },
-    },
-    {
         path: "/login",
         name: "Login",
         component: Login,
@@ -207,12 +231,12 @@ const routes = [
     },
     {
         path: "*",
-        redirect: "/",
+        redirect: '/'
     },
 ];
 
 const router = new VueRouter({
-    routes,
+       routes: is_mobile() ? mobile_routes: routes,
 });
 
 export default router;
