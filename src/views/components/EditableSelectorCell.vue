@@ -12,7 +12,7 @@
       <a-space align="baseline">
         <a-select
             show-search
-
+            :dropdownMatchSelectWidth="false"
             ref="selector"
             option-filter-prop="children"
             :filter-option="filterOption"

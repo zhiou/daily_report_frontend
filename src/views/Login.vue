@@ -3,7 +3,7 @@
 
     <div v-show="ww_login" id="ww_login" class="we-login-box we-login-box-radius"/>
     <div v-show="!ww_login" class="me-login-box me-login-box-radius">
-      <img src="@/assets/logo.png" alt=""/>
+      <img src="@/assets/logo.png" alt="" style="width:60%;margin-left: 20%"/>
       <h1>{{ $t("login.title") }}</h1>
 
       <a-form
@@ -55,7 +55,7 @@
           <a-button
               type="primary"
               html-type="submit"
-              class="login-form-button"
+              style="width: 60%; margin-left:20%;"
               :loading="loading"
           >
             {{ $t("login.button.login") }}
