@@ -22,11 +22,10 @@
             <ul class="events">
               <li v-for="(item, index) in getListData(value)" :key="index">
                 <a-badge
-                    v-if="index <= 2"
+                    v-if="index < 2"
                     :status="item.type"
                     :text="item.content"
                 />
-                <a-badge v-if="index > 2" :status="item.type" :text="other"/>
               </li>
             </ul>
           </div>
@@ -35,11 +34,10 @@
             <ul class="events">
               <li v-for="(item, index) in getListData(value)" :key="index">
                 <a-badge
-                    v-if="index <= 2"
+                    v-if="index < 2"
                     :status="item.type"
                     :text="item.content"
                 />
-                <a-badge v-if="index > 2" :status="item.type" :text="other"/>
               </li>
             </ul>
             </div>
