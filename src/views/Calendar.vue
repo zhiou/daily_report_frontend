@@ -16,16 +16,34 @@
           @panelChange="onChange"
           :mode="mode"
       >
-        <ul slot="dateCellRender" slot-scope="value" class="events">
-          <li v-for="(item, index) in getListData(value)" :key="index">
-            <a-badge
-                v-if="index <= 2"
-                :status="item.type"
-                :text="item.content"
-            />
-            <a-badge v-if="index > 2" :status="item.type" :text="other"/>
-          </li>
-        </ul>
+        <template slot="dateFullCellRender" slot-scope="value">
+          <div v-if='value.day() !== 0 && value.day() % 2 === 0' class='even-date-cell'>
+            <span>{{ value.format('DD') }}</span>
+            <ul class="events">
+              <li v-for="(item, index) in getListData(value)" :key="index">
+                <a-badge
+                    v-if="index <= 2"
+                    :status="item.type"
+                    :text="item.content"
+                />
+                <a-badge v-if="index > 2" :status="item.type" :text="other"/>
+              </li>
+            </ul>
+          </div>
+          <div v-else class='odd-date-cell'>
+            <span>{{ value.format('DD') }}</span>
+            <ul class="events">
+              <li v-for="(item, index) in getListData(value)" :key="index">
+                <a-badge
+                    v-if="index <= 2"
+                    :status="item.type"
+                    :text="item.content"
+                />
+                <a-badge v-if="index > 2" :status="item.type" :text="other"/>
+              </li>
+            </ul>
+            </div>
+        </template>
         <template slot="monthCellRender" slot-scope="value">
           <div v-if="getMonthData(value)" class="notes-month">
             <section>{{ getMonthData(value) }}</section>
@@ -139,6 +157,26 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #F0F2F5;
+}
+
+.odd-date-cell {
+  padding: 0.5rem;
+  height: 6rem;
+  background-color: #CCE5F4;
+}
+
+.odd-date-cell:hover {
+  background-color: #40A2D8;
+}
+
+.even-date-cell {
+  padding: 0.5rem;
+  height: 6rem;
+  background-color: #D2F5C7;
+}
+
+.even-date-cell:hover {
+  background-color: #55D331;
 }
 
 .events {
