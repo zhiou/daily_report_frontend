@@ -15,7 +15,7 @@ retry() {
 }
 
 check_local_if_latest() {
-  git status | grep "nothing to commit, working tree clean"
+  LANG=en_GB git status | grep "nothing to commit, working tree clean"
   if [ "$?" -ne 0 ]; then
     echo -e "\033[31mERROR: there are tracked files in local workspakce, please commit!! \033[0m\n"
     exit 1
