@@ -372,7 +372,7 @@ export default {
         end = moment(date).add(1, "day")
       } else if (mode === 'week') {
         start = moment(date).startOf('week')
-        end = moment(date).endOf('week')
+        end = moment(date).add(1, 'week')
       }
       this.fetchData(start, end);
     },
@@ -422,7 +422,7 @@ export default {
         end = moment(date).add(1, "day")
       } else if (this.mode === 'week') {
         start = moment(date).startOf('week')
-        end = moment(date).endOf('week')
+        end = moment(date).add(1, 'week')
       }
       this.fetchData(start, end);
     },

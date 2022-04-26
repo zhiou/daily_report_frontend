@@ -5,10 +5,10 @@
 replicaCount: 1
 
 image:
-  repository: registry-dev.excelsecu.com/daily_report/dashboard
+  repository: registry-dev.excelsecu.com/es_docker/daily_report/dashboard
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 1.16.0_build_6d9a7e0
+  tag: 1.16.0_build_1ddfedb
 
 imagePullSecrets: []
 nameOverride: ""
