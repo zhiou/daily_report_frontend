@@ -2,13 +2,13 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
+replicaCount: 2
 
 image:
   repository: registry-dev.excelsecu.com/es_docker/daily_report/dashboard
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 1.16.0_build_1ddfedb
+  tag: 1.16.0_build_6861069
 
 imagePullSecrets: []
 nameOverride: ""
@@ -79,4 +79,13 @@ nodeSelector: {}
 
 tolerations: []
 
-affinity: {}
+affinity: 
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+    - labelSelector:
+        matchExpressions:
+        - key: app.kubernetes.io/name
+          operator: In
+          values:
+          - daily-report-dashboard
+      topologyKey: "kubernetes.io/hostname"
